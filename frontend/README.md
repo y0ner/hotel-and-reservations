@@ -1,59 +1,71 @@
-# Frontend
+# Hotel y Reservas
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
+Este proyecto es un sistema web de gestión para hoteles que permite administrar de forma sencilla y organizada las diferentes operaciones relacionadas con reservas, huéspedes, habitaciones, facturación, servicios y reportes.  
+Está diseñado para mejorar la experiencia tanto de los administradores del hotel como de los clientes que realizan reservas.
 
-## Development server
+Cada uno de los módulos cuenta con su propio **CRUD (Crear, Leer, Actualizar, Eliminar)**, lo que permite un control completo sobre la información del sistema.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## Funcionalidades principales
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Dashboard**: Vista general con indicadores y accesos rápidos a las funciones principales.
+- **Reservas**: CRUD completo para gestionar reservas de habitaciones con control de fechas, disponibilidad y estado.
+- **Huéspedes**: CRUD para el registro y administración de la información de los huéspedes.
+- **Habitaciones**: CRUD para el control de habitaciones disponibles, tipos, precios y estado.
+- **Facturación**: CRUD para la emisión y administración de facturas asociadas a las reservas y servicios.
+- **Servicios**: CRUD para la gestión de servicios adicionales ofrecidos por el hotel.
+- **Reportes**: Generación de reportes para análisis de ocupación, ingresos y estadísticas relevantes.
+- **Configuración**: CRUD para la personalización y ajustes generales del sistema.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Capturas de pantalla
 
-```bash
-ng generate component component-name
-```
+A continuación se muestran las vistas principales del sistema. Cada sección tiene su captura correspondiente:  
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Dashboard  
+![Dashboard](./capturas/dashboard.png)
 
-```bash
-ng generate --help
-```
+### Reservas  
+![Reservas](./capturas/reservas.png)
 
-## Building
+### Huéspedes  
+![Huéspedes](./capturas/huespedes.png)
 
-To build the project run:
+### Habitaciones  
+![Habitaciones](./capturas/habitaciones.png)
 
-```bash
-ng build
-```
+### Crear Habitaciones
+![Habitaciones](./capturas/habitaciones_crear.png)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Facturación  
+![Facturación](./capturas/facturacion.png)
 
-## Running unit tests
+### Servicios  
+![Servicios](./capturas/servicios.png)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Reportes  
+![Reportes](./capturas/reportes.png)
 
-```bash
-ng test
-```
+### Configuración  
+![Configuración](./capturas/configuracion.png)
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## Tecnologías utilizadas
 
-```bash
-ng e2e
-```
+- **Frontend**: (Ejemplo: React, TailwindCSS, etc.)
+- **Backend**: (Ejemplo: Node.js, Express, etc.)
+- **Base de datos**: (Ejemplo: MySQL, MongoDB, etc.)
+- **Control de versiones**: Git y GitHub
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+*(Completa esta sección con las tecnologías específicas que hayas usado en tu proyecto.)*
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Instalación y ejecución
+
+1. Clonar este repositorio:  
+   ```bash
+   git clone https://github.com/usuario/hotel-y-reservas.git
