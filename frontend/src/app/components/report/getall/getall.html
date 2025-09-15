@@ -1,0 +1,25 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6" *ngIf="reportData$ | async as data">
+  <p-card header="Total Ingresos (Pagados)" subheader="Suma de todas las reservas completadas">
+    <div class="text-3xl font-bold text-green-600">
+      {{ data.totalRevenue | currency:'COP':'symbol-narrow':'1.0-0' }}
+    </div>
+  </p-card>
+
+  <p-card header="Tasa de Ocupación Actual" subheader="Porcentaje de habitaciones ocupadas">
+    <div class="text-3xl font-bold text-blue-600">
+      {{ data.occupancyRate | number:'1.0-2' }}%
+    </div>
+  </p-card>
+
+  <p-card header="Huéspedes Activos" subheader="Clientes actualmente registrados">
+    <div class="text-3xl font-bold text-purple-600">
+      {{ data.activeGuests }}
+    </div>
+  </p-card>
+
+  <div class="md:col-span-3 mt-6">
+    <p-card header="Ingresos por Mes">
+      <p-chart type="bar" [data]="data.monthlyChart" [options]="chartOptions"></p-chart>
+    </p-card>
+  </div>
+</div>

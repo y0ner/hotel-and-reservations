@@ -1,0 +1,47 @@
+<div class="bg-white rounded-lg shadow-md">
+    <div class="p-6 border-b border-gray-200">
+        <h2 class="text-2xl font-semibold text-gray-700">Cuentas y Facturación</h2>
+        <p class="text-gray-500 mt-1">Listado de reservas confirmadas pendientes de pago.</p>
+    </div>
+    <div class="p-6">
+        <p-table [value]="(invoices$ | async) || []" stripedRows>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="p-4 text-left">Factura #</th>
+                    <th class="p-4 text-left">Huésped</th>
+                    <th class="p-4 text-left">Habitación</th>
+                    <th class="p-4 text-left">Fecha de Salida (Check-out)</th>
+                    <th class="p-4 text-left">Monto Total</th>
+                    <th class="p-4 text-left">Estado del Pago</th>
+                    <th class="p-4 text-left">Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-invoice>
+                <tr class="hover:bg-gray-50">
+                    <td class="p-4">FAC-00{{invoice.id}}</td>
+                    <td class="p-4">{{invoice.guestName}}</td>
+                    <td class="p-4">{{invoice.roomNumber}}</td>
+                    <td class="p-4">{{invoice.checkOutDate | date:'dd/MM/yyyy'}}</td>
+                    <td class="p-4">{{invoice.totalPrice | currency:'COP':'symbol-narrow':'1.0-0'}}</td>
+                    <td class="p-4">
+                        <p-tag [value]="invoice.status === 'Confirmada' ? 'Pendiente' : 'Pagada'"
+                            [severity]="invoice.status === 'Confirmada' ? 'warning' : 'success'">
+                        </p-tag>
+                    </td>
+                    <td class="p-4">
+                        <button pButton icon="pi pi-print" class="p-button-text" title="Imprimir Factura" [routerLink]="['/billing/invoice', invoice.id]" target="_blank"></button> 
+                        @if (invoice.status === 'Confirmada') {
+                        <button pButton icon="pi pi-check-circle" class="p-button-text p-button-success"
+                            title="Marcar como Pagada" (click)="markAsPaid(invoice)"></button>
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center p-4">No hay cuentas pendientes por ahora.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

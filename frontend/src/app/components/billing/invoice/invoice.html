@@ -1,0 +1,56 @@
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg my-6 print-container">
+  @if (invoice) {
+    <div class="flex justify-between items-start border-b pb-4">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">FACTURA</h1>
+        <p class="text-gray-500">FAC-00{{ invoice.id }}</p>
+      </div>
+      <div class="text-right">
+        <h2 class="text-xl font-semibold text-gray-700">Hotel Uniguajira</h2>
+        <p class="text-gray-500">Riohacha, La Guajira</p>
+        <p class="text-gray-500">Fecha de Emisión: {{ invoice.checkOutDate | date:'longDate' }}</p>
+      </div>
+    </div>
+
+    <div class="my-6">
+      <h3 class="text-lg font-semibold text-gray-600 border-b pb-2">Facturar a:</h3>
+      <p class="mt-2 font-bold">{{ invoice.guestName }}</p>
+      <p class="text-gray-600">Doc: {{ invoice.guestDocument }}</p>
+      <p class="text-gray-600">Email: {{ invoice.guestEmail }}</p>
+    </div>
+
+    <table class="w-full text-left">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="p-3 font-semibold text-gray-600">Descripción</th>
+          <th class="p-3 font-semibold text-gray-600 text-center">Noches</th>
+          <th class="p-3 font-semibold text-gray-600 text-right">Precio Unit.</th>
+          <th class="p-3 font-semibold text-gray-600 text-right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b">
+          <td class="p-3">Estadía en Habitación {{ invoice.roomNumber }} ({{ invoice.roomType }})</td>
+          <td class="p-3 text-center">{{ invoice.nights }}</td>
+          <td class="p-3 text-right">{{ invoice.roomPrice | currency:'COP' }}</td>
+          <td class="p-3 text-right">{{ invoice.totalPrice | currency:'COP' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="flex justify-end mt-6">
+      <div class="w-1/3">
+        <div class="flex justify-between text-lg font-bold text-gray-800">
+          <span>TOTAL A PAGAR:</span>
+          <span>{{ invoice.totalPrice | currency:'COP' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8 no-print">
+      <button pButton label="Imprimir Factura" icon="pi pi-print" (click)="printInvoice()"></button>
+    </div>
+  } @else {
+    <p>Cargando factura...</p>
+  }
+</div>

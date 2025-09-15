@@ -1,0 +1,118 @@
+/* src/styles.css */
+
+/* --- 1. Importaciones Fundamentales --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+/* --- 2. Estilos Globales del Body --- */
+body {
+  background-color: #f1f5f9; /* Color de fondo gris sutil (slate-100) */
+  font-family: "Inter", sans-serif;
+  color: #4B5563;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* src/styles.css */
+
+/* --- 3. Estructura del Layout (Definitiva y Correcta) --- */
+
+.layout-wrapper {
+    min-height: 100vh;
+}
+
+.layout-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5rem; /* 80px */
+    padding: 0 2rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    z-index: 1001; /* La capa más alta */
+}
+
+.layout-sidebar {
+    position: fixed;
+    width: 300px;
+    height: calc(100vh - 5rem - 2rem); /* Altura - header - márgenes vert. */
+    top: calc(5rem + 1rem); /* Debajo del header + margen superior */
+    left: 1rem; /* Margen izquierdo */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+}
+
+.layout-main-container {
+    padding-top: 5rem; /* Espacio para el header fijo */
+    padding-left: calc(300px + 2rem); /* Espacio para el sidebar + sus márgenes */
+    padding-right: 1rem;
+    padding-bottom: calc(4rem + 2rem); /* Espacio para el footer + márgenes */
+    transition: padding-left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.layout-main {
+    padding-top: 1rem;
+}
+
+.layout-footer {
+    position: fixed; /* Footer fijo abajo */
+    height: 4rem;
+    bottom: 1rem; /* Margen inferior */
+    left: calc(300px + 2rem); /* Alineado con el contenido y el margen del aside */
+    right: 1rem; /* Margen derecho */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 999;
+}
+
+
+/* Lógica para Ocultar el Sidebar */
+.layout-sidebar-inactive .layout-sidebar {
+    transform: translateX(calc(-100% - 1rem));
+}
+
+.layout-sidebar-inactive .layout-main-container {
+    padding-left: 1rem; /* Mantiene el margen y elimina el hueco */
+}
+
+.layout-sidebar-inactive .layout-footer {
+    left: 1rem; /* El footer se alinea al borde del contenido */
+}
+
+
+/* --- Estilos para Componentes (Aside y Menú de Usuario) --- */
+/* RESTAURADO: Estilos para el menú activo y hover */
+.menu-item .active-menuitem, .menu-item a:hover {
+    background-color: #EFF6FF !important; 
+    color: #1D4ED8 !important;
+}
+.menu-item .active-menuitem i, .menu-item a:hover i {
+    color: #1D4ED8 !important;
+}
+
+.p-tieredmenu {
+    border-radius: 8px !important;
+    padding: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border: none !important;
+}
+.p-tieredmenu .p-menuitem-link {
+    border-radius: 6px !important;
+    transition: background-color 0.2s;
+    margin: 0.125rem 0; /* Añade separación vertical entre opciones */
+}
+.p-tieredmenu .p-menuitem.p-focus > .p-menuitem-link {
+    background-color: #e5e7eb !important; /* gray-200 */
+}

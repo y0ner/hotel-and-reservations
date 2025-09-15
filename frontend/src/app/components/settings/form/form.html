@@ -1,0 +1,39 @@
+<p-card header="Configuración General del Hotel">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8 p-4">
+      
+      <div>
+        <label for="hotelName" class="block text-sm font-medium leading-6 text-gray-900">Nombre del Hotel</label>
+        <div class="mt-2">
+          <input pInputText id="hotelName" formControlName="hotelName" class="w-full" />
+        </div>
+      </div>
+
+      <div>
+        <label for="taxId" class="block text-sm font-medium leading-6 text-gray-900">NIT o ID Fiscal</label>
+        <div class="mt-2">
+          <input pInputText id="taxId" formControlName="taxId" class="w-full" />
+        </div>
+      </div>
+
+      <div>
+        <label for="address" class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
+        <div class="mt-2">
+          <input pInputText id="address" formControlName="address" class="w-full" />
+        </div>
+      </div>
+
+      <div>
+        <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
+        <div class="mt-2">
+          <input pInputText id="phone" formControlName="phone" class="w-full" />
+        </div>
+      </div>
+
+    </div>
+    
+    <div class="mt-4 pt-6 border-t border-gray-200 flex items-center justify-end">
+      <button pButton type="submit" label="Guardar Cambios" icon="pi pi-save" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</p-card>

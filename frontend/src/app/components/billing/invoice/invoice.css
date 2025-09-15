@@ -1,0 +1,21 @@
+/* src/app/components/billing/invoice/invoice.css */
+@media print {
+  /* Oculta todo excepto el contenedor de la factura */
+  body * {
+    visibility: hidden;
+  }
+  .print-container, .print-container * {
+    visibility: visible;
+  }
+  /* Asegura que la factura ocupe toda la página */
+  .print-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  /* Oculta el botón de imprimir al imprimir */
+  .no-print {
+    display: none;
+  }
+}

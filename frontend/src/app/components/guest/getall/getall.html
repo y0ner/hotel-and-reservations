@@ -1,0 +1,38 @@
+<div class="bg-white rounded-lg shadow-md">
+    <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-2xl font-semibold text-gray-700">Gestión de Huéspedes</h2>
+        <button pButton type="button" label="Nuevo Huésped" icon="pi pi-plus" [routerLink]="['/guests/new']"></button>
+    </div>
+
+    <div class="p-6">
+        <p-table [value]="guests" stripedRows [tableStyle]="{'min-width': '50rem'}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="p-4 text-left text-sm font-semibold text-gray-500 uppercase">Nombre</th>
+                    <th class="p-4 text-left text-sm font-semibold text-gray-500 uppercase">Documento</th>
+                    <th class="p-4 text-left text-sm font-semibold text-gray-500 uppercase">Email</th>
+                    <th class="p-4 text-left text-sm font-semibold text-gray-500 uppercase">Estado</th>
+                    <th class="p-4 text-left text-sm font-semibold text-gray-500 uppercase">Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-guest>
+                <tr class="hover:bg-gray-50">
+                    <td class="p-4">{{guest.name}}</td>
+                    <td class="p-4">{{guest.documentNumber}}</td>
+                    <td class="p-4">{{guest.email}}</td>
+                    <td class="p-4">
+                        <p-tag [value]="guest.status" [severity]="guest.status === 'ACTIVE' ? 'success' : 'danger'">
+                        </p-tag>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex gap-2">
+                            <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded" [routerLink]="['/guests/edit', guest.id]"></button>
+                            <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-danger"
+                                (click)="confirmDelete(guest.id)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="bg-white rounded-lg shadow-md max-w-4xl mx-auto">
+  <div class="p-6 border-b border-gray-200">
+    <h2 class="text-2xl font-semibold text-gray-700">Editar Reserva</h2>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+
+      <div>
+        <label for="guest" class="block text-sm font-medium leading-6 text-gray-900">Huésped</label>
+        <div class="mt-2">
+          <p-select [options]="guestOptions" formControlName="guestId" placeholder="Seleccione un huésped"></p-select>
+        </div>
+      </div>
+
+      <div>
+        <label for="room" class="block text-sm font-medium leading-6 text-gray-900">Habitación</label>
+        <div class="mt-2">
+          <p-select [options]="roomOptions" formControlName="roomId" placeholder="Seleccione una habitación"></p-select>
+        </div>
+      </div>
+
+      <div>
+        <label for="checkin" class="block text-sm font-medium leading-6 text-gray-900">Fecha de Check-in</label>
+        <div class="mt-2">
+          <p-datepicker formControlName="checkInDate" dateFormat="dd/mm/yy" [showIcon]="true"></p-datepicker>
+        </div>
+      </div>
+
+      <div>
+        <label for="checkout" class="block text-sm font-medium leading-6 text-gray-900">Fecha de Check-out</label>
+        <div class="mt-2">
+          <p-datepicker formControlName="checkOutDate" dateFormat="dd/mm/yy" [showIcon]="true"></p-datepicker>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-8 pt-6 border-t border-gray-200 flex items-center justify-end gap-x-4">
+      <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="cancelar()"></button>
+      <button pButton type="submit" label="Actualizar Reserva" icon="pi pi-check" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</div>

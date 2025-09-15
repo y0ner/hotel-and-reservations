@@ -1,0 +1,26 @@
+/* Fondo gris y sin bordes en todo el bloque del PanelMenu */
+.p-panelmenu,
+.p-panelmenu .p-panelmenu-panel,
+.p-panelmenu .p-panelmenu-header,
+.p-panelmenu .p-panelmenu-content,
+.p-panelmenu .p-submenu-list,
+.p-panelmenu .p-menuitem,
+.p-panelmenu .p-menuitem-link {
+  background-color: #f3f4f6 !important; /* gris claro */
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+/* Eliminar separadores entre paneles y submenús */
+.p-panelmenu .p-panelmenu-panel + .p-panelmenu-panel {
+  border-top: 0 !important;
+}
+
+/* Quitar padding extra en contenedores internos si genera “cajas” */
+.p-panelmenu .p-panelmenu-content,
+.p-panelmenu .p-submenu-list {
+  padding: 0 !important;
+}
+

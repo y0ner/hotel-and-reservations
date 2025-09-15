@@ -1,0 +1,39 @@
+<div class="bg-white rounded-lg shadow-md max-w-4xl mx-auto">
+  <div class="p-6 border-b border-gray-200">
+    <h2 class="text-2xl font-semibold text-gray-700">Editar Habitación</h2>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+      <div>
+        <label for="number" class="block text-sm font-medium leading-6 text-gray-900">Número de Habitación</label>
+        <div class="mt-2">
+          <input pInputText id="number" formControlName="number" class="w-full" />
+        </div>
+      </div>
+      <div>
+        <label for="type" class="block text-sm font-medium leading-6 text-gray-900">Tipo de Habitación</label>
+        <div class="mt-2">
+          <p-select [options]="roomTypes" id="type" formControlName="type" class="w-full"></p-select>
+        </div>
+      </div>
+      <div>
+        <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Precio por Noche</label>
+        <div class="mt-2">
+          <p-inputNumber inputId="price" formControlName="price" mode="currency" currency="COP" locale="es-CO"></p-inputNumber>
+        </div>
+      </div>
+      <div>
+        <label for="status" class="block text-sm font-medium leading-6 text-gray-900">Estado</label>
+        <div class="mt-2">
+          <p-select [options]="roomStatuses" id="status" formControlName="status"></p-select>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-8 pt-6 border-t border-gray-200 flex items-center justify-end gap-x-4">
+      <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="cancelar()"></button>
+      <button pButton type="submit" label="Actualizar Habitación" icon="pi pi-save" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</div>

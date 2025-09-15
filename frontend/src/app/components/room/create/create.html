@@ -1,0 +1,24 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="w-full p-6 bg-white rounded shadow">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-1 font-semibold">Número de Habitación</label>
+        <input pInputText formControlName="number" class="w-full" />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Tipo de Habitación</label>
+        <p-select [options]="roomTypes" formControlName="type" placeholder="Seleccione un tipo" class="w-full"></p-select> </div>
+      <div>
+        <label class="block mb-1 font-semibold">Precio</label>
+        <p-inputNumber formControlName="price" mode="currency" currency="COP" locale="es-CO" class="w-full"></p-inputNumber>
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Estado</label>
+        <p-select [options]="roomStatuses" formControlName="status" placeholder="Seleccione un estado" class="w-full"></p-select> </div>
+    </div>
+    <div class="flex justify-center mt-6">
+      <div class="bg-gray-100 rounded p-4 flex gap-4 items-center">
+        <button pButton type="submit" label="Guardar" icon="pi pi-save"></button>
+        <button pButton type="button" class="p-button-secondary" label="Cancelar" icon="pi pi-times" (click)="cancelar()"></button>
+      </div>
+    </div>
+  </form>

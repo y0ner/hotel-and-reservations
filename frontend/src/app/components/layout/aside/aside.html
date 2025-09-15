@@ -1,0 +1,17 @@
+<div class="overflow-y-auto h-full">
+  <ul class="list-none p-0 m-0 pt-4"> 
+    <li *ngFor="let item of items" class="menu-item">
+      
+      <a 
+        [routerLink]="item.routerLink" 
+        routerLinkActive="active-menuitem" 
+        [routerLinkActiveOptions]="{exact: true}"
+        class="flex items-center cursor-pointer p-4 text-text-color hover:bg-gray-100 rounded-lg transition-all duration-150 ease-in-out mx-2 my-1 active:scale-95">
+        
+        <i [class]="item.icon" class="text-lg mr-3 text-text-color-secondary"></i>
+        <span class="font-medium">{{ item.label }}</span>
+      </a>
+
+    </li>
+  </ul>
+</div>
