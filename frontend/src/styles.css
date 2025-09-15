@@ -5,6 +5,12 @@
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
 
+
+
+/* --- AÑADE ESTAS DOS LÍNEAS ---
+@import "primeng/resources/primeng.min.css";
+@import "primeng/resources/themes/lara-light/theme.css"; */
+
 /* --- 2. Estilos Globales del Body --- */
 body {
   background-color: #f1f5f9; /* Color de fondo gris sutil (slate-100) */
@@ -39,7 +45,7 @@ body {
 .layout-sidebar {
     position: fixed;
     width: 300px;
-    height: calc(100vh - 5rem - 2rem); /* Altura - header - márgenes vert. */
+    height: calc(100vh - 5rem - 4rem - 2rem); /* Altura - header - footer - márgenes vert. */
     top: calc(5rem + 1rem); /* Debajo del header + margen superior */
     left: 1rem; /* Margen izquierdo */
     background-color: #ffffff;
@@ -64,17 +70,16 @@ body {
 .layout-footer {
     position: fixed; /* Footer fijo abajo */
     height: 4rem;
-    bottom: 1rem; /* Margen inferior */
-    left: calc(300px + 2rem); /* Alineado con el contenido y el margen del aside */
-    right: 1rem; /* Margen derecho */
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-color: #ffffff;
-    border-radius: 12px;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 999;
+    border-top: 1px solid #e5e7eb;
 }
 
 
@@ -88,7 +93,7 @@ body {
 }
 
 .layout-sidebar-inactive .layout-footer {
-    left: 1rem; /* El footer se alinea al borde del contenido */
+    left: 0; /* El footer se alinea al borde del contenido */
 }
 
 
@@ -116,4 +121,3 @@ body {
 .p-tieredmenu .p-menuitem.p-focus > .p-menuitem-link {
     background-color: #e5e7eb !important; /* gray-200 */
 }
-
