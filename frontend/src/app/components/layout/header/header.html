@@ -1,36 +1,38 @@
-<div class="flex items-center w-full h-full">
-  <!-- Logo -->
-  <div class="flex items-center">
-    <img class="h-10" src="/logo.png" alt="Logo Hotel" />
+<div class="flex items-center w-full h-full px-4">
+  <!-- Logo en texto -->
+  <div class="flex items-center mr-4">
+    <span class="italic text-green-400 text-xl font-semibold">
+      Hotel y reservas
+    </span>
   </div>
 
-  <!-- Espacio fijo -->
-  <div class="w-52"></div>
+  <!-- Buscador con hamburguesa -->
+  <div class="flex-1 flex justify-center">
+    <div class="flex items-center w-full max-w-md">
+      <!-- Hamburguesa dentro del bloque de búsqueda -->
+      <button 
+        pButton 
+        type="button" 
+        icon="pi pi-bars" 
+        (click)="toggleAside.emit()" 
+        class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100 mr-2">
+      </button>
 
-  <!-- Menú hamburguesa -->
-  <button 
-    pButton 
-    type="button" 
-    icon="pi pi-bars" 
-    (click)="toggleAside.emit()"
-    class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100 mr-4">
-  </button>
-
-  <!-- Campo de búsqueda (solo input, sin ícono) -->
-  <div class="flex-1 max-w-md">
-    <input 
-      pInputText 
-      placeholder="Buscar..." 
-      class="w-full font-normal px-3 py-2 border rounded-lg" />
+      <!-- Input búsqueda -->
+      <input 
+        pInputText 
+        placeholder="Buscar..." 
+        class="flex-1 font-normal px-3 py-2 border rounded-lg" />
+    </div>
   </div>
 
   <!-- Íconos alineados a la derecha -->
-  <div class="flex items-center gap-4 ml-200">
-    <!-- Icono buscar -->
+  <div class="flex items-center gap-4">
+    <!-- Buscar -->
     <button 
       pButton 
       type="button" 
-      icon="pi pi-search"
+      icon="pi pi-search" 
       class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100">
     </button>
 
@@ -38,7 +40,7 @@
     <button 
       pButton 
       type="button" 
-      icon="pi pi-bell"
+      icon="pi pi-bell" 
       class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100 relative">
       <p-badge value="2" severity="danger"></p-badge>
     </button>
@@ -47,16 +49,16 @@
     <button 
       pButton 
       type="button" 
-      icon="pi pi-cog"
-      class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100"
+      icon="pi pi-cog" 
+      class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100" 
       [routerLink]="['/settings']">
     </button>
 
     <!-- Usuario -->
     <button 
       pButton 
-      type="button"
-      class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100 flex items-center justify-center w-10 h-10 border-2 border-transparent hover:border-primary transition-colors"
+      type="button" 
+      class="p-button-text p-button-rounded text-text-color-secondary hover:bg-gray-100 flex items-center justify-center w-10 h-10 border-2 border-transparent hover:border-primary transition-colors" 
       (click)="menu.toggle($event)">
       <i class="pi pi-user text-2xl"></i>
     </button>
