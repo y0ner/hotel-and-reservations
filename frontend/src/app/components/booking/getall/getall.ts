@@ -53,4 +53,19 @@ export class GetallComponent {
       }
     });
   }
+  // En getall.ts
+getSeverity(status: string): string {
+  switch (status) {
+    case 'Confirmada':
+      return 'success';
+    case 'Pendiente':
+      return 'warning';
+    case 'Cancelada':
+      return 'danger';
+    case 'Pagada':
+      return 'info';
+    default:
+      return 'secondary';
+  }
+}
 }
