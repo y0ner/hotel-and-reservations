@@ -36,7 +36,7 @@ A continuación se muestran las vistas principales del sistema. Cada sección ti
 ### Habitaciones  
 ![Habitaciones](./capturas/habitaciones.png)
 
-### Crear Habitaciones
+### Crear_Habitaciones
 ![Habitaciones](./capturas/habitaciones_crear.png)
 
 ### Facturación  
