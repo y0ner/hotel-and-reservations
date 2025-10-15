@@ -19,14 +19,12 @@ Invoice.init({
         defaultValue: DataTypes.NOW
     },
     status: {
-        type: DataTypes.STRING, // E.g., 'Paid', 'Unpaid'
-        defaultValue: 'Unpaid'
+        type: DataTypes.ENUM('Pagada', 'Pendiente'), // He ajustado esto para seguir tu patrón
+        defaultValue: 'Pendiente'
     }
 }, {
     sequelize,
-    modelName: 'invoice'
+    tableName: 'invoices', // Es buena práctica usar tableName
+    modelName: 'Invoice', // Y también modelName
+    timestamps: false
 });
-
-// Relationship
-Invoice.belongsTo(Booking);
-Booking.hasOne(Invoice);

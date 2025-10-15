@@ -1,81 +1,100 @@
-import { Request, Response } from 'express';
-import { Booking } from '../models/Booking'; // Modelo principal
-import { Guest } from '../models/Guest';   // Modelo relacionado
-import { Room } from '../models/Room';     // Modelo relacionado
+import { Request, Response } from "express";
+import { Booking, BookingI } from "../models/Booking";
 
 export class BookingController {
 
-    // Obtener todas las reservas con sus relaciones
-    public async getBookings(req: Request, res: Response): Promise<void> {
-        try {
-            const bookings = await Booking.findAll({
-                include: [Guest, Room] // Incluimos los modelos Guest y Room
-            });
-            res.json(bookings);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al obtener las reservas', error });
-        }
+  // Get all bookings with status "ACTIVE"
+  public async getAllBookings(req: Request, res: Response) {
+    try {
+      const bookings: BookingI[] = await Booking.findAll({
+        where: { status: 'ACTIVE' },
+      });
+      res.status(200).json({ bookings });
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching bookings" });
     }
+  }
 
-    // Obtener una reserva por ID con sus relaciones
-    public async getBooking(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        try {
-            const booking = await Booking.findByPk(id, {
-                include: [Guest, Room] // Incluimos los modelos Guest y Room
-            });
-            if (booking) {
-                res.json(booking);
-            } else {
-                res.status(404).json({ msg: `No se encontró una reserva con el id ${id}` });
-            }
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al obtener la reserva', error });
-        }
+  // Get a booking by ID
+  public async getBookingById(req: Request, res: Response) {
+    try {
+      const { id: pk } = req.params;
+      const booking = await Booking.findOne({
+        where: { id: pk, status: 'ACTIVE' },
+      });
+      if (booking) {
+        res.status(200).json(booking);
+      } else {
+        res.status(404).json({ error: "Booking not found or inactive" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching booking" });
     }
+  }
 
-    // Crear una nueva reserva
-    public async createBooking(req: Request, res: Response): Promise<void> {
-        const { body } = req;
-        // body debería incluir: checkInDate, checkOutDate, guestId, roomId
-        try {
-            const newBooking = await Booking.create(body);
-            res.status(201).json(newBooking);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al crear la reserva', error });
-        }
+  // Create a new booking
+  public async createBooking(req: Request, res: Response) {
+    // El cuerpo ahora espera 'booking_status'
+    const { guestId, roomId, checkInDate, checkOutDate, totalPrice, booking_status } = req.body;
+    try {
+      let body: BookingI = { guestId, roomId, checkInDate, checkOutDate, totalPrice, booking_status, status: 'ACTIVE' };
+      const newBooking = await Booking.create({ ...body });
+      res.status(201).json(newBooking);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
     }
+  }
 
-    // Actualizar una reserva
-    public async updateBooking(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        const { body } = req;
-        try {
-            const booking = await Booking.findByPk(id);
-            if (!booking) {
-                res.status(404).json({ msg: `No se encontró una reserva con el id ${id}` });
-                return;
-            }
-            await booking.update(body);
-            res.json(booking);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al actualizar la reserva', error });
-        }
-    }
+  // Update a booking
+  public async updateBooking(req: Request, res: Response) {
+    const { id: pk } = req.params;
+    const { guestId, roomId, checkInDate, checkOutDate, totalPrice, booking_status, status } = req.body;
+    try {
+      let body: BookingI = { guestId, roomId, checkInDate, checkOutDate, totalPrice, booking_status, status };
+      const bookingExist = await Booking.findOne({ where: { id: pk, status: 'ACTIVE' } });
 
-    // Eliminar una reserva
-    public async deleteBooking(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        try {
-            const booking = await Booking.findByPk(id);
-            if (!booking) {
-                res.status(404).json({ msg: `No se encontró una reserva con el id ${id}` });
-                return;
-            }
-            await booking.destroy();
-            res.json({ msg: 'Reserva eliminada con éxito' });
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al eliminar la reserva', error });
-        }
+      if (bookingExist) {
+        await bookingExist.update(body);
+        res.status(200).json(bookingExist);
+      } else {
+        res.status(404).json({ error: "Booking not found or inactive" });
+      }
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
     }
+  }
+
+  // Delete a booking physically
+  public async deleteBooking(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const bookingToDelete = await Booking.findByPk(id);
+
+      if (bookingToDelete) {
+        await bookingToDelete.destroy();
+        res.status(200).json({ message: "Booking deleted successfully" });
+      } else {
+        res.status(404).json({ error: "Booking not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error deleting booking" });
+    }
+  }
+
+  // Delete a booking logically
+  public async deleteBookingAdv(req: Request, res: Response) {
+    try {
+      const { id: pk } = req.params;
+      const bookingToUpdate = await Booking.findOne({ where: { id: pk, status: 'ACTIVE' }});
+
+      if (bookingToUpdate) {
+        await bookingToUpdate.update({ status: 'INACTIVE' });
+        res.status(200).json({ message: "Booking marked as inactive" });
+      } else {
+        res.status(404).json({ error: "Booking not found or already inactive" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error marking booking as inactive" });
+    }
+  }
 }

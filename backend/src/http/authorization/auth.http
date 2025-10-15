@@ -1,6 +1,6 @@
 ### auth.http
 
-@baseUrl = http://localhost:4000
+@baseUrl = http://localhost:3000
 # @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ### ================== RUTAS SIN AUTENTICACIÓN ==================
@@ -10,8 +10,8 @@ POST {{baseUrl}}/api/register
 Content-Type: application/json
 
 {
-  "username": "jquintero",
-  "email": "jq@gmail.com",
+  "username": "yoner",
+  "email": "yoner@gmail.com",
   "password": "12345678",
   "is_active": "ACTIVE",
   "avatar": "avatar.jpg"

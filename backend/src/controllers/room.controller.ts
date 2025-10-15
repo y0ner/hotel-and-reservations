@@ -1,74 +1,99 @@
-import { Request, Response } from 'express';
-import { Room } from '../models/Room'; // Importamos el modelo de Room
+import { Request, Response } from "express";
+import { Room, RoomI } from "../models/Room";
 
 export class RoomController {
 
-    // Obtener todas las habitaciones
-    public async getRooms(req: Request, res: Response): Promise<void> {
-        try {
-            const rooms = await Room.findAll();
-            res.json(rooms);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al obtener las habitaciones', error });
-        }
+  // Get all rooms with status "ACTIVE"
+  public async getAllRooms(req: Request, res: Response) {
+    try {
+      const rooms: RoomI[] = await Room.findAll({
+        where: { status: 'ACTIVE' },
+      });
+      res.status(200).json({ rooms });
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching rooms" });
     }
+  }
 
-    // Obtener una habitación por ID
-    public async getRoom(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        try {
-            const room = await Room.findByPk(id);
-            if (room) {
-                res.json(room);
-            } else {
-                res.status(404).json({ msg: `No se encontró una habitación con el id ${id}` });
-            }
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al obtener la habitación', error });
-        }
+  // Get a room by ID
+  public async getRoomById(req: Request, res: Response) {
+    try {
+      const { id: pk } = req.params;
+      const room = await Room.findOne({
+        where: { id: pk, status: 'ACTIVE' },
+      });
+      if (room) {
+        res.status(200).json(room);
+      } else {
+        res.status(404).json({ error: "Room not found or inactive" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching room" });
     }
+  }
 
-    // Crear una nueva habitación
-    public async createRoom(req: Request, res: Response): Promise<void> {
-        const { body } = req;
-        try {
-            const newRoom = await Room.create(body);
-            res.status(201).json(newRoom);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al crear la habitación', error });
-        }
+  // Create a new room
+  public async createRoom(req: Request, res: Response) {
+    const { number, type, price } = req.body;
+    try {
+      let body: RoomI = { number, type, price, status: 'ACTIVE' };
+      const newRoom = await Room.create({ ...body });
+      res.status(201).json(newRoom);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
     }
+  }
 
-    // Actualizar una habitación
-    public async updateRoom(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        const { body } = req;
-        try {
-            const room = await Room.findByPk(id);
-            if (!room) {
-                res.status(404).json({ msg: `No se encontró una habitación con el id ${id}` });
-                return;
-            }
-            await room.update(body);
-            res.json(room);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al actualizar la habitación', error });
-        }
-    }
+  // Update a room
+  public async updateRoom(req: Request, res: Response) {
+    const { id: pk } = req.params;
+    const { number, type, price, status } = req.body;
+    try {
+      let body: RoomI = { number, type, price, status };
+      const roomExist = await Room.findOne({ where: { id: pk, status: 'ACTIVE' } });
 
-    // Eliminar una habitación
-    public async deleteRoom(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        try {
-            const room = await Room.findByPk(id);
-            if (!room) {
-                res.status(404).json({ msg: `No se encontró una habitación con el id ${id}` });
-                return;
-            }
-            await room.destroy();
-            res.json({ msg: 'Habitación eliminada con éxito' });
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al eliminar la habitación', error });
-        }
+      if (roomExist) {
+        await roomExist.update(body);
+        res.status(200).json(roomExist);
+      } else {
+        res.status(404).json({ error: "Room not found or inactive" });
+      }
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
     }
+  }
+
+  // Delete a room physically
+  public async deleteRoom(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const roomToDelete = await Room.findByPk(id);
+
+      if (roomToDelete) {
+        await roomToDelete.destroy();
+        res.status(200).json({ message: "Room deleted successfully" });
+      } else {
+        res.status(404).json({ error: "Room not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error deleting room" });
+    }
+  }
+
+  // Delete a room logically
+  public async deleteRoomAdv(req: Request, res: Response) {
+    try {
+      const { id: pk } = req.params;
+      const roomToUpdate = await Room.findOne({ where: { id: pk, status: 'ACTIVE' }});
+
+      if (roomToUpdate) {
+        await roomToUpdate.update({ status: 'INACTIVE' });
+        res.status(200).json({ message: "Room marked as inactive" });
+      } else {
+        res.status(404).json({ error: "Room not found or already inactive" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error marking room as inactive" });
+    }
+  }
 }

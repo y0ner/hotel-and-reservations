@@ -1,9 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../database/db';
-import { Booking } from './Booking';
-import { Service } from './Service';
+// No necesitamos importar Booking y Service aquí para definir la relación
 
-export class BookingService extends Model {}
+export class BookingService extends Model {
+    public quantity!: number;
+}
 
 BookingService.init({
     id: {
@@ -13,13 +14,13 @@ BookingService.init({
     },
     quantity: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         defaultValue: 1
     }
 }, {
     sequelize,
-    modelName: 'booking_service'
+    tableName: 'booking_services', // Estandaricemos el nombre de la tabla
+    modelName: 'BookingService',
+    timestamps: false
 });
 
-// Relationships
-Booking.belongsToMany(Service, { through: BookingService });
-Service.belongsToMany(Booking, { through: BookingService });

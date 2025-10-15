@@ -1,74 +1,99 @@
-import { Request, Response } from 'express';
-import { Service } from '../models/Service'; // Importamos el modelo de Service
+import { Request, Response } from "express";
+import { Service, ServiceI } from "../models/Service";
 
 export class ServiceController {
 
-    // Obtener todos los servicios
-    public async getServices(req: Request, res: Response): Promise<void> {
-        try {
-            const services = await Service.findAll();
-            res.json(services);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al obtener los servicios', error });
-        }
+  // Get all services with status "ACTIVE"
+  public async getAllServices(req: Request, res: Response) {
+    try {
+      const services: ServiceI[] = await Service.findAll({
+        where: { status: 'ACTIVE' },
+      });
+      res.status(200).json({ services });
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching services" });
     }
+  }
 
-    // Obtener un servicio por ID
-    public async getService(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        try {
-            const service = await Service.findByPk(id);
-            if (service) {
-                res.json(service);
-            } else {
-                res.status(404).json({ msg: `No se encontró un servicio con el id ${id}` });
-            }
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al obtener el servicio', error });
-        }
+  // Get a service by ID
+  public async getServiceById(req: Request, res: Response) {
+    try {
+      const { id: pk } = req.params;
+      const service = await Service.findOne({
+        where: { id: pk, status: 'ACTIVE' },
+      });
+      if (service) {
+        res.status(200).json(service);
+      } else {
+        res.status(404).json({ error: "Service not found or inactive" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching service" });
     }
+  }
 
-    // Crear un nuevo servicio
-    public async createService(req: Request, res: Response): Promise<void> {
-        const { body } = req;
-        try {
-            const newService = await Service.create(body);
-            res.status(201).json(newService);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al crear el servicio', error });
-        }
+  // Create a new service
+  public async createService(req: Request, res: Response) {
+    const { name, description, price } = req.body;
+    try {
+      let body: ServiceI = { name, description, price, status: 'ACTIVE' };
+      const newService = await Service.create({ ...body });
+      res.status(201).json(newService);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
     }
+  }
 
-    // Actualizar un servicio
-    public async updateService(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        const { body } = req;
-        try {
-            const service = await Service.findByPk(id);
-            if (!service) {
-                res.status(404).json({ msg: `No se encontró un servicio con el id ${id}` });
-                return;
-            }
-            await service.update(body);
-            res.json(service);
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al actualizar el servicio', error });
-        }
-    }
+  // Update a service
+  public async updateService(req: Request, res: Response) {
+    const { id: pk } = req.params;
+    const { name, description, price, status } = req.body;
+    try {
+      let body: ServiceI = { name, description, price, status };
+      const serviceExist = await Service.findOne({ where: { id: pk, status: 'ACTIVE' } });
 
-    // Eliminar un servicio
-    public async deleteService(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
-        try {
-            const service = await Service.findByPk(id);
-            if (!service) {
-                res.status(404).json({ msg: `No se encontró un servicio con el id ${id}` });
-                return;
-            }
-            await service.destroy();
-            res.json({ msg: 'Servicio eliminado con éxito' });
-        } catch (error) {
-            res.status(500).json({ msg: 'Error al eliminar el servicio', error });
-        }
+      if (serviceExist) {
+        await serviceExist.update(body);
+        res.status(200).json(serviceExist);
+      } else {
+        res.status(404).json({ error: "Service not found or inactive" });
+      }
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
     }
+  }
+
+  // Delete a service physically
+  public async deleteService(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const serviceToDelete = await Service.findByPk(id);
+
+      if (serviceToDelete) {
+        await serviceToDelete.destroy();
+        res.status(200).json({ message: "Service deleted successfully" });
+      } else {
+        res.status(404).json({ error: "Service not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error deleting service" });
+    }
+  }
+
+  // Delete a service logically
+  public async deleteServiceAdv(req: Request, res: Response) {
+    try {
+      const { id: pk } = req.params;
+      const serviceToUpdate = await Service.findOne({ where: { id: pk, status: 'ACTIVE' }});
+
+      if (serviceToUpdate) {
+        await serviceToUpdate.update({ status: 'INACTIVE' });
+        res.status(200).json({ message: "Service marked as inactive" });
+      } else {
+        res.status(404).json({ error: "Service not found or already inactive" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error marking service as inactive" });
+    }
+  }
 }

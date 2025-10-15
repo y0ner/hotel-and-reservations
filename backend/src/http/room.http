@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE2ODk5MzI0LCJleHAiOjE3MTY5ODU3MjR9.w-BEhz04i2mAY-2O3j9wKa-a21v_n5a8f5z0kY_x_3c
+
+### ================== RUTAS SIN AUTENTICACIÓN (PUBLIC) ==================
+
+### Obtener todas las habitaciones
+GET {{baseUrl}}/api/rooms/public
+
+### ================== RUTAS CON AUTENTICACIÓN ==================
+
+### Obtener todas las habitaciones (protegido)
+GET {{baseUrl}}/api/rooms
+Authorization: Bearer {{token}}
+
+### Crear una nueva habitación (protegido)
+POST {{baseUrl}}/api/rooms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "number": "301",
+  "type": "Suite",
+  "price": 750000
+}
+
+### Actualizar una habitación (protegido)
+PATCH {{baseUrl}}/api/rooms/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "price": 160000
+}
+
+### Eliminar lógicamente una habitación (protegido)
+DELETE {{baseUrl}}/api/rooms/2/logic
+Authorization: Bearer {{token}}

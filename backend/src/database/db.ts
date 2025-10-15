@@ -1,5 +1,7 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
+import oracledb from "oracledb";
+import tedious from "tedious"; // 👈 Driver de SQL Server
 
 dotenv.config();
 
@@ -10,6 +12,8 @@ interface DatabaseConfig {
   password: string;
   database: string;
   port: number;
+  dialectModule?: any;
+  dialectOptions?: any;
 }
 
 const dbConfigurations: Record<string, DatabaseConfig> = {
@@ -19,7 +23,7 @@ const dbConfigurations: Record<string, DatabaseConfig> = {
     username: process.env.MYSQL_USER || "root",
     password: process.env.MYSQL_PASSWORD || "",
     database: process.env.MYSQL_NAME || "test",
-    port: parseInt(process.env.MYSQL_PORT || "3306")
+    port: parseInt(process.env.MYSQL_PORT || "3306"),
   },
   postgres: {
     dialect: "postgres",
@@ -27,8 +31,37 @@ const dbConfigurations: Record<string, DatabaseConfig> = {
     username: process.env.POSTGRES_USER || "postgres",
     password: process.env.POSTGRES_PASSWORD || "",
     database: process.env.POSTGRES_NAME || "test",
-    port: parseInt(process.env.POSTGRES_PORT || "5432")
-  }
+    port: parseInt(process.env.POSTGRES_PORT || "5432"),
+  },
+  oracle: {
+    dialect: "oracle",
+    host: process.env.ORACLE_HOST || "localhost",
+    username: process.env.ORACLE_USER || "system",
+    password: process.env.ORACLE_PASSWORD || "",
+    database: process.env.ORACLE_NAME || "XE",
+    port: parseInt(process.env.ORACLE_PORT || "1521"),
+    dialectModule: oracledb,
+    dialectOptions: {
+      connectString: `${process.env.ORACLE_HOST || "localhost"}:${
+        process.env.ORACLE_PORT || "1521"
+      }/${process.env.ORACLE_NAME || "XE"}`,
+    },
+  },
+  mssql: {
+    dialect: "mssql",
+    host: process.env.MSSQL_HOST || "localhost",
+    username: process.env.MSSQL_USER || "sa",
+    password: process.env.MSSQL_PASSWORD || "",
+    database: process.env.MSSQL_NAME || "test",
+    port: parseInt(process.env.MSSQL_PORT || "1433"),
+    dialectModule: tedious, // 👈 importante para MSSQL
+    dialectOptions: {
+      options: {
+        encrypt: false, // ponlo en true si usas Azure
+        trustServerCertificate: true,
+      },
+    },
+  },
 };
 
 const selectedEngine = process.env.DB_ENGINE || "mysql";
@@ -48,13 +81,15 @@ export const sequelize = new Sequelize(
     host: selectedConfig.host,
     port: selectedConfig.port,
     dialect: selectedConfig.dialect as any,
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    dialectModule: selectedConfig.dialectModule,
+    dialectOptions: selectedConfig.dialectOptions,
+    logging: process.env.NODE_ENV === "development" ? console.log : false,
     pool: {
       max: 5,
       min: 0,
       acquire: 30000,
-      idle: 10000
-    }
+      idle: 10000,
+    },
   }
 );
 
@@ -62,7 +97,7 @@ export const getDatabaseInfo = () => {
   return {
     engine: selectedEngine,
     config: selectedConfig,
-    connectionString: `${selectedConfig.dialect}://${selectedConfig.username}@${selectedConfig.host}:${selectedConfig.port}/${selectedConfig.database}`
+    connectionString: `${selectedConfig.dialect}://${selectedConfig.username}@${selectedConfig.host}:${selectedConfig.port}/${selectedConfig.database}`,
   };
 };
 

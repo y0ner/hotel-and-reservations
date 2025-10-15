@@ -1,38 +1,70 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../database/db';
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../database/db";
+import { Booking } from "./Booking"; // Asegúrate de que Booking esté importado
 
-export class Guest extends Model {
-    // Añade estas declaraciones de propiedades
-    public id!: number;
-    public firstName!: string;
-    public lastName!: string;
-    public email!: string;
-    public phone!: string;
+// 1. Añadimos la interfaz 'GuestI'
+export interface GuestI {
+  id?: number;
+  name: string;
+  documentNumber: string;
+  phone: string;
+  email: string;
+  status: "ACTIVE" | "INACTIVE";
 }
 
-Guest.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+// 2. Definimos las propiedades como públicas en la clase
+export class Guest extends Model {
+  public id!: number;
+  public name!: string;
+  public documentNumber!: string;
+  public phone!: string;
+  public email!: string;
+  public status!: "ACTIVE" | "INACTIVE";
+}
+
+Guest.init(
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    firstName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    lastName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+    documentNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     phone: {
-        type: DataTypes.STRING
-    }
-}, {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: { msg: "Email must be a valid email address" },
+      },
+    },
+    // 3. Añadimos el campo 'status'
+    status: {
+      type: DataTypes.ENUM("ACTIVE", "INACTIVE"),
+      defaultValue: "ACTIVE",
+    },
+  },
+  {
     sequelize,
-    modelName: 'guest'
+    modelName: "Guest", // Es una buena práctica definir el modelName
+    tableName: "guests",
+    timestamps: false,
+  }
+);
+
+// Mantener las asociaciones existentes
+Guest.hasMany(Booking, {
+    foreignKey: "guestId",
+    sourceKey: "id",
+});
+Booking.belongsTo(Guest, {
+    foreignKey: "guestId",
+    targetKey: "id",
 });
