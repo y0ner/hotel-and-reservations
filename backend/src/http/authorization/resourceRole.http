@@ -12,15 +12,15 @@ GET {{baseUrl}}/api/resourceRoles/public
 GET {{baseUrl}}/api/resourceRoles/public/1
 
 ### Crear un nuevo rol de recurso (SIN token)
+### Crear un nuevo rol de recurso (SIN token)
 POST {{baseUrl}}/api/resourceRoles/public
 Content-Type: application/json
 
 {
-  "resource_id": 1,
-  "role_id": 1,
-  "is_active": "ACTIVE"
+    "ResourceId": 1,
+    "RoleId": 1,
+    "is_active": "ACTIVE"
 }
-
 ### Actualizar un rol de recurso (SIN token)
 PATCH {{baseUrl}}/api/resourceRoles/public/1
 Content-Type: application/json

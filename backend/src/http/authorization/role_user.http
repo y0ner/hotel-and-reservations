@@ -13,12 +13,13 @@ GET {{baseUrl}}/api/roleUsers/public/16
 
 ### Crear un nuevo rol de usuario (SIN token)
 ### Crear un nuevo rol de usuario (SIN token)
+### Crear un nuevo rol de usuario (SIN token)
 POST {{baseUrl}}/api/roleUsers/public
 Content-Type: application/json
 
 {
+    "UserId": 1,
     "RoleId": 1,
-    "UserId": 16,
     "is_active": "ACTIVE"
 }
 ### Actualizar un rol de usuario (SIN token)
