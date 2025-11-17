@@ -1,0 +1,31 @@
+<div class="container">
+  <h1>Check-ins</h1>
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+  <p-button label="Nuevo Check-in" icon="pi pi-plus" routerLink="/checkin/create"></p-button>
+  <p-table [value]="checkins" [loading]="loading" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Reserva ID</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-checkin>
+      <tr>
+        <td>{{ checkin.id }}</td>
+        <td>{{ checkin.reservation_id }}</td>
+        <td>{{ checkin.date }}</td>
+        <td>{{ checkin.time }}</td>
+        <td>{{ checkin.status }}</td>
+        <td>
+          <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-success" [routerLink]="['/checkin/update', checkin.id]"></p-button>
+          <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger" (click)="confirmDelete(checkin)"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
