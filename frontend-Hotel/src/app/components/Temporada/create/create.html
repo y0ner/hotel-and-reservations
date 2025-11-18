@@ -1,1 +1,40 @@
-<p>create works!</p>
+<div class="flex justify-center items-center min-h-screen">
+    <p-card header="Crear Nueva Temporada" styleClass="w-full max-w-lg">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="p-fluid grid">
+                <!-- Fila 1: Nombre -->
+                <div class="field col-12">
+                    <label for="name">Nombre de la Temporada</label>
+                    <input pInputText id="name" formControlName="name" />
+                    <small class="p-error" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
+                </div>
+
+                <!-- Fila 2: Fechas -->
+                <div class="field col-12 md:col-6">
+                    <label for="start_date">Fecha de Inicio</label>
+                    <p-datepicker id="start_date" formControlName="start_date" dateFormat="yy-mm-dd"></p-datepicker>
+                    <small class="p-error" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label for="end_date">Fecha de Fin</label>
+                    <p-datepicker id="end_date" formControlName="end_date" dateFormat="yy-mm-dd"></p-datepicker>
+                    <small class="p-error" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
+                </div>
+
+                <!-- Fila 3: Multiplicador de Precio -->
+                <div class="field col-12">
+                    <label for="price_multiplier">Multiplicador de Precio</label>
+                    <p-inputNumber id="price_multiplier" formControlName="price_multiplier" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+                    <small class="p-error" *ngIf="getFieldError('price_multiplier')">{{ getFieldError('price_multiplier') }}</small>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-2 mt-4">
+                <p-button label="Cancelar" styleClass="p-button-secondary" (onClick)="cancelar()"></p-button>
+                <p-button label="Guardar" type="submit" [loading]="loading"></p-button>
+            </div>
+        </form>
+    </p-card>
+</div>
+<p-toast></p-toast>

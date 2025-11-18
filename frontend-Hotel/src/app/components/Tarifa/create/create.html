@@ -1,1 +1,61 @@
-<p>create works!</p>
+<div class="container">
+  <p-toast></p-toast>
+  <div class="card">
+    <div class="card-header">
+      <h2>Crear Tarifa</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col-12 p-md-6">
+            <label for="name">Nombre</label>
+            <input id="name" type="text" pInputText formControlName="name" />
+            <small class="p-error" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
+          </div>
+
+          <div class="p-field p-col-12">
+            <label for="description">Descripción</label>
+            <textarea id="description" pInputTextarea formControlName="description" rows="3"></textarea>
+          </div>
+
+          <div class="p-field p-col-12 p-md-6">
+            <label for="price">Precio</label>
+            <p-inputNumber id="price" formControlName="price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+            <small class="p-error" *ngIf="getFieldError('price')">{{ getFieldError('price') }}</small>
+          </div>
+
+          <div class="p-field p-col-12 p-md-6">
+            <label for="room_type_id">Tipo de Habitación</label>
+            <p-dropdown
+              id="room_type_id"
+              [options]="roomTypes"
+              formControlName="room_type_id"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Seleccione un tipo de habitación"
+            ></p-dropdown>
+            <small class="p-error" *ngIf="getFieldError('room_type_id')">{{ getFieldError('room_type_id') }}</small>
+          </div>
+
+          <div class="p-field p-col-12 p-md-6">
+            <label for="season_id">Temporada</label>
+            <p-dropdown
+              id="season_id"
+              [options]="seasons"
+              formControlName="season_id"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Seleccione una temporada"
+            ></p-dropdown>
+            <small class="p-error" *ngIf="getFieldError('season_id')">{{ getFieldError('season_id') }}</small>
+          </div>
+        </div>
+
+        <div class="p-mt-4">
+          <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="loading"></p-button>
+          <p-button label="Cancelar" icon="pi pi-times" styleClass="p-button-secondary" (click)="cancelar()" class="p-ml-2"></p-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

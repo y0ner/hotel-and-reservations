@@ -83,7 +83,7 @@ export class Getall implements OnInit, OnDestroy {
 
   deleteItem(id: number): void {
     this.subscription.add(
-      this.reservationService.delete(id).subscribe({
+      this.reservationService.deleteLogic(id).subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',

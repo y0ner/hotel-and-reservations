@@ -1,7 +1,7 @@
 ###
 # @name Hotel
 # Variables de entorno para las pruebas de Hotel
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzYzNDIwNTAzLCJleHAiOjE3NjM0MjExMDN9.UyCQmTj5QDysFZoLTD_23USYVLExc-0whoSlBcvpBx8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzYzNDIyNzM2LCJleHAiOjE3NjM0MjMzMzZ9.CxpAFP6_NZcU2mJTUZQeRZ7mpIbiRO-RS2UXhl1GVcA
 @baseUrl = http://localhost:4000
 
 ### ================== RUTAS SIN AUTENTICACIÓN ==================

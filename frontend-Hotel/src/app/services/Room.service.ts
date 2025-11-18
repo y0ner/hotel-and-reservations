@@ -5,16 +5,11 @@ import { map } from 'rxjs/operators';
 import { RoomI, RoomResponseI } from '../models/Room';
 import { AuthService } from './auth.service';
 
-// Interfaz para la respuesta del backend (espera un objeto con una propiedad que es el array)
-interface RoomApiResponse {
-  rooms: RoomResponseI[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class RoomService {
-  private baseUrl = 'http://localhost:4000/api/Room';
+  private baseUrl = 'http://localhost:4000/api/Rooms'; // Corregido: plural
   private RoomSubject = new BehaviorSubject<RoomResponseI[]>([]);
   public Room$ = this.RoomSubject.asObservable();
 
@@ -33,9 +28,8 @@ export class RoomService {
   }
 
   getAll(): Observable<RoomResponseI[]> {
-    return this.http.get<RoomApiResponse>(this.baseUrl, { headers: this.getHeaders() })
+    return this.http.get<RoomResponseI[]>(this.baseUrl, { headers: this.getHeaders() }) // Corregido: no se necesita RoomApiResponse
       .pipe(
-        map(response => response.rooms), // Extraer el array de la propiedad
         tap(Room => {
           this.RoomSubject.next(Room);
         }),
@@ -79,14 +73,7 @@ export class RoomService {
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        tap(() => this.refresh()),
-        catchError(error => {
-          console.error(`Error deleting Room with id ${id}:`, error);
-          return throwError(() => error);
-        })
-      );
+    return this.deleteLogic(id); // Corregido: usar borrado lógico
   }
 
   deleteLogic(id: number): Observable<void> {

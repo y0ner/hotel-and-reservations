@@ -5,16 +5,11 @@ import { map } from 'rxjs/operators';
 import { SeasonI, SeasonResponseI } from '../models/Season';
 import { AuthService } from './auth.service';
 
-// Interfaz para la respuesta del backend (espera un objeto con una propiedad que es el array)
-interface SeasonApiResponse {
-  seasons: SeasonResponseI[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class SeasonService {
-  private baseUrl = 'http://localhost:4000/api/Season';
+  private baseUrl = 'http://localhost:4000/api/Seasons'; // Corregido: plural
   private SeasonSubject = new BehaviorSubject<SeasonResponseI[]>([]);
   public Season$ = this.SeasonSubject.asObservable();
 
@@ -33,9 +28,8 @@ export class SeasonService {
   }
 
   getAll(): Observable<SeasonResponseI[]> {
-    return this.http.get<SeasonApiResponse>(this.baseUrl, { headers: this.getHeaders() })
+    return this.http.get<SeasonResponseI[]>(this.baseUrl, { headers: this.getHeaders() }) // Corregido: no se necesita SeasonApiResponse
       .pipe(
-        map(response => response.seasons), // Extraer el array de la propiedad
         tap(Season => {
           this.SeasonSubject.next(Season);
         }),
@@ -79,14 +73,7 @@ export class SeasonService {
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        tap(() => this.refresh()),
-        catchError(error => {
-          console.error(`Error deleting Season with id ${id}:`, error);
-          return throwError(() => error);
-        })
-      );
+    return this.deleteLogic(id); // Corregido: usar borrado lógico
   }
 
   deleteLogic(id: number): Observable<void> {

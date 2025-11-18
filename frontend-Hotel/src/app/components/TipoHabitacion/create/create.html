@@ -1,1 +1,41 @@
-<p>create works!</p>
+<div class="flex justify-center items-center min-h-screen">
+    <p-card header="Crear Nuevo Tipo de Habitación" styleClass="w-full max-w-lg">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="p-fluid grid">
+                <!-- Fila 1: Nombre -->
+                <div class="field col-12">
+                    <label for="name">Nombre</label>
+                    <input pInputText id="name" formControlName="name" />
+                    <small class="p-error" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
+                </div>
+
+                <!-- Fila 2: Descripción -->
+                <div class="field col-12">
+                    <label for="description">Descripción</label>
+                    <textarea pTextarea id="description" formControlName="description" rows="3"></textarea>
+                    <small class="p-error" *ngIf="getFieldError('description')">{{ getFieldError('description') }}</small>
+                </div>
+
+                <!-- Fila 3: Máximo Personas -->
+                <div class="field col-12">
+                    <label for="max_people">Máximo de Personas</label>
+                    <input type="number" pInputText id="max_people" formControlName="max_people" />
+                    <small class="p-error" *ngIf="getFieldError('max_people')">{{ getFieldError('max_people') }}</small>
+                </div>
+
+                <!-- Fila 4: Incluye Desayuno -->
+                <div class="field col-12 flex items-center gap-2">
+                    <p-checkbox formControlName="includes_breakfast" [binary]="true" inputId="includes_breakfast"></p-checkbox>
+                    <label for="includes_breakfast">¿Incluye desayuno?</label>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-2 mt-4">
+                <p-button label="Cancelar" styleClass="p-button-secondary" (onClick)="cancelar()"></p-button>
+                <p-button label="Guardar" type="submit" [loading]="loading"></p-button>
+            </div>
+        </form>
+    </p-card>
+</div>
+<p-toast></p-toast>

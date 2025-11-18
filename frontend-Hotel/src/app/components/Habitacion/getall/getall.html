@@ -1,1 +1,66 @@
-<p>getall works!</p>
+<div class="card p-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Gestión de Habitaciones</h2>
+        <p-button
+            label="Nueva Habitación"
+            icon="pi pi-plus"
+            [routerLink]="['/Habitacion/new']"
+            styleClass="p-button-success"
+        ></p-button>
+    </div>
+
+    <p-table 
+        [value]="rooms" 
+        [loading]="loading"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [rowsPerPageOptions]="[5, 10, 25, 50]"
+        dataKey="id"
+        styleClass="p-datatable-striped"
+        [tableStyle]="{'min-width': '50rem'}"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                <th pSortableColumn="number">Número <p-sortIcon field="number"></p-sortIcon></th>
+                <th pSortableColumn="floor">Piso <p-sortIcon field="floor"></p-sortIcon></th>
+                <th pSortableColumn="description">Descripción <p-sortIcon field="description"></p-sortIcon></th>
+                <th pSortableColumn="capacity">Capacidad <p-sortIcon field="capacity"></p-sortIcon></th>
+                <th pSortableColumn="base_price">Precio Base <p-sortIcon field="base_price"></p-sortIcon></th>
+                <th pSortableColumn="available">Disponible <p-sortIcon field="available"></p-sortIcon></th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-room>
+            <tr>
+                <td>{{ room.id }}</td>
+                <td>{{ room.number }}</td>
+                <td>{{ room.floor }}</td>
+                <td>{{ room.description }}</td>
+                <td>{{ room.capacity }}</td>
+                <td>{{ room.base_price | currency:'USD' }}</td>
+                <td>
+                    <i class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': room.available, 'false-icon pi-times-circle text-red-500': !room.available}"></i>
+                </td>
+                <td class="text-center">
+                    <div class="flex justify-center gap-2">
+                        <p-button icon="pi pi-pencil" [routerLink]="['/Habitacion/edit', room.id]" styleClass="p-button-rounded p-button-text p-button-warning" pTooltip="Editar" tooltipPosition="top"></p-button>
+                        <p-button icon="pi pi-trash" (onClick)="confirmDelete(room)" styleClass="p-button-rounded p-button-text p-button-danger" pTooltip="Eliminar" tooltipPosition="top"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" class="text-center p-4">No se encontraron registros</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

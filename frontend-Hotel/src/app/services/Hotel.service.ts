@@ -5,11 +5,6 @@ import { map } from 'rxjs/operators';
 import { HotelI, HotelResponseI } from '../models/Hotel';
 import { AuthService } from './auth.service';
 
-// Interfaz para la respuesta del backend (espera un objeto con una propiedad que es el array)
-interface HotelApiResponse {
-  hotels: HotelResponseI[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -32,10 +27,10 @@ export class HotelService {
     return headers;
   }
 
-  getAll(): Observable<HotelResponseI[]> {
-    return this.http.get<HotelApiResponse>(this.baseUrl, { headers: this.getHeaders() })
+ 
+ getAll(): Observable<HotelResponseI[]> {
+    return this.http.get<HotelResponseI[]>(this.baseUrl, { headers: this.getHeaders() })
       .pipe(
-        map(response => response.hotels), // Extraer el array de la propiedad
         tap(Hotel => {
           this.HotelSubject.next(Hotel);
         }),
@@ -79,14 +74,8 @@ export class HotelService {
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        tap(() => this.refresh()),
-        catchError(error => {
-          console.error(`Error deleting Hotel with id ${id}:`, error);
-          return throwError(() => error);
-        })
-      );
+    // Redirigir al borrado lógico que es el que espera el backend
+    return this.deleteLogic(id);
   }
 
   deleteLogic(id: number): Observable<void> {

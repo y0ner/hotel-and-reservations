@@ -5,16 +5,11 @@ import { map } from 'rxjs/operators';
 import { ClientI, ClientResponseI } from '../models/Client';
 import { AuthService } from './auth.service';
 
-// Interfaz para la respuesta del backend (espera un objeto con una propiedad que es el array)
-interface ClientApiResponse {
-  clients: ClientResponseI[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
-  private baseUrl = 'http://localhost:4000/api/Client';
+  private baseUrl = 'http://localhost:4000/api/Clients'; // Corregido: plural
   private ClientSubject = new BehaviorSubject<ClientResponseI[]>([]);
   public Client$ = this.ClientSubject.asObservable();
 
@@ -33,9 +28,8 @@ export class ClienteService {
   }
 
   getAll(): Observable<ClientResponseI[]> {
-    return this.http.get<ClientApiResponse>(this.baseUrl, { headers: this.getHeaders() })
+    return this.http.get<ClientResponseI[]>(this.baseUrl, { headers: this.getHeaders() }) // Corregido: no se necesita ClientApiResponse
       .pipe(
-        map(response => response.clients), // Extraer el array de la propiedad
         tap(Client => {
           this.ClientSubject.next(Client);
         }),
@@ -79,14 +73,7 @@ export class ClienteService {
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        tap(() => this.refresh()),
-        catchError(error => {
-          console.error(`Error deleting Client with id ${id}:`, error);
-          return throwError(() => error);
-        })
-      );
+    return this.deleteLogic(id); // Corregido: usar borrado lógico
   }
 
   deleteLogic(id: number): Observable<void> {
