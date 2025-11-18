@@ -22,5 +22,5 @@ export interface RoomResponseI {
   available: boolean;
   hotel_id: number;
   room_type_id: number;
-
+  status: "ACTIVE" | "INACTIVE";
 }

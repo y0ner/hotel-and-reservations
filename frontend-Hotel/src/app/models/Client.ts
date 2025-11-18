@@ -18,5 +18,5 @@ export interface ClientResponseI {
   phone: string;
   email: string;
   nationality: string;
-
+  status: "ACTIVE" | "INACTIVE";
 }

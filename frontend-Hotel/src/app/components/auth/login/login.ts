@@ -46,7 +46,7 @@ export class Login {
             detail: 'Sesión iniciada correctamente'
           });
           setTimeout(() => {
-            this.router.navigate(['/']); // Redirigir a la raíz protegida
+            this.router.navigate(['/Hotel']); // Redirigir a la página principal del hotel
           }, 1000);
         },
         error: (error) => {

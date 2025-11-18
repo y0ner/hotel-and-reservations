@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
-import { TooltipModule } from 'primeng/tooltip'; // Mantener TooltipModule
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { PaymentService } from '../../../services/Payment.service';
 import { PaymentResponseI } from '../../../models/Payment';
 
@@ -17,89 +16,78 @@ import { PaymentResponseI } from '../../../models/Payment';
   imports: [
     CommonModule,
     RouterModule,
-    TableModule,
     ButtonModule,
-    ConfirmDialogModule,
+    TableModule,
     ToastModule,
-    TooltipModule // Mantener TooltipModule
+    ConfirmDialogModule,
+    TooltipModule
   ],
-  providers: [ConfirmationService, MessageService],
   templateUrl: './getall.html',
-  styleUrl: './getall.css'
+  styleUrls: ['./getall.css'],
+  providers: [MessageService, ConfirmationService]
 })
-export class Getall implements OnInit, OnDestroy {
+export class Getall implements OnInit {
   payments: PaymentResponseI[] = [];
-  loading: boolean = false;
-  private subscription = new Subscription();
+  loading: boolean = true;
 
   constructor(
     private paymentService: PaymentService,
-    private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private router: Router,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
-    this.loadData(); // Carga inicial de datos
+    this.loadPayments();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  loadData(): void {
+  loadPayments(): void {
     this.loading = true;
-    this.subscription.add(
-      this.paymentService.getAll().subscribe({
-        next: (data: any) => {
-          this.payments = data;
-          this.paymentService.updateLocalData(data);
-          this.loading = false;
-        },
-        error: (error: any) => {
-          this.messageService.add({
-            severity: 'error', // Corregido: severity
-            summary: 'Error',
-            detail: 'No se pudieron cargar los datos'
-          });
-          this.loading = false;
-        }
-      })
-    );
+    this.paymentService.getAll().subscribe({
+      next: (data) => {
+        this.payments = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.loading = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los pagos' });
+      }
+    });
   }
 
-  confirmDelete(item: PaymentResponseI): void {
+  createPayment(): void {
+    this.router.navigate(['/Pago/new']);
+  }
+
+  editPayment(id: number | undefined): void {
+    if (id === undefined) return;
+    this.router.navigate(['/Pago/edit', id]);
+  }
+
+  confirmDelete(payment: PaymentResponseI): void {
+    if (payment.id === undefined) return;
     this.confirmationService.confirm({
-      message: `¿Está seguro de que desea eliminar el registro ${item.id}?`,
+      message: `¿Está seguro de que desea eliminar el pago ${payment.id}?`,
       header: 'Confirmar Eliminación',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.deleteItem(item.id!);
+        this.deletePayment(payment.id!);
       }
     });
   }
 
-  deleteItem(id: number): void {
-    this.subscription.add(
-      this.paymentService.delete(id).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Registro eliminado correctamente'
-          });
-          this.loadData(); // Recargar datos después de eliminar
-        },
-        error: (error: any) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudo eliminar el registro'
-          });
-        }
-      })
-    );
+  deletePayment(id: number): void {
+    this.paymentService.delete(id).subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Pago eliminado correctamente' });
+        this.loadPayments();
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el pago' });
+      }
+    });
   }
 }

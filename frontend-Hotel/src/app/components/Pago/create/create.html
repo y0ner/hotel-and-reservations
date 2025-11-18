@@ -1,1 +1,76 @@
-<p>create works!</p>
+<div class="card p-8">
+    <h2 class="text-2xl font-bold mb-4">Crear Nuevo Pago</h2>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="p-fluid grid">
+            <!-- Reservation -->
+            <div class="field col-12 md:col-6">
+                <label for="reservation_id">Reserva</label>
+                <p-select
+                    id="reservation_id"
+                    [options]="reservations"
+                    formControlName="reservation_id"
+                    optionLabel="id"
+                    optionValue="id"
+                    placeholder="Seleccione una reserva"
+                ></p-select>
+            </div>
+
+            <!-- Amount -->
+            <div class="field col-12 md:col-6">
+                <label for="amount">Monto</label>
+                <p-inputNumber
+                    id="amount"
+                    formControlName="amount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US"
+                ></p-inputNumber>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="field col-12 md:col-6">
+                <label for="method">Método de Pago</label>
+                <p-select
+                    id="method"
+                    [options]="paymentMethods"
+                    formControlName="method"
+                    placeholder="Seleccione un método"
+                ></p-select>
+            </div>
+
+            <!-- Payment Date -->
+            <div class="field col-12 md:col-6">
+                <label for="payment_date">Fecha de Pago</label>
+                <p-datepicker
+                    id="payment_date"
+                    formControlName="payment_date"
+                    [showIcon]="true"
+                    dateFormat="dd/mm/yy"
+                ></p-datepicker>
+            </div>
+
+            <!-- Reference -->
+            <div class="field col-12">
+                <label for="reference">Referencia</label>
+                <input id="reference" type="text" pInputText formControlName="reference" />
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-2 mt-4">
+            <p-button
+                label="Cancelar"
+                icon="pi pi-times"
+                (click)="cancel()"
+                styleClass="p-button-secondary"
+            ></p-button>
+            <p-button
+                label="Guardar"
+                icon="pi pi-check"
+                type="submit"
+                [loading]="loading"
+            ></p-button>
+        </div>
+    </form>
+</div>
+<p-toast></p-toast>

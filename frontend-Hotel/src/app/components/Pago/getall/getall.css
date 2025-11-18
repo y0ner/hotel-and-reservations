@@ -1,0 +1,28 @@
+/* Add your styles here */
+.text-center {
+    text-align: center;
+}
+.flex {
+    display: flex;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.items-center {
+    align-items: center;
+}
+.mb-4 {
+    margin-bottom: 1rem;
+}
+.gap-2 {
+    gap: 0.5rem;
+}
+.p-8 {
+    padding: 2rem;
+}
+.text-2xl {
+    font-size: 1.5rem;
+}
+.font-bold {
+    font-weight: 700;
+}

@@ -13,7 +13,7 @@ interface CheckoutApiResponse {
   providedIn: 'root'
 })
 export class CheckOutService {
-  private baseUrl = 'http://localhost:4000/api/Checkout';
+  private baseUrl = 'http://localhost:4000/api/Checkouts';
   private CheckOutSubject = new BehaviorSubject<CheckoutI[]>([]);
   public CheckOut$ = this.CheckOutSubject.asObservable();
 

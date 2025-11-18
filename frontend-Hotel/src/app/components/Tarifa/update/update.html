@@ -26,27 +26,27 @@
 
           <div class="p-field p-col-12 p-md-6">
             <label for="room_type_id">Tipo de Habitación</label>
-            <p-dropdown
+            <p-select
               id="room_type_id"
               [options]="roomTypes"
               formControlName="room_type_id"
               optionLabel="name"
               optionValue="id"
               placeholder="Seleccione un tipo de habitación"
-            ></p-dropdown>
+            ></p-select>
             <small class="p-error" *ngIf="getFieldError('room_type_id')">{{ getFieldError('room_type_id') }}</small>
           </div>
 
           <div class="p-field p-col-12 p-md-6">
             <label for="season_id">Temporada</label>
-            <p-dropdown
+            <p-select
               id="season_id"
               [options]="seasons"
               formControlName="season_id"
               optionLabel="name"
               optionValue="id"
               placeholder="Seleccione una temporada"
-            ></p-dropdown>
+            ></p-select>
             <small class="p-error" *ngIf="getFieldError('season_id')">{{ getFieldError('season_id') }}</small>
           </div>
         </div>

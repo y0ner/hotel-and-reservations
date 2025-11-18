@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -19,7 +19,7 @@ import { SeasonService } from '../../../services/Season.service';
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
-    CalendarModule,
+    DatePickerModule,
     InputNumberModule,
     ToastModule,
     CardModule,

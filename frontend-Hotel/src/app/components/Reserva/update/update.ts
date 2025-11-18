@@ -3,18 +3,18 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 
-import { ClientService } from '../../../services/Client.service';
+import { ClienteService } from '../../../services/Client.service';
 import { RoomService } from '../../../services/Room.service';
 import { ReservationService } from '../../../services/Reservation.service';
-import { Client } from '../../../models/Client';
-import { Room } from '../../../models/Room';
-import { Reservation } from '../../../models/Reservation';
+import { ClientI } from '../../../models/Client';
+import { RoomI } from '../../../models/Room';
+import { ReservationI, ReservationResponseI } from '../../../models/Reservation';
 
 @Component({
   selector: 'app-update',
@@ -23,8 +23,8 @@ import { Reservation } from '../../../models/Reservation';
     CommonModule,
     ReactiveFormsModule,
     ToastModule,
-    DropdownModule,
-    CalendarModule,
+    SelectModule,
+    DatePickerModule,
     InputNumberModule,
     ButtonModule
   ],
@@ -34,8 +34,8 @@ import { Reservation } from '../../../models/Reservation';
 })
 export class Update implements OnInit {
   form!: FormGroup;
-  clients: Client[] = [];
-  rooms: Room[] = [];
+  clients: ClientI[] = [];
+  rooms: RoomI[] = [];
   statuses: any[] = [
     { label: 'Pending', value: 'pending' },
     { label: 'Confirmed', value: 'confirmed' },
@@ -47,7 +47,7 @@ export class Update implements OnInit {
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
-    private clientService: ClientService,
+    private clientService: ClienteService,
     private roomService: RoomService,
     private reservationService: ReservationService,
     private route: ActivatedRoute,
@@ -66,19 +66,19 @@ export class Update implements OnInit {
     this.form = this.fb.group({
       client_id: [null, Validators.required],
       room_id: [null, Validators.required],
-      start_date: [null, Validators.required],
-      end_date: [null, Validators.required],
-      total_price: [0, [Validators.required, Validators.min(0)]],
+      checkin_date: [null, Validators.required],
+      checkout_date: [null, Validators.required],
+      total_amount: [0, [Validators.required, Validators.min(0)]],
       status: ['pending', Validators.required]
     });
   }
 
   loadClients(): void {
     this.clientService.getAll().subscribe({
-      next: (data) => {
+      next: (data: ClientI[]) => {
         this.clients = data;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load clients' });
         console.error('Error loading clients:', error);
       }
@@ -87,10 +87,10 @@ export class Update implements OnInit {
 
   loadRooms(): void {
     this.roomService.getAll().subscribe({
-      next: (data) => {
+      next: (data: RoomI[]) => {
         this.rooms = data;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load rooms' });
         console.error('Error loading rooms:', error);
       }
@@ -99,17 +99,17 @@ export class Update implements OnInit {
 
   loadReservation(id: number): void {
     this.reservationService.getById(id).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.form.patchValue({
           client_id: data.client_id,
           room_id: data.room_id,
-          start_date: new Date(data.start_date),
-          end_date: new Date(data.end_date),
-          total_price: data.total_price,
+          checkin_date: new Date(data.checkin_date),
+          checkout_date: new Date(data.checkout_date),
+          total_amount: data.total_amount,
           status: data.status
         });
       },
-      error: (error) => {
+      error: (error: any) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load reservation' });
         console.error('Error loading reservation:', error);
         this.router.navigate(['/reservas']);
@@ -120,20 +120,20 @@ export class Update implements OnInit {
   submit(): void {
     if (this.form.valid) {
       this.loading = true;
-      const reservation: Reservation = {
+      const reservation: ReservationI = {
         ...this.form.value,
         id: this.reservationId,
-        start_date: this.form.value.start_date.toISOString().split('T')[0],
-        end_date: this.form.value.end_date.toISOString().split('T')[0]
+        checkin_date: this.form.value.checkin_date.toISOString().split('T')[0],
+        checkout_date: this.form.value.checkout_date.toISOString().split('T')[0]
       };
 
       this.reservationService.update(this.reservationId, reservation).subscribe({
-        next: () => {
+        next: (data: any) => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Reservation updated successfully' });
           this.loading = false;
           this.router.navigate(['/reservas']);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update reservation' });
           console.error('Error updating reservation:', error);
           this.loading = false;

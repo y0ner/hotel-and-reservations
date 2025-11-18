@@ -14,7 +14,7 @@ interface RateApiResponse {
   providedIn: 'root'
 })
 export class TarifaService {
-  private baseUrl = 'http://localhost:4000/api/Rate';
+  private baseUrl = 'http://localhost:4000/api/Rates';
   private RateSubject = new BehaviorSubject<RateResponseI[]>([]);
   public Rate$ = this.RateSubject.asObservable();
 
@@ -33,9 +33,8 @@ export class TarifaService {
   }
 
   getAll(): Observable<RateResponseI[]> {
-    return this.http.get<RateApiResponse>(this.baseUrl, { headers: this.getHeaders() })
-      .pipe(
-        map(response => response.rates), // Extraer el array de la propiedad
+    return this.http.get<RateResponseI[]>(this.baseUrl, { headers: this.getHeaders() })
+      .pipe( // Extraer el array de la propiedad
         tap(Rate => {
           this.RateSubject.next(Rate);
         }),

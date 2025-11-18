@@ -14,7 +14,7 @@ interface ReservationApiResponse {
   providedIn: 'root'
 })
 export class ReservationService {
-  private baseUrl = 'http://localhost:4000/api/Reservation';
+  private baseUrl = 'http://localhost:4000/api/Reservations';
   private ReservationSubject = new BehaviorSubject<ReservationResponseI[]>([]);
   public Reservation$ = this.ReservationSubject.asObservable();
 
@@ -33,9 +33,8 @@ export class ReservationService {
   }
 
   getAll(): Observable<ReservationResponseI[]> {
-    return this.http.get<ReservationApiResponse>(this.baseUrl, { headers: this.getHeaders() })
+    return this.http.get<ReservationResponseI[]>(this.baseUrl, { headers: this.getHeaders() })
       .pipe(
-        map(response => response.reservations), // Extraer el array de la propiedad
         tap(Reservation => {
           this.ReservationSubject.next(Reservation);
         }),

@@ -14,7 +14,7 @@ interface CheckinApiResponse {
 })
 
 export class CheckInService {
-  private baseUrl = 'http://localhost:4000/api/Checkin';
+  private baseUrl = 'http://localhost:4000/api/Checkins';
   private CheckInSubject = new BehaviorSubject<CheckinI[]>([]);
   public CheckIn$ = this.CheckInSubject.asObservable();
 

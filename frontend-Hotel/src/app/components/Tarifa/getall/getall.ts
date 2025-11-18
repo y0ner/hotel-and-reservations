@@ -1,13 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
-import { TooltipModule } from 'primeng/tooltip'; // Mantener TooltipModule
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { CardModule } from 'primeng/card';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { TarifaService } from '../../../services/Rate.service';
 import { RateResponseI } from '../../../models/Rate';
 
@@ -17,89 +17,79 @@ import { RateResponseI } from '../../../models/Rate';
   imports: [
     CommonModule,
     RouterModule,
-    TableModule,
     ButtonModule,
-    ConfirmDialogModule,
+    TableModule,
     ToastModule,
-    TooltipModule // Mantener TooltipModule
+    CardModule,
+    ConfirmDialogModule,
+    TooltipModule
   ],
-  providers: [ConfirmationService, MessageService],
   templateUrl: './getall.html',
-  styleUrl: './getall.css'
+  styleUrls: ['./getall.css'],
+  providers: [MessageService, ConfirmationService]
 })
-export class Getall implements OnInit, OnDestroy {
+export class Getall implements OnInit {
   rates: RateResponseI[] = [];
-  loading: boolean = false;
-  private subscription = new Subscription();
+  loading: boolean = true;
 
   constructor(
-    private rateService: TarifaService,
-    private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private tarifaService: TarifaService,
+    private router: Router,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
-    this.loadData(); // Carga inicial de datos
+    this.loadRates();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  loadData(): void {
+  loadRates(): void {
     this.loading = true;
-    this.subscription.add(
-      this.rateService.getAll().subscribe({
-        next: (data: any) => {
-          this.rates = data;
-          this.rateService.updateLocalData(data);
-          this.loading = false;
-        },
-        error: (error: any) => {
-          this.messageService.add({
-            severity: 'error', // Corregido: severity
-            summary: 'Error',
-            detail: 'No se pudieron cargar los datos'
-          });
-          this.loading = false;
-        }
-      })
-    );
+    this.tarifaService.getAll().subscribe({
+      next: (data) => {
+        this.rates = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.loading = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las tarifas' });
+      }
+    });
   }
 
-  confirmDelete(item: RateResponseI): void {
+  createRate(): void {
+    this.router.navigate(['/Tarifa/new']);
+  }
+
+  editRate(id: number | undefined): void {
+    if (id === undefined) return;
+    this.router.navigate(['/Tarifa/edit', id]);
+  }
+
+  confirmDelete(rate: RateResponseI): void {
+    if (rate.id === undefined) return;
     this.confirmationService.confirm({
-      message: `¿Está seguro de que desea eliminar el registro ${item.id}?`,
+      message: `¿Está seguro de que desea eliminar la tarifa ${rate.id}?`,
       header: 'Confirmar Eliminación',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.deleteItem(item.id!);
+        this.deleteRate(rate.id!);
       }
     });
   }
 
-  deleteItem(id: number): void {
-    this.subscription.add(
-      this.rateService.deleteLogic(id).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Registro eliminado correctamente'
-          });
-          this.loadData(); // Recargar datos después de eliminar
-        },
-        error: (error: any) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudo eliminar el registro'
-          });
-        }
-      })
-    );
+  deleteRate(id: number): void {
+    this.tarifaService.delete(id).subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Tarifa eliminada correctamente' });
+        this.loadRates(); // Recargar la lista
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la tarifa' });
+      }
+    });
   }
 }

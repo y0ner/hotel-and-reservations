@@ -14,7 +14,7 @@ interface PaymentApiResponse {
   providedIn: 'root'
 })
 export class PaymentService {
-  private baseUrl = 'http://localhost:4000/api/Payment';
+  private baseUrl = 'http://localhost:4000/api/Payments';
   private PaymentSubject = new BehaviorSubject<PaymentResponseI[]>([]);
   public Payment$ = this.PaymentSubject.asObservable();
 
@@ -33,9 +33,8 @@ export class PaymentService {
   }
 
   getAll(): Observable<PaymentResponseI[]> {
-    return this.http.get<PaymentApiResponse>(this.baseUrl, { headers: this.getHeaders() })
-      .pipe(
-        map(response => response.payments), // Extraer el array de la propiedad
+    return this.http.get<PaymentResponseI[]>(this.baseUrl, { headers: this.getHeaders() })
+      .pipe( 
         tap(Payment => {
           this.PaymentSubject.next(Payment);
         }),

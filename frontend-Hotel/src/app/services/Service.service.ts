@@ -14,7 +14,7 @@ interface ServiceApiResponse {
   providedIn: 'root'
 })
 export class ServiceService {
-  private baseUrl = 'http://localhost:4000/api/Service';
+  private baseUrl = 'http://localhost:4000/api/Services';
   private ServiceSubject = new BehaviorSubject<ServiceResponseI[]>([]);
   public Service$ = this.ServiceSubject.asObservable();
 
@@ -33,9 +33,8 @@ export class ServiceService {
   }
 
   getAll(): Observable<ServiceResponseI[]> {
-    return this.http.get<ServiceApiResponse>(this.baseUrl, { headers: this.getHeaders() })
-      .pipe(
-        map(response => response.services), // Extraer el array de la propiedad
+    return this.http.get<ServiceResponseI[]>(this.baseUrl, { headers: this.getHeaders() })
+      .pipe( // Extraer el array de la propiedad
         tap(Service => {
           this.ServiceSubject.next(Service);
         }),

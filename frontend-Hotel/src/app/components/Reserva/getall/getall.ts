@@ -5,11 +5,15 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
-import { TooltipModule } from 'primeng/tooltip'; // Mantener TooltipModule
+import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { ReservationService } from '../../../services/Reservation.service';
 import { ReservationResponseI } from '../../../models/Reservation';
+import { ClienteService } from '../../../services/Client.service';
+import { ClientResponseI } from '../../../models/Client';
+import { RoomService } from '../../../services/Room.service';
+import { RoomResponseI } from '../../../models/Room';
 
 @Component({
   selector: 'app-reservation-getall',
@@ -21,29 +25,59 @@ import { ReservationResponseI } from '../../../models/Reservation';
     ButtonModule,
     ConfirmDialogModule,
     ToastModule,
-    TooltipModule // Mantener TooltipModule
+    TooltipModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './getall.html',
-  styleUrl: './getall.css'
+  styleUrls: ['./getall.css']
 })
 export class Getall implements OnInit, OnDestroy {
   reservations: ReservationResponseI[] = [];
+  clients: ClientResponseI[] = [];
+  rooms: RoomResponseI[] = [];
   loading: boolean = false;
   private subscription = new Subscription();
 
   constructor(
     private reservationService: ReservationService,
+    private clienteService: ClienteService,
+    private roomService: RoomService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
-    this.loadData(); // Carga inicial de datos
+    this.loadInitialData();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  loadInitialData(): void {
+    this.loading = true;
+    this.subscription.add(
+      forkJoin({
+        reservations: this.reservationService.getAll(),
+        clients: this.clienteService.getAll(),
+        rooms: this.roomService.getAll()
+      }).subscribe({
+        next: (data) => {
+          this.reservations = data.reservations;
+          this.clients = data.clients;
+          this.rooms = data.rooms;
+          this.loading = false;
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los datos iniciales'
+          });
+          this.loading = false;
+        }
+      })
+    );
   }
 
   loadData(): void {
@@ -52,12 +86,11 @@ export class Getall implements OnInit, OnDestroy {
       this.reservationService.getAll().subscribe({
         next: (data: any) => {
           this.reservations = data;
-          this.reservationService.updateLocalData(data);
           this.loading = false;
         },
         error: (error: any) => {
           this.messageService.add({
-            severity: 'error', // Corregido: severity
+            severity: 'error',
             summary: 'Error',
             detail: 'No se pudieron cargar los datos'
           });
@@ -65,6 +98,16 @@ export class Getall implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  getClientName(clientId: number): string {
+    const client = this.clients.find(c => c.id === clientId);
+    return client ? `${client.first_name} ${client.last_name}` : 'Desconocido';
+  }
+
+  getRoomNumber(roomId: number): string {
+    const room = this.rooms.find(r => r.id === roomId);
+    return room ? `N° ${room.number}` : 'Desconocida';
   }
 
   confirmDelete(item: ReservationResponseI): void {
