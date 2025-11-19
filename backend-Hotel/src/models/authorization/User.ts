@@ -11,6 +11,7 @@ export class User extends Model {
   public password!: string;
   public is_active!: "ACTIVE" | "INACTIVE";
   public avatar!: string;
+  public hotel_id!: number;
 
   public async checkPassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
@@ -42,6 +43,7 @@ export interface UserI {
   password: string;
   is_active: "ACTIVE" | "INACTIVE";
   avatar?: string;
+  hotel_id: number;
 }
 
 User.init(
@@ -66,6 +68,14 @@ User.init(
     avatar: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    hotel_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'hotels',
+        key: 'id'
+      }
     }
   },
   {

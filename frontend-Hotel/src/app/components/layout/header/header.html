@@ -1,6 +1,16 @@
 <div class="header-container">
   <div class="header-content">
-    <h1 class="header-title">Hotel Management System</h1>
+    <div class="header-title-wrapper">
+      <img class="hotel-logo" src="https://dcassetcdn.com/design_img/1141086/51618/51618_6053295_1141086_image.jpg" alt="Hotel Logo" />
+      <h1 class="header-title">Hotel Management System</h1>
+    </div>
+    <!-- Hotel Info Section -->
+    <div class="hotel-info" *ngIf="isLoggedIn && currentHotel">
+      <div class="hotel-badge">
+        <i class="pi pi-building text-lg"></i>
+        <span class="hotel-name">{{ currentHotel.name }}</span>
+      </div>
+    </div>
   </div>
   <div class="header-actions">
     <button *ngIf="isLoggedIn" type="button" class="text-orange-500 bg-gray-100 hover:bg-gray-200 rounded-full shadow hover:shadow-lg flex items-center justify-center w-10 h-10">

@@ -10,8 +10,19 @@ import { Payment } from "./Payment";
 import { Checkout } from "./Checkout";
 import { ReservationService } from "./ReservationService";
 import { Reservation } from './Reservation';
+import { User } from "./authorization/User";
 
 export function setupAssociations() {
+  // Hotel - User (One to Many)
+  Hotel.hasMany(User, {
+    foreignKey: "hotel_id",
+    sourceKey: "id",
+  });
+  User.belongsTo(Hotel, {
+    foreignKey: "hotel_id",
+    targetKey: "id",
+  });
+
   // Client - Reservation (One to Many)
   Client.hasMany(Reservation, {
     foreignKey: "client_id",

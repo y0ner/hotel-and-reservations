@@ -53,7 +53,6 @@ export class Update implements OnInit {
     private messageService: MessageService
   ) {
     this.form = this.fb.group({
-      name: ['', [Validators.required]],
       description: ['', []],
       price: [0, [Validators.required, Validators.min(0)]],
       room_type_id: [null, [Validators.required]],

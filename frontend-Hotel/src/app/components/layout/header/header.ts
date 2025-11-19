@@ -6,6 +6,7 @@ import { TieredMenu } from 'primeng/tieredmenu';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { UserI, HotelDataI } from '../../../models/auth';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,10 @@ import { Subscription } from 'rxjs';
 export class Header implements OnInit, OnDestroy {
   items: MenuItem[] = [];
   isLoggedIn = false;
+  currentUser: UserI | null = null;
+  currentHotel: HotelDataI | null = null;
   private authSubscription?: Subscription;
+  private userSubscription?: Subscription;
 
   constructor(
     private router: Router,
@@ -29,12 +33,25 @@ export class Header implements OnInit, OnDestroy {
       this.isLoggedIn = isLoggedIn;
       this.updateMenuItems();
     });
+
+    this.userSubscription = this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (user && user.Hotel) {
+        this.currentHotel = user.Hotel;
+      }
+    });
+
     this.isLoggedIn = this.authService.isLoggedIn();
+    this.currentUser = this.authService.getCurrentUser();
+    if (this.currentUser && this.currentUser.Hotel) {
+      this.currentHotel = this.currentUser.Hotel;
+    }
     this.updateMenuItems();
   }
 
   ngOnDestroy() {
     this.authSubscription?.unsubscribe();
+    this.userSubscription?.unsubscribe();
   }
 
   private updateMenuItems(): void {
