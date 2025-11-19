@@ -1,63 +1,75 @@
-<div class="flex justify-center items-center min-h-screen">
-    <p-card header="Crear Nueva Habitación" styleClass="w-full max-w-2xl">
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <div class="p-fluid grid">
-                <!-- Fila 1: Hotel y Tipo de Habitación -->
-                <div class="field col-12 md:col-6">
-                    <label for="hotel_id">Hotel</label>
-                    <p-select id="hotel_id" [options]="hotels" formControlName="hotel_id" placeholder="Seleccione un hotel" optionLabel="name" optionValue="id"></p-select>
-                    <small class="p-error" *ngIf="getFieldError('hotel_id')">{{ getFieldError('hotel_id') }}</small>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl">
+        <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+            <ng-template pTemplate="header">
+                <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-lg">
+                    <h2 class="text-2xl font-bold m-0">Crear Nueva Habitación</h2>
                 </div>
-                <div class="field col-12 md:col-6">
-                    <label for="roomtype_id">Tipo de Habitación</label>
-                    <p-select id="roomtype_id" [options]="roomTypes" formControlName="roomtype_id" placeholder="Seleccione un tipo" optionLabel="name" optionValue="id"></p-select>
-                    <small class="p-error" *ngIf="getFieldError('roomtype_id')">{{ getFieldError('roomtype_id') }}</small>
+            </ng-template>
+
+            <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Hotel -->
+                    <div class="flex flex-col">
+                        <label for="hotel_id" class="block text-sm font-semibold text-gray-700 mb-2">Hotel *</label>
+                        <p-select id="hotel_id" [options]="hotels" formControlName="hotel_id" placeholder="Seleccione un hotel" optionLabel="name" optionValue="id"></p-select>
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('hotel_id')">{{ getFieldError('hotel_id') }}</small>
+                    </div>
+                    <!-- Tipo de Habitación -->
+                    <div class="flex flex-col">
+                        <label for="roomtype_id" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Habitación *</label>
+                        <p-select id="roomtype_id" [options]="roomTypes" formControlName="roomtype_id" placeholder="Seleccione un tipo" optionLabel="name" optionValue="id"></p-select>
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('roomtype_id')">{{ getFieldError('roomtype_id') }}</small>
+                    </div>
+
+                    <!-- Número -->
+                    <div class="flex flex-col">
+                        <label for="number" class="block text-sm font-semibold text-gray-700 mb-2">Número de Habitación *</label>
+                        <input pInputText id="number" formControlName="number" placeholder="Ej: 101" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('number')">{{ getFieldError('number') }}</small>
+                    </div>
+                    <!-- Piso -->
+                    <div class="flex flex-col">
+                        <label for="floor" class="block text-sm font-semibold text-gray-700 mb-2">Piso *</label>
+                        <input pInputText id="floor" formControlName="floor" placeholder="Ej: 1" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('floor')">{{ getFieldError('floor') }}</small>
+                    </div>
+
+                    <!-- Capacidad -->
+                    <div class="flex flex-col">
+                        <label for="capacity" class="block text-sm font-semibold text-gray-700 mb-2">Capacidad *</label>
+                        <input type="number" pInputText id="capacity" formControlName="capacity" placeholder="Ej: 2" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('capacity')">{{ getFieldError('capacity') }}</small>
+                    </div>
+                    <!-- Precio Base -->
+                    <div class="flex flex-col">
+                        <label for="base_price" class="block text-sm font-semibold text-gray-700 mb-2">Precio Base *</label>
+                        <input type="number" pInputText id="base_price" formControlName="base_price" placeholder="Ej: 100" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('base_price')">{{ getFieldError('base_price') }}</small>
+                    </div>
                 </div>
 
-                <!-- Fila 2: Número y Piso -->
-                <div class="field col-12 md:col-6">
-                    <label for="number">Número de Habitación</label>
-                    <input pInputText id="number" formControlName="number" />
-                    <small class="p-error" *ngIf="getFieldError('number')">{{ getFieldError('number') }}</small>
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label for="floor">Piso</label>
-                    <input pInputText id="floor" formControlName="floor" />
-                    <small class="p-error" *ngIf="getFieldError('floor')">{{ getFieldError('floor') }}</small>
+                <!-- Descripción -->
+                <div class="flex flex-col">
+                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Descripción</label>
+                    <textarea pTextarea id="description" formControlName="description" rows="3" placeholder="Describe la habitación..." class="w-full"></textarea>
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('description')">{{ getFieldError('description') }}</small>
                 </div>
 
-                <!-- Fila 3: Capacidad y Precio Base -->
-                <div class="field col-12 md:col-6">
-                    <label for="capacity">Capacidad</label>
-                    <input type="number" pInputText id="capacity" formControlName="capacity" />
-                    <small class="p-error" *ngIf="getFieldError('capacity')">{{ getFieldError('capacity') }}</small>
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label for="base_price">Precio Base</label>
-                    <input type="number" pInputText id="base_price" formControlName="base_price" />
-                    <small class="p-error" *ngIf="getFieldError('base_price')">{{ getFieldError('base_price') }}</small>
-                </div>
-
-                <!-- Fila 4: Descripción -->
-                <div class="field col-12">
-                    <label for="description">Descripción</label>
-                    <textarea pTextarea id="description" formControlName="description" rows="3"></textarea>
-                    <small class="p-error" *ngIf="getFieldError('description')">{{ getFieldError('description') }}</small>
-                </div>
-
-                <!-- Fila 5: Disponible -->
-                <div class="field col-12 flex items-center gap-2">
+                <!-- Disponible -->
+                <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
                     <p-checkbox formControlName="available" [binary]="true" inputId="available"></p-checkbox>
-                    <label for="available">¿Disponible?</label>
+                    <label for="available" class="text-sm font-semibold text-gray-700">¿Disponible?</label>
                 </div>
-            </div>
+            </form>
 
-            <!-- Botones -->
-            <div class="flex justify-end gap-2 mt-4">
-                <p-button label="Cancelar" styleClass="p-button-secondary" (onClick)="cancelar()"></p-button>
-                <p-button label="Guardar" type="submit" [loading]="loading"></p-button>
-            </div>
-        </form>
-    </p-card>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                    <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancelar()"></p-button>
+                    <p-button label="Guardar" icon="pi pi-save" type="submit" (click)="submit()" [loading]="loading"></p-button>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
 </div>
 <p-toast></p-toast>

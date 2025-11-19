@@ -1,31 +1,51 @@
-<div class="card p-8 max-w-lg mx-auto">
-    <h2 class="text-2xl font-bold mb-4">Confirmar Check-out</h2>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-lg">
+    <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+      <ng-template pTemplate="header">
+        <div class="bg-gradient-to-r from-lime-500 to-lime-600 text-white p-4 rounded-t-lg">
+          <h2 class="text-2xl font-bold m-0">Confirmar Check-out</h2>
+        </div>
+      </ng-template>
 
-    <div *ngIf="loading" class="text-center">
-        <p>Cargando datos de la reserva...</p>
-    </div>
+      <div *ngIf="loading" class="flex justify-center items-center py-8">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #84cc16;"></i>
+        <p class="ml-4 text-gray-600">Cargando datos de la reserva...</p>
+      </div>
 
-    <div *ngIf="!loading && reservation">
-        <div class="mb-4">
-            <p><strong>Reserva ID:</strong> {{ reservation.id }}</p>
-            <p><strong>Fecha de Check-in:</strong> {{ reservation.checkin_date | date: 'fullDate' }}</p>
-            <p><strong>Fecha de Check-out:</strong> {{ reservation.checkout_date | date: 'fullDate' }}</p>
+      <div *ngIf="!loading && reservation" class="space-y-6">
+        <div class="grid grid-cols-1 gap-3 bg-green-50 p-4 rounded-lg border-l-4 border-lime-500">
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-semibold text-gray-700">Reserva ID:</span>
+            <span class="text-lg font-bold text-lime-600">{{ reservation.id }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-semibold text-gray-700">Fecha de Check-in:</span>
+            <span class="text-sm text-gray-600">{{ reservation.checkin_date | date: 'fullDate' }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-semibold text-gray-700">Fecha de Check-out:</span>
+            <span class="text-sm text-gray-600">{{ reservation.checkout_date | date: 'fullDate' }}</span>
+          </div>
         </div>
 
-        <div class="field">
-            <label for="observation">Observaciones</label>
-            <textarea id="observation" pInputTextarea [(ngModel)]="observation" rows="3" class="w-full"></textarea>
+        <div class="flex flex-col">
+          <label for="observation" class="block text-sm font-semibold text-gray-700 mb-2">Observaciones</label>
+          <textarea id="observation" pInputTextarea [(ngModel)]="observation" rows="3" placeholder="Añade observaciones sobre el check-out..." class="w-full"></textarea>
         </div>
+      </div>
 
-        <div class="flex justify-end gap-2 mt-4">
-            <p-button label="Cancelar" icon="pi pi-times" (click)="cancel()" styleClass="p-button-secondary"></p-button>
-            <p-button label="Confirmar Check-out" icon="pi pi-check" (click)="confirmCheckout()" [loading]="loading"></p-button>
+      <div *ngIf="!loading && !reservation" class="py-8 text-center">
+        <i class="pi pi-exclamation-circle text-red-500" style="font-size: 3rem; display: block; margin-bottom: 1rem;"></i>
+        <p class="text-red-500 font-semibold">No se pudo cargar la información de la reserva.</p>
+      </div>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200" *ngIf="!loading && reservation">
+          <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (click)="cancel()"></p-button>
+          <p-button label="Confirmar Check-out" icon="pi pi-check" (click)="confirmCheckout()" [loading]="loading"></p-button>
         </div>
-    </div>
-
-    <div *ngIf="!loading && !reservation" class="text-center text-red-500">
-        <p>No se pudo cargar la información de la reserva.</p>
-    </div>
+      </ng-template>
+    </p-card>
+  </div>
 </div>
-
 <p-toast></p-toast>

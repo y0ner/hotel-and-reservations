@@ -45,9 +45,8 @@ export class Login {
             summary: 'Éxito',
             detail: 'Sesión iniciada correctamente'
           });
-          setTimeout(() => {
-            this.router.navigate(['/Hotel']); // Redirigir a la página principal del hotel
-          }, 1000);
+          // Navegar inmediatamente sin delay
+          this.router.navigate(['/Hotel']);
         },
         error: (error) => {
           console.error('Error logging in:', error);

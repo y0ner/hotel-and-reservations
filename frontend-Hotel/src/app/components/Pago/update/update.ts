@@ -118,4 +118,13 @@ export class Update implements OnInit {
   cancel(): void {
     this.router.navigate(['/Pago']);
   }
+
+  getFieldError(fieldName: string): string {
+    const field = this.form.get(fieldName);
+    if (field?.touched && field.errors) {
+      if (field.errors['required']) return 'El campo es requerido.';
+      if (field.errors['min']) return `El valor mínimo es ${field.errors['min'].min}.`;
+    }
+    return '';
+  }
 }

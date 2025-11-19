@@ -1,56 +1,67 @@
-<div class="flex justify-center items-center min-h-screen">
-    <p-card header="Editar Cliente" styleClass="w-full max-w-lg">
-        <div *ngIf="loading" class="flex justify-center items-center">
-            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-        </div>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg">
+        <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+            <ng-template pTemplate="header">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-t-lg">
+                    <h2 class="text-2xl font-bold m-0">Editar Cliente</h2>
+                </div>
+            </ng-template>
 
-        <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading">
-            <div class="p-fluid grid">
-                <!-- Fila 1: Nombre y Apellido -->
-                <div class="field col-12 md:col-6">
-                    <label for="first_name">Nombre</label>
-                    <input pInputText id="first_name" formControlName="first_name" />
-                    <small class="p-error" *ngIf="getFieldError('first_name')">{{ getFieldError('first_name') }}</small>
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label for="last_name">Apellido</label>
-                    <input pInputText id="last_name" formControlName="last_name" />
-                    <small class="p-error" *ngIf="getFieldError('last_name')">{{ getFieldError('last_name') }}</small>
-                </div>
-
-                <!-- Fila 2: Documento y Teléfono -->
-                <div class="field col-12 md:col-6">
-                    <label for="document">Documento</label>
-                    <input pInputText id="document" formControlName="document" />
-                    <small class="p-error" *ngIf="getFieldError('document')">{{ getFieldError('document') }}</small>
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label for="phone">Teléfono</label>
-                    <input pInputText id="phone" formControlName="phone" />
-                    <small class="p-error" *ngIf="getFieldError('phone')">{{ getFieldError('phone') }}</small>
-                </div>
-
-                <!-- Fila 3: Email -->
-                <div class="field col-12">
-                    <label for="email">Email</label>
-                    <input pInputText id="email" type="email" formControlName="email" />
-                    <small class="p-error" *ngIf="getFieldError('email')">{{ getFieldError('email') }}</small>
-                </div>
-
-                <!-- Fila 4: Nacionalidad -->
-                <div class="field col-12">
-                    <label for="nationality">Nacionalidad</label>
-                    <input pInputText id="nationality" formControlName="nationality" />
-                    <small class="p-error" *ngIf="getFieldError('nationality')">{{ getFieldError('nationality') }}</small>
-                </div>
+            <div *ngIf="loading" class="flex justify-center items-center py-8">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #3b82f6;"></i>
             </div>
 
-            <!-- Botones -->
-            <div class="flex justify-end gap-2 mt-4">
-                <p-button label="Cancelar" styleClass="p-button-secondary" (onClick)="cancelar()"></p-button>
-                <p-button label="Guardar Cambios" type="submit" [loading]="loading"></p-button>
-            </div>
-        </form>
-    </p-card>
+            <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Nombre -->
+                    <div class="flex flex-col">
+                        <label for="first_name" class="block text-sm font-semibold text-gray-700 mb-2">Nombre *</label>
+                        <input pInputText id="first_name" formControlName="first_name" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('first_name')">{{ getFieldError('first_name') }}</small>
+                    </div>
+                    <!-- Apellido -->
+                    <div class="flex flex-col">
+                        <label for="last_name" class="block text-sm font-semibold text-gray-700 mb-2">Apellido *</label>
+                        <input pInputText id="last_name" formControlName="last_name" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('last_name')">{{ getFieldError('last_name') }}</small>
+                    </div>
+
+                    <!-- Documento -->
+                    <div class="flex flex-col">
+                        <label for="document" class="block text-sm font-semibold text-gray-700 mb-2">Documento *</label>
+                        <input pInputText id="document" formControlName="document" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('document')">{{ getFieldError('document') }}</small>
+                    </div>
+                    <!-- Teléfono -->
+                    <div class="flex flex-col">
+                        <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Teléfono *</label>
+                        <input pInputText id="phone" formControlName="phone" class="w-full" />
+                        <small class="text-red-500 mt-1" *ngIf="getFieldError('phone')">{{ getFieldError('phone') }}</small>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="flex flex-col">
+                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+                    <input pInputText id="email" type="email" formControlName="email" class="w-full" />
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('email')">{{ getFieldError('email') }}</small>
+                </div>
+
+                <!-- Nacionalidad -->
+                <div class="flex flex-col">
+                    <label for="nationality" class="block text-sm font-semibold text-gray-700 mb-2">Nacionalidad *</label>
+                    <input pInputText id="nationality" formControlName="nationality" class="w-full" />
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('nationality')">{{ getFieldError('nationality') }}</small>
+                </div>
+            </form>
+
+            <ng-template pTemplate="footer">
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200" *ngIf="!loading">
+                    <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancelar()"></p-button>
+                    <p-button label="Guardar Cambios" icon="pi pi-save" type="submit" (click)="submit()" [loading]="loading"></p-button>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
 </div>
 <p-toast></p-toast>

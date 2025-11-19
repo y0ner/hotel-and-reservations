@@ -7,6 +7,7 @@ import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
 
 import { ClienteService } from '../../../services/Client.service';
@@ -26,7 +27,8 @@ import { ReservationI, ReservationResponseI } from '../../../models/Reservation'
     SelectModule,
     DatePickerModule,
     InputNumberModule,
-    ButtonModule
+    ButtonModule,
+    CardModule
   ],
   templateUrl: './update.html',
   styleUrls: ['./update.css'],

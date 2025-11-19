@@ -1,61 +1,56 @@
-<div class="container">
-  <p-toast></p-toast>
-  <div class="card">
-    <div class="card-header">
-      <h2>Crear Tarifa</h2>
-    </div>
-    <div class="card-body">
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <div class="p-fluid p-formgrid p-grid">
-          <div class="p-field p-col-12 p-md-6">
-            <label for="name">Nombre</label>
-            <input id="name" type="text" pInputText formControlName="name" />
-            <small class="p-error" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl">
+    <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+      <ng-template pTemplate="header">
+        <div class="bg-gradient-to-r from-rose-500 to-rose-600 text-white p-4 rounded-t-lg">
+          <h2 class="text-2xl font-bold m-0">Crear Tarifa</h2>
+        </div>
+      </ng-template>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Nombre -->
+          <div class="flex flex-col">
+            <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nombre *</label>
+            <input id="name" type="text" pInputText formControlName="name" placeholder="Ej: Tarifa Especial" class="w-full" />
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
           </div>
 
-          <div class="p-field p-col-12">
-            <label for="description">Descripción</label>
-            <textarea id="description" pInputTextarea formControlName="description" rows="3"></textarea>
-          </div>
-
-          <div class="p-field p-col-12 p-md-6">
-            <label for="price">Precio</label>
+          <!-- Precio -->
+          <div class="flex flex-col">
+            <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Precio *</label>
             <p-inputNumber id="price" formControlName="price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-            <small class="p-error" *ngIf="getFieldError('price')">{{ getFieldError('price') }}</small>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('price')">{{ getFieldError('price') }}</small>
           </div>
 
-          <div class="p-field p-col-12 p-md-6">
-            <label for="room_type_id">Tipo de Habitación</label>
-            <p-select
-              id="room_type_id"
-              [options]="roomTypes"
-              formControlName="room_type_id"
-              optionLabel="name"
-              optionValue="id"
-              placeholder="Seleccione un tipo de habitación"
-            ></p-select>
-            <small class="p-error" *ngIf="getFieldError('room_type_id')">{{ getFieldError('room_type_id') }}</small>
+          <!-- Tipo de Habitación -->
+          <div class="flex flex-col">
+            <label for="room_type_id" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Habitación *</label>
+            <p-select id="room_type_id" [options]="roomTypes" formControlName="room_type_id" optionLabel="name" optionValue="id" placeholder="Seleccione un tipo de habitación"></p-select>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('room_type_id')">{{ getFieldError('room_type_id') }}</small>
           </div>
 
-          <div class="p-field p-col-12 p-md-6">
-            <label for="season_id">Temporada</label>
-            <p-select
-              id="season_id"
-              [options]="seasons"
-              formControlName="season_id"
-              optionLabel="name"
-              optionValue="id"
-              placeholder="Seleccione una temporada"
-            ></p-select>
-            <small class="p-error" *ngIf="getFieldError('season_id')">{{ getFieldError('season_id') }}</small>
+          <!-- Temporada -->
+          <div class="flex flex-col">
+            <label for="season_id" class="block text-sm font-semibold text-gray-700 mb-2">Temporada *</label>
+            <p-select id="season_id" [options]="seasons" formControlName="season_id" optionLabel="name" optionValue="id" placeholder="Seleccione una temporada"></p-select>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('season_id')">{{ getFieldError('season_id') }}</small>
           </div>
         </div>
 
-        <div class="p-mt-4">
-          <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="loading"></p-button>
-          <p-button label="Cancelar" icon="pi pi-times" styleClass="p-button-secondary" (click)="cancelar()" class="p-ml-2"></p-button>
+        <!-- Descripción -->
+        <div class="flex flex-col">
+          <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Descripción</label>
+          <textarea id="description" pInputTextarea formControlName="description" rows="3" placeholder="Describe la tarifa..." class="w-full"></textarea>
         </div>
       </form>
-    </div>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancelar()"></p-button>
+          <p-button label="Guardar" icon="pi pi-save" type="submit" (click)="submit()" [loading]="loading"></p-button>
+        </div>
+      </ng-template>
+    </p-card>
   </div>
 </div>

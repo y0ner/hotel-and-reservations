@@ -1,76 +1,53 @@
-<div class="card p-8">
-    <h2 class="text-2xl font-bold mb-4">Crear Nuevo Pago</h2>
-    <form [formGroup]="form" (ngSubmit)="submit()">
-        <div class="p-fluid grid">
-            <!-- Reservation -->
-            <div class="field col-12 md:col-6">
-                <label for="reservation_id">Reserva</label>
-                <p-select
-                    id="reservation_id"
-                    [options]="reservations"
-                    formControlName="reservation_id"
-                    optionLabel="id"
-                    optionValue="id"
-                    placeholder="Seleccione una reserva"
-                ></p-select>
-            </div>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-lg">
+    <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+      <ng-template pTemplate="header">
+        <div class="bg-gradient-to-r from-teal-500 to-teal-600 text-white p-4 rounded-t-lg">
+          <h2 class="text-2xl font-bold m-0">Crear Nuevo Pago</h2>
+        </div>
+      </ng-template>
 
-            <!-- Amount -->
-            <div class="field col-12 md:col-6">
-                <label for="amount">Monto</label>
-                <p-inputNumber
-                    id="amount"
-                    formControlName="amount"
-                    mode="currency"
-                    currency="USD"
-                    locale="en-US"
-                ></p-inputNumber>
-            </div>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Reserva -->
+          <div class="flex flex-col">
+            <label for="reservation_id" class="block text-sm font-semibold text-gray-700 mb-2">Reserva *</label>
+            <p-select id="reservation_id" [options]="reservations" formControlName="reservation_id" optionLabel="id" optionValue="id" placeholder="Seleccione una reserva"></p-select>
+          </div>
 
-            <!-- Payment Method -->
-            <div class="field col-12 md:col-6">
-                <label for="method">Método de Pago</label>
-                <p-select
-                    id="method"
-                    [options]="paymentMethods"
-                    formControlName="method"
-                    placeholder="Seleccione un método"
-                ></p-select>
-            </div>
+          <!-- Monto -->
+          <div class="flex flex-col">
+            <label for="amount" class="block text-sm font-semibold text-gray-700 mb-2">Monto *</label>
+            <p-inputNumber id="amount" formControlName="amount" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+          </div>
 
-            <!-- Payment Date -->
-            <div class="field col-12 md:col-6">
-                <label for="payment_date">Fecha de Pago</label>
-                <p-datepicker
-                    id="payment_date"
-                    formControlName="payment_date"
-                    [showIcon]="true"
-                    dateFormat="dd/mm/yy"
-                ></p-datepicker>
-            </div>
+          <!-- Método de Pago -->
+          <div class="flex flex-col">
+            <label for="method" class="block text-sm font-semibold text-gray-700 mb-2">Método de Pago *</label>
+            <p-select id="method" [options]="paymentMethods" formControlName="method" placeholder="Seleccione un método"></p-select>
+          </div>
 
-            <!-- Reference -->
-            <div class="field col-12">
-                <label for="reference">Referencia</label>
-                <input id="reference" type="text" pInputText formControlName="reference" />
-            </div>
+          <!-- Fecha de Pago -->
+          <div class="flex flex-col">
+            <label for="payment_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Pago *</label>
+            <p-datepicker id="payment_date" formControlName="payment_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
+          </div>
         </div>
 
-        <!-- Actions -->
-        <div class="flex justify-end gap-2 mt-4">
-            <p-button
-                label="Cancelar"
-                icon="pi pi-times"
-                (click)="cancel()"
-                styleClass="p-button-secondary"
-            ></p-button>
-            <p-button
-                label="Guardar"
-                icon="pi pi-check"
-                type="submit"
-                [loading]="loading"
-            ></p-button>
+        <!-- Referencia -->
+        <div class="flex flex-col">
+          <label for="reference" class="block text-sm font-semibold text-gray-700 mb-2">Referencia</label>
+          <input id="reference" type="text" pInputText formControlName="reference" placeholder="Ej: Ref12345" class="w-full" />
         </div>
-    </form>
+      </form>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancel()"></p-button>
+          <p-button label="Guardar" icon="pi pi-save" type="submit" (click)="submit()" [loading]="loading"></p-button>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
 </div>
 <p-toast></p-toast>

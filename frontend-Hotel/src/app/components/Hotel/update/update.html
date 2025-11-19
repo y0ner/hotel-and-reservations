@@ -1,23 +1,65 @@
-<div class="max-w-4xl mx-auto p-6">
-  <div class="bg-white rounded-lg shadow-lg p-8">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800">Editar Hotel</h2>
-
-    <div class="flex justify-center py-8" *ngIf="loading">
-      <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem"></i>
-    </div>
-
-    <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="flex flex-col"><label class="block mb-2 font-semibold text-gray-700">Address *</label><input pInputText type="text" formControlName="address" class="w-full" placeholder=""/><small class="text-red-500 mt-1" *ngIf="getFieldError('address')">{{ getFieldError('address') }}</small></div>        <div class="flex flex-col"><label class="block mb-2 font-semibold text-gray-700">City *</label><input pInputText type="text" formControlName="city" class="w-full" placeholder=""/><small class="text-red-500 mt-1" *ngIf="getFieldError('city')">{{ getFieldError('city') }}</small></div>        <div class="flex flex-col"><label class="block mb-2 font-semibold text-gray-700">Country *</label><input pInputText type="text" formControlName="country" class="w-full" placeholder=""/><small class="text-red-500 mt-1" *ngIf="getFieldError('country')">{{ getFieldError('country') }}</small></div>        <div class="flex flex-col"><label class="block mb-2 font-semibold text-gray-700">Name *</label><input pInputText type="text" formControlName="name" class="w-full" placeholder=""/><small class="text-red-500 mt-1" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small></div>        <div class="flex flex-col"><label class="block mb-2 font-semibold text-gray-700">Phone *</label><input pInputText type="text" formControlName="phone" class="w-full" placeholder=""/><small class="text-red-500 mt-1" *ngIf="getFieldError('phone')">{{ getFieldError('phone') }}</small></div>        <div class="flex flex-col"><label class="block mb-2 font-semibold text-gray-700">Stars *</label><input pInputText type="text" formControlName="stars" class="w-full" placeholder=""/><small class="text-red-500 mt-1" *ngIf="getFieldError('stars')">{{ getFieldError('stars') }}</small></div>
-      </div>
-
-      <div class="flex justify-center mt-8">
-        <div class="bg-gray-50 rounded-lg p-4 flex gap-4 items-center">
-          <button pButton type="submit" label="Actualizar" icon="pi pi-save" [loading]="loading" [disabled]="form.invalid || loading"></button>
-          <button pButton type="button" class="p-button-secondary" label="Cancelar" icon="pi pi-times" (click)="cancelar()" [disabled]="loading"></button>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl">
+    <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+      <ng-template pTemplate="header">
+        <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-t-lg">
+          <h2 class="text-2xl font-bold m-0">Editar Hotel</h2>
         </div>
+      </ng-template>
+
+      <div class="flex justify-center py-8" *ngIf="loading">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #a855f7;"></i>
       </div>
-    </form>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Nombre -->
+          <div class="flex flex-col">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre *</label>
+            <input pInputText type="text" formControlName="name" class="w-full" />
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
+          </div>
+          <!-- Teléfono -->
+          <div class="flex flex-col">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Teléfono *</label>
+            <input pInputText type="text" formControlName="phone" class="w-full" />
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('phone')">{{ getFieldError('phone') }}</small>
+          </div>
+          <!-- Ciudad -->
+          <div class="flex flex-col">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Ciudad *</label>
+            <input pInputText type="text" formControlName="city" class="w-full" />
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('city')">{{ getFieldError('city') }}</small>
+          </div>
+          <!-- País -->
+          <div class="flex flex-col">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">País *</label>
+            <input pInputText type="text" formControlName="country" class="w-full" />
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('country')">{{ getFieldError('country') }}</small>
+          </div>
+          <!-- Estrellas -->
+          <div class="flex flex-col">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Estrellas *</label>
+            <input pInputText type="text" formControlName="stars" class="w-full" />
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('stars')">{{ getFieldError('stars') }}</small>
+          </div>
+        </div>
+
+        <!-- Dirección -->
+        <div class="flex flex-col">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Dirección *</label>
+          <input pInputText type="text" formControlName="address" class="w-full" />
+          <small class="text-red-500 mt-1" *ngIf="getFieldError('address')">{{ getFieldError('address') }}</small>
+        </div>
+      </form>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200" *ngIf="!loading">
+          <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancelar()"></p-button>
+          <p-button label="Actualizar" icon="pi pi-save" type="submit" (click)="submit()" [loading]="loading" [disabled]="form.invalid || loading"></p-button>
+        </div>
+      </ng-template>
+    </p-card>
   </div>
 </div>
 <p-toast></p-toast>

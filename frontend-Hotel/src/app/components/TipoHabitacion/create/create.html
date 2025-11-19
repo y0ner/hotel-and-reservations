@@ -1,41 +1,48 @@
-<div class="flex justify-center items-center min-h-screen">
-    <p-card header="Crear Nuevo Tipo de Habitación" styleClass="w-full max-w-lg">
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <div class="p-fluid grid">
-                <!-- Fila 1: Nombre -->
-                <div class="field col-12">
-                    <label for="name">Nombre</label>
-                    <input pInputText id="name" formControlName="name" />
-                    <small class="p-error" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg">
+        <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+            <ng-template pTemplate="header">
+                <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-t-lg">
+                    <h2 class="text-2xl font-bold m-0">Crear Tipo de Habitación</h2>
+                </div>
+            </ng-template>
+
+            <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
+                <!-- Nombre -->
+                <div class="flex flex-col">
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nombre *</label>
+                    <input pInputText id="name" formControlName="name" placeholder="Ej: Suite Deluxe" class="w-full" />
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
                 </div>
 
-                <!-- Fila 2: Descripción -->
-                <div class="field col-12">
-                    <label for="description">Descripción</label>
-                    <textarea pTextarea id="description" formControlName="description" rows="3"></textarea>
-                    <small class="p-error" *ngIf="getFieldError('description')">{{ getFieldError('description') }}</small>
+                <!-- Descripción -->
+                <div class="flex flex-col">
+                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Descripción *</label>
+                    <textarea pTextarea id="description" formControlName="description" rows="3" placeholder="Describe el tipo de habitación..." class="w-full"></textarea>
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('description')">{{ getFieldError('description') }}</small>
                 </div>
 
-                <!-- Fila 3: Máximo Personas -->
-                <div class="field col-12">
-                    <label for="max_people">Máximo de Personas</label>
-                    <input type="number" pInputText id="max_people" formControlName="max_people" />
-                    <small class="p-error" *ngIf="getFieldError('max_people')">{{ getFieldError('max_people') }}</small>
+                <!-- Máximo de Personas -->
+                <div class="flex flex-col">
+                    <label for="max_people" class="block text-sm font-semibold text-gray-700 mb-2">Máximo de Personas *</label>
+                    <input type="number" pInputText id="max_people" formControlName="max_people" placeholder="Ej: 4" class="w-full" />
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('max_people')">{{ getFieldError('max_people') }}</small>
                 </div>
 
-                <!-- Fila 4: Incluye Desayuno -->
-                <div class="field col-12 flex items-center gap-2">
+                <!-- Incluye Desayuno -->
+                <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
                     <p-checkbox formControlName="includes_breakfast" [binary]="true" inputId="includes_breakfast"></p-checkbox>
-                    <label for="includes_breakfast">¿Incluye desayuno?</label>
+                    <label for="includes_breakfast" class="text-sm font-semibold text-gray-700">¿Incluye desayuno?</label>
                 </div>
-            </div>
+            </form>
 
-            <!-- Botones -->
-            <div class="flex justify-end gap-2 mt-4">
-                <p-button label="Cancelar" styleClass="p-button-secondary" (onClick)="cancelar()"></p-button>
-                <p-button label="Guardar" type="submit" [loading]="loading"></p-button>
-            </div>
-        </form>
-    </p-card>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                    <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancelar()"></p-button>
+                    <p-button label="Guardar" icon="pi pi-save" type="submit" (click)="submit()" [loading]="loading"></p-button>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
 </div>
 <p-toast></p-toast>

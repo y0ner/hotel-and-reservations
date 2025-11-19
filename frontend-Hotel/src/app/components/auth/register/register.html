@@ -9,8 +9,11 @@
         <div class="flex flex-col"><label for="confirmPassword" class="block mb-2 font-semibold text-gray-700">Confirmar Contraseña *</label><input pInputText id="confirmPassword" type="password" formControlName="confirmPassword" class="w-full" /><small class="text-red-500 mt-1" *ngIf="form.get('confirmPassword')?.hasError('passwordMismatch')">Las contraseñas no coinciden</small></div>
 
         <div class="flex flex-col space-y-3 mt-6">
-          <button pButton type="submit" class="w-full" label="Registrarse" icon="pi pi-user-plus" [loading]="loading" [disabled]="form.invalid || loading"></button>
-          <a routerLink="/login" class="text-center text-blue-500 hover:underline">¿Ya tienes cuenta? Iniciar Sesión</a>
+          <p-button type="submit" class="w-full" label="Registrarse" icon="pi pi-user-plus" [loading]="loading" [disabled]="form.invalid || loading"></p-button>
+          <a routerLink="/login" class="text-center text-blue-500 hover:underline flex items-center justify-center gap-2">
+            <i class="pi pi-sign-in"></i>
+            ¿Ya tienes cuenta? Iniciar Sesión
+          </a>
         </div>
       </form>
     </p-card>

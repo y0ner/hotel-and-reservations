@@ -50,9 +50,7 @@ export class Create {
             summary: 'Éxito',
             detail: 'Cliente creado correctamente'
           });
-          setTimeout(() => {
-            this.router.navigate(['/Cliente']);
-          }, 1000);
+          this.router.navigate(['/Cliente']);
         },
         error: (error) => {
           console.error('Error creating Client:', error);

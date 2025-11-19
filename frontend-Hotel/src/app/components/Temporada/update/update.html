@@ -1,44 +1,53 @@
-<div class="flex justify-center items-center min-h-screen">
-    <p-card header="Editar Temporada" styleClass="w-full max-w-lg">
-        <div *ngIf="loading" class="flex justify-center items-center">
-            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-        </div>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg">
+        <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+            <ng-template pTemplate="header">
+                <div class="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-4 rounded-t-lg">
+                    <h2 class="text-2xl font-bold m-0">Editar Temporada</h2>
+                </div>
+            </ng-template>
 
-        <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading">
-            <div class="p-fluid grid">
-                <!-- Fila 1: Nombre -->
-                <div class="field col-12">
-                    <label for="name">Nombre de la Temporada</label>
-                    <input pInputText id="name" formControlName="name" />
-                    <small class="p-error" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
+            <div *ngIf="loading" class="flex justify-center items-center py-8">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #ec4899;"></i>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading" class="space-y-6">
+                <!-- Nombre -->
+                <div class="flex flex-col">
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nombre de la Temporada *</label>
+                    <input pInputText id="name" formControlName="name" class="w-full" />
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('name')">{{ getFieldError('name') }}</small>
                 </div>
 
-                <!-- Fila 2: Fechas -->
-                <div class="field col-12 md:col-6">
-                    <label for="start_date">Fecha de Inicio</label>
+                <!-- Fecha de Inicio -->
+                <div class="flex flex-col">
+                    <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Inicio *</label>
                     <p-calendar id="start_date" formControlName="start_date" dateFormat="yy-mm-dd"></p-calendar>
-                    <small class="p-error" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
                 </div>
-                <div class="field col-12 md:col-6">
-                    <label for="end_date">Fecha de Fin</label>
+
+                <!-- Fecha de Fin -->
+                <div class="flex flex-col">
+                    <label for="end_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Fin *</label>
                     <p-calendar id="end_date" formControlName="end_date" dateFormat="yy-mm-dd"></p-calendar>
-                    <small class="p-error" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
                 </div>
 
-                <!-- Fila 3: Multiplicador de Precio -->
-                <div class="field col-12">
-                    <label for="price_multiplier">Multiplicador de Precio</label>
+                <!-- Multiplicador de Precio -->
+                <div class="flex flex-col">
+                    <label for="price_multiplier" class="block text-sm font-semibold text-gray-700 mb-2">Multiplicador de Precio *</label>
                     <p-inputNumber id="price_multiplier" formControlName="price_multiplier" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
-                    <small class="p-error" *ngIf="getFieldError('price_multiplier')">{{ getFieldError('price_multiplier') }}</small>
+                    <small class="text-red-500 mt-1" *ngIf="getFieldError('price_multiplier')">{{ getFieldError('price_multiplier') }}</small>
                 </div>
-            </div>
+            </form>
 
-            <!-- Botones -->
-            <div class="flex justify-end gap-2 mt-4">
-                <p-button label="Cancelar" styleClass="p-button-secondary" (onClick)="cancelar()"></p-button>
-                <p-button label="Guardar Cambios" type="submit" [loading]="loading"></p-button>
-            </div>
-        </form>
-    </p-card>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200" *ngIf="!loading">
+                    <p-button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancelar()"></p-button>
+                    <p-button label="Guardar Cambios" icon="pi pi-save" type="submit" (click)="submit()" [loading]="loading"></p-button>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
 </div>
 <p-toast></p-toast>

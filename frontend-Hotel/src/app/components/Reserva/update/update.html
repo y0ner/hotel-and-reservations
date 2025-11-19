@@ -1,73 +1,75 @@
-<div class="container">
-  <p-toast></p-toast>
-  <div class="card">
-    <div class="card-header">
-      <h2>Editar Reserva</h2>
-    </div>
-    <div class="card-body">
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <div class="p-fluid p-formgrid p-grid">
-          <div class="p-field p-col-12 p-md-6">
-            <label for="client_id">Cliente</label>
-            <p-select
-              id="client_id"
-              [options]="clients"
-              formControlName="client_id"
-              optionLabel="first_name"
-              optionValue="id"
-              placeholder="Seleccione un cliente"
-            ></p-select>
-            <small class="p-error" *ngIf="getFieldError('client_id')">{{ getFieldError('client_id') }}</small>
-          </div>
-
-          <div class="p-field p-col-12 p-md-6">
-            <label for="room_id">Habitación</label>
-            <p-select
-              id="room_id"
-              [options]="rooms"
-              formControlName="room_id"
-              optionLabel="number"
-              optionValue="id"
-              placeholder="Seleccione una habitación"
-            ></p-select>
-            <small class="p-error" *ngIf="getFieldError('room_id')">{{ getFieldError('room_id') }}</small>
-          </div>
-
-          <div class="p-field p-col-12 p-md-6">
-            <label for="start_date">Fecha de Inicio</label>
-            <p-datepicker id="start_date" formControlName="start_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
-            <small class="p-error" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
-          </div>
-
-          <div class="p-field p-col-12 p-md-6">
-            <label for="end_date">Fecha de Fin</label>
-            <p-datepicker id="end_date" formControlName="end_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
-            <small class="p-error" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
-          </div>
-
-          <div class="p-field p-col-12 p-md-6">
-            <label for="total_price">Precio Total</label>
-            <p-inputNumber id="total_price" formControlName="total_price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-            <small class="p-error" *ngIf="getFieldError('total_price')">{{ getFieldError('total_price') }}</small>
-          </div>
-
-          <div class="p-field p-col-12 p-md-6">
-            <label for="status">Estado</label>
-            <p-select
-              id="status"
-              [options]="statuses"
-              formControlName="status"
-              placeholder="Seleccione un estado"
-            ></p-select>
-            <small class="p-error" *ngIf="getFieldError('status')">{{ getFieldError('status') }}</small>
-          </div>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl">
+    <p-card [style]="{'box-shadow': '0 1px 3px rgba(0,0,0,0.1)', 'border-radius': '8px'}">
+      <ng-template pTemplate="header">
+        <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-4 rounded-t-lg">
+          <h2 class="text-2xl font-bold m-0">Editar Reserva</h2>
         </div>
+      </ng-template>
 
-        <div class="p-mt-4">
-          <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="loading"></p-button>
-          <p-button label="Cancelar" icon="pi pi-times" styleClass="p-button-secondary" (click)="cancelar()" class="p-ml-2"></p-button>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Cliente -->
+          <div class="flex flex-col">
+            <label for="client_id" class="block text-sm font-semibold text-gray-700 mb-2">Cliente *</label>
+            <p-select id="client_id" [options]="clients" formControlName="client_id" optionLabel="first_name" optionValue="id" placeholder="Seleccione un cliente"></p-select>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('client_id')">{{ getFieldError('client_id') }}</small>
+          </div>
+
+          <!-- Habitación -->
+          <div class="flex flex-col">
+            <label for="room_id" class="block text-sm font-semibold text-gray-700 mb-2">Habitación *</label>
+            <p-select id="room_id" [options]="rooms" formControlName="room_id" optionLabel="number" optionValue="id" placeholder="Seleccione una habitación"></p-select>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('room_id')">{{ getFieldError('room_id') }}</small>
+          </div>
+
+          <!-- Fecha de Inicio -->
+          <div class="flex flex-col">
+            <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Inicio *</label>
+            <p-datepicker id="start_date" formControlName="start_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
+          </div>
+
+          <!-- Fecha de Fin -->
+          <div class="flex flex-col">
+            <label for="end_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Fin *</label>
+            <p-datepicker id="end_date" formControlName="end_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
+          </div>
+
+          <!-- Precio Total -->
+          <div class="flex flex-col">
+            <label for="total_price" class="block text-sm font-semibold text-gray-700 mb-2">Precio Total *</label>
+            <p-inputNumber id="total_price" formControlName="total_price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('total_price')">{{ getFieldError('total_price') }}</small>
+          </div>
+
+          <!-- Estado -->
+          <div class="flex flex-col">
+            <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">Estado *</label>
+            <p-select id="status" [options]="statuses" formControlName="status" placeholder="Seleccione un estado"></p-select>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('status')">{{ getFieldError('status') }}</small>
+          </div>
         </div>
       </form>
-    </div>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <p-button
+            label="Cancelar"
+            severity="secondary"
+            icon="pi pi-times"
+            (click)="cancelar()"
+          ></p-button>
+          <p-button
+            label="Guardar Cambios"
+            icon="pi pi-save"
+            (click)="submit()"
+            [loading]="loading"
+          ></p-button>
+        </div>
+      </ng-template>
+    </p-card>
   </div>
 </div>
+<p-toast></p-toast>

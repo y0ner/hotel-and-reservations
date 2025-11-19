@@ -55,9 +55,7 @@ export class Create {
             summary: 'Éxito',
             detail: 'Hotel creado correctamente'
           });
-          setTimeout(() => {
-            this.router.navigate(['/Hotel']);
-          }, 1000);
+          this.router.navigate(['/Hotel']);
         },
         error: (error) => {
           console.error('Error creating Hotel:', error);

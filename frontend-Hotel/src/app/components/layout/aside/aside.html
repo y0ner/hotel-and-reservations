@@ -1,3 +1,12 @@
-<div class="card flex justify-center">
-    <p-panelmenu [model]="items" class="w-full md:w-80"></p-panelmenu>
+<div class="aside-container">
+  <nav class="aside-nav">
+    <ul class="aside-menu">
+      <li *ngFor="let item of items" class="aside-menu-item">
+        <a [routerLink]="item.routerLink" class="aside-menu-link" routerLinkActive="active">
+          <i class="aside-icon pi" [ngClass]="getIconClass(item.icon)"></i>
+          <span class="aside-label">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </div>

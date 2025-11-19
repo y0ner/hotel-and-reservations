@@ -57,9 +57,8 @@ export class Register {
             summary: 'Éxito',
             detail: 'Usuario registrado correctamente'
           });
-          setTimeout(() => {
-            this.router.navigate(['/']);
-          }, 1000);
+          // Navegar inmediatamente sin delay
+          this.router.navigate(['/Hotel']);
         },
         error: (error) => {
           this.messageService.add({
