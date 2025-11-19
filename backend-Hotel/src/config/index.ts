@@ -3,6 +3,7 @@ import express, { Application } from "express";
 import morgan from "morgan";
 import { sequelize, testConnection, getDatabaseInfo } from "../database/db";
 import { Routes } from "../routes/index";
+import { setupAssociations } from "../models/associations";
 
 var cors = require("cors");
 
@@ -16,6 +17,7 @@ export class App {
     this.app = express();
     this.settings();
     this.middlewares();
+    setupAssociations(); // Set up associations
     this.routes();
     this.dbConnection();
   }

@@ -13,10 +13,12 @@ export class ReservationServiceRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/ReservationServices")
-      .get(authMiddleware, this.reservationserviceController.getAllReservationServices);
+      .get(this.reservationserviceController.getAllReservationServices)
+      .post(authMiddleware, this.reservationserviceController.createReservationService);
 
     app.route("/api/ReservationServices/:id")
-      .get(authMiddleware, this.reservationserviceController.getReservationServiceById);
+      .get(authMiddleware, this.reservationserviceController.getReservationServiceById)
+      .delete(authMiddleware, this.reservationserviceController.deleteReservationService);
 
   }
 }

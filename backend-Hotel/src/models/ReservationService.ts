@@ -18,6 +18,11 @@ export class ReservationService extends Model<ReservationServiceI> implements Re
 
 ReservationService.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false

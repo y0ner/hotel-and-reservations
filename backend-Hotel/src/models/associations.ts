@@ -52,6 +52,24 @@ export const setupAssociations = () => {
     foreignKey: "service_id",
   });
 
+  ReservationService.belongsTo(Reservation, {
+    foreignKey: 'reservation_id',
+    targetKey: 'id'
+  });
+  Reservation.hasMany(ReservationService, {
+    foreignKey: 'reservation_id',
+    sourceKey: 'id'
+  });
+
+  ReservationService.belongsTo(Service, {
+    foreignKey: 'service_id',
+    targetKey: 'id'
+  });
+  Service.hasMany(ReservationService, {
+    foreignKey: 'service_id',
+    sourceKey: 'id'
+  });
+
   // Reservation - Payment (One to Many)
   Reservation.hasMany(Payment, {
     foreignKey: "reservation_id",
