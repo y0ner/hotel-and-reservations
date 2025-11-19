@@ -79,8 +79,6 @@ Instrucciones para acceder:
 
 **Descripción:** El dashboard es el panel de control principal donde puede ver un resumen de la información del hotel.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Dashboard General]
-
 **Elementos principales:**
 - Indicadores de ocupación
 - Reservaciones pendientes
@@ -127,8 +125,7 @@ Menú Principal:
 ### 3.2 Crear Cliente (CREATE)
 
 **Descripción:** Registrar un nuevo cliente en el sistema.
-
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Formulario Crear Cliente]
+![alt text](image-5.png)
 
 **Pasos:**
 1. En la lista de clientes, haga clic en el botón "Crear Cliente" o "+"
@@ -140,8 +137,7 @@ Menú Principal:
    - **Email:** (Ej: juan@example.com)
    - **Nacionalidad:** (Ej: Colombiana)
 3. Haga clic en "Guardar"
-
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Confirmación de Cliente Creado]
+![alt text](image-6.png)
 
 **Validaciones:**
 - El email debe ser válido
@@ -152,7 +148,7 @@ Menú Principal:
 
 **Descripción:** Ver los detalles de un cliente específico.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Detalle de Cliente]
+
 
 **Pasos:**
 1. En la lista de clientes, busque el cliente deseado
@@ -163,7 +159,6 @@ Menú Principal:
 
 **Descripción:** Modificar la información de un cliente existente.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Formulario Editar Cliente]
 
 **Pasos:**
 1. En la lista de clientes, identifique el cliente a editar
@@ -171,13 +166,11 @@ Menú Principal:
 3. Modifique los campos necesarios
 4. Haga clic en "Actualizar"
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Cliente Actualizado Exitosamente]
-
 ### 3.5 Eliminar Cliente (DELETE)
 
 **Descripción:** Inactivar un cliente del sistema (eliminación lógica).
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Diálogo de Confirmación Eliminar Cliente]
+
 
 **Pasos:**
 1. En la lista de clientes, busque el cliente a eliminar
@@ -194,9 +187,7 @@ Menú Principal:
 ### 4.1 Listar Hoteles
 
 **Descripción:** Ver todos los hoteles disponibles en el sistema.
-
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Listado de Hoteles]
-
+![alt text](image-7.png)
 **Columnas visibles:**
 - ID
 - Nombre del Hotel
@@ -210,8 +201,7 @@ Menú Principal:
 ### 4.2 Crear Hotel (CREATE)
 
 **Descripción:** Registrar un nuevo hotel en el sistema.
-
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Formulario Crear Hotel]
+![alt text](image-8.png)
 
 **Pasos:**
 1. Haga clic en "Hoteles" en el menú
@@ -225,13 +215,11 @@ Menú Principal:
    - **Estrellas:** (1-5)
 4. Haga clic en "Guardar"
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Hotel Creado Exitosamente]
-
 ### 4.3 Leer/Ver Hotel (READ)
 
 **Descripción:** Ver información detallada de un hotel.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Detalle de Hotel]
+
 
 **Información mostrada:**
 - Nombre y descripción
@@ -244,7 +232,7 @@ Menú Principal:
 
 **Descripción:** Modificar datos del hotel.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Formulario Editar Hotel]
+
 
 **Pasos:**
 1. Localice el hotel en la lista
@@ -252,13 +240,13 @@ Menú Principal:
 3. Modifique los campos requeridos
 4. Haga clic en "Actualizar"
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Hotel Actualizado]
+
 
 ### 4.5 Eliminar Hotel (DELETE)
 
 **Descripción:** Inactivar un hotel.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Confirmación Eliminar Hotel]
+
 
 **Pasos:**
 1. Seleccione el hotel a eliminar
@@ -273,8 +261,7 @@ Menú Principal:
 
 **Descripción:** Ver todas las categorías de habitaciones disponibles.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Listado de Tipos de Habitación]
-
+![alt text](image-9.png)
 **Información mostrada:**
 - Nombre del tipo
 - Descripción
@@ -286,7 +273,7 @@ Menú Principal:
 
 **Descripción:** Agregar una nueva categoría de habitación.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Formulario Crear Tipo Habitación]
+
 
 **Pasos:**
 1. Haga clic en "Tipos de Habitación"
@@ -298,19 +285,15 @@ Menú Principal:
    - **Desayuno Incluido:** (Sí/No)
 4. Haga clic en "Guardar"
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Tipo Creado Exitosamente]
-
 ### 5.3 Leer/Ver Tipo (READ)
 
 **Descripción:** Ver detalles de una categoría de habitación.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Detalle Tipo Habitación]
 
 ### 5.4 Actualizar Tipo de Habitación (UPDATE)
 
 **Descripción:** Modificar una categoría de habitación.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Editar Tipo Habitación]
 
 **Pasos:**
 1. Busque el tipo a modificar
@@ -322,7 +305,6 @@ Menú Principal:
 
 **Descripción:** Inactivar una categoría.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Eliminar Tipo Habitación]
 
 ---
 
@@ -332,7 +314,7 @@ Menú Principal:
 
 **Descripción:** Ver todas las habitaciones del hotel.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Listado de Habitaciones]
+![alt text](image-10.png)
 
 **Columnas:**
 - Número de habitación
@@ -347,7 +329,7 @@ Menú Principal:
 
 **Descripción:** Registrar una nueva habitación.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Formulario Crear Habitación]
+
 
 **Pasos:**
 1. Haga clic en "Habitaciones"
@@ -363,19 +345,19 @@ Menú Principal:
    - **Disponible:** (Marque si está disponible)
 4. Haga clic en "Guardar"
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Habitación Creada]
+
 
 ### 6.3 Leer/Ver Habitación (READ)
 
 **Descripción:** Ver detalles completos de una habitación.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Detalle Habitación]
+
 
 ### 6.4 Actualizar Habitación (UPDATE)
 
 **Descripción:** Modificar información de una habitación.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Editar Habitación]
+
 
 **Pasos:**
 1. Localice la habitación
@@ -383,13 +365,12 @@ Menú Principal:
 3. Modifique los campos
 4. Haga clic en "Actualizar"
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Habitación Actualizada]
+
 
 ### 6.5 Eliminar Habitación (DELETE)
 
 **Descripción:** Inactivar una habitación.
 
-[INSERTAR AQUÍ CAPTURA DE PANTALLA: Eliminar Habitación]
 
 ---
 
