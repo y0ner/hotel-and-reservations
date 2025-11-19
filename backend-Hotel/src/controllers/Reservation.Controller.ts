@@ -1,11 +1,19 @@
 import { Request, Response } from "express";
 import { Reservation, ReservationI } from "../models/Reservation";
+import { Client } from "../models/Client";
+import { Room } from "../models/Room";
 
 export class ReservationController {
 
   public async getAllReservations(req: Request, res: Response) {
     try {
-      const reservations: ReservationI[] = await Reservation.findAll({ where: { status: 'ACTIVE' } });
+      const reservations: ReservationI[] = await Reservation.findAll({ 
+        where: { status: 'ACTIVE' }, 
+        include: [
+          { model: Client },
+          { model: Room }
+        ]
+      });
       res.status(200).json(reservations);
     } catch (error) {
       res.status(500).json({ error: "Error fetching reservations" });
@@ -27,9 +35,9 @@ export class ReservationController {
   }
 
   public async createReservation(req: Request, res: Response) {
-    const { id,client_id,room_id,reservation_date,checkin_date,checkout_date,number_of_guests,total_amount,status } = req.body;
+    const { id,client_id,room_id,reservation_date,start_date, end_date, checkin_date,checkout_date,number_of_guests,total_amount,status } = req.body;
     try {
-      let body: ReservationI = { client_id,room_id,reservation_date,checkin_date,checkout_date,number_of_guests,total_amount, status };
+      let body: ReservationI = { client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,total_amount, status };
       const newReservation = await Reservation.create(body as any);
       res.status(201).json(newReservation);
     } catch (error: any) {
@@ -39,10 +47,10 @@ export class ReservationController {
 
   public async updateReservation(req: Request, res: Response) {
   const { id: pk } = req.params;
-  const { id,client_id,room_id,reservation_date,checkin_date,checkout_date,number_of_guests,total_amount,status } = req.body;
+  const { id,client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,total_amount,status } = req.body;
   try {
     const reservationExist = await Reservation.findOne({ where: { id: pk, status: 'ACTIVE' } });
-    let body: ReservationI = { client_id,room_id,reservation_date,checkin_date,checkout_date,number_of_guests,total_amount, status };
+    let body: ReservationI = { client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,total_amount, status };
       if (reservationExist) {
         await reservationExist.update(body);
         res.status(200).json(reservationExist);

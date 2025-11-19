@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/db";
-import { Reservation } from "./Reservation";
 
 export interface CheckinI {
   id?: number;

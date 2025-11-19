@@ -1,17 +1,14 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/db";
-import { Client } from "./Client";
-import { Room } from "./Room";
-import { Checkin } from "./Checkin";
-import { Service } from "./Service";
-import { Payment } from "./Payment";
-import { Checkout } from "./Checkout";
+
 
 export interface ReservationI {
   id?: number;
-  reservation_date: Date;
-  checkin_date: Date;
-  checkout_date: Date;
+  reservation_date?: Date | null;
+  start_date?: Date | null;
+  end_date?: Date | null;
+  checkin_date?: Date | null;
+  checkout_date?: Date | null;
   number_of_guests: number;
   total_amount: number;
   client_id: number;
@@ -20,9 +17,11 @@ export interface ReservationI {
 }
 
 export class Reservation extends Model<ReservationI> implements ReservationI {
-  public reservation_date!: Date;
-  public checkin_date!: Date;
-  public checkout_date!: Date;
+  public reservation_date!: Date | null;
+  public start_date!: Date | null;
+  public end_date!: Date | null;
+  public checkin_date!: Date | null;
+  public checkout_date!: Date | null;
   public number_of_guests!: number;
   public total_amount!: number;
   public client_id!: number;
@@ -32,17 +31,30 @@ export class Reservation extends Model<ReservationI> implements ReservationI {
 
 Reservation.init(
   {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     reservation_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
+    },
+    start_date: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    end_date: {
+        type: DataTypes.DATE,
+        allowNull: true
     },
     checkin_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     checkout_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     number_of_guests: {
       type: DataTypes.INTEGER,

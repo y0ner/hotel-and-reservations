@@ -1,8 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/db";
-import { RoomType } from "./RoomType";
-import { Reservation } from "./Reservation";
-import { Hotel } from "./Hotel";
+
 
 export interface RoomI {
   id?: number;

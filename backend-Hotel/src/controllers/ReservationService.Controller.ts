@@ -11,7 +11,7 @@ export class ReservationServiceController {
         include: [
           {
             model: Reservation,
-            attributes: ['id', 'start_date', 'end_date']
+            attributes: ['id', 'reservation_date', 'start_date', 'end_date']
           },
           {
             model: Service,

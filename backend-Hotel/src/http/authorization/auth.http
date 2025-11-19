@@ -13,9 +13,9 @@ POST {{baseUrl}}/api/register
 Content-Type: application/json
 
 {
-  "username": "prueba",
-  "email": "prueba@gmail.com",
-  "password": "prueba",
+  "username": "yoner",
+  "email": "yoner@gmail.com",
+  "password": "yoner123",
   "is_active": "ACTIVE",
   "avatar": "avatar.jpg"
 }

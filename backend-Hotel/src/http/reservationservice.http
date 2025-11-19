@@ -1,7 +1,7 @@
 ###
 # @name ReservationService
 # Variables de entorno para las pruebas de ReservationService
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzYzNDkyNjcwLCJleHAiOjE3NjM0OTMyNzB9._8qFvU2b9mqL02LuM1h7CWXmJr0Wzzlb8-G8kUDicT8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzYzNTIxNDk5LCJleHAiOjE3NjM1MjIwOTl9.wQYO9rDXFMEUHwh2XH3Er5ndki8zu71q36o5KCGqZY0
 @baseUrl = http://localhost:4000
 
 ### ================== RUTAS SIN AUTENTICACIÓN ==================
@@ -38,17 +38,17 @@ DELETE {{baseUrl}}/api/reservationservices/public/2/logic
 ### ================== RUTAS CON AUTENTICACIÓN ==================
 
 ### Obtener todos los reservationservices (CON token)
-GET {{baseUrl}}/api/reservationservices
+GET {{baseUrl}}/api/ReservationServices
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Obtener un ReservationService por ID (CON token)
-GET {{baseUrl}}/api/reservationservices/1
+GET {{baseUrl}}/api/ReservationServices/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Crear un nuevo ReservationService (CON token)
-POST {{baseUrl}}/api/reservationservices
+POST {{baseUrl}}/api/ReservationServices
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -58,7 +58,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Actualizar un ReservationService existente (CON token)
-PATCH {{baseUrl}}/api/reservationservices/1
+PATCH {{baseUrl}}/api/ReservationServices/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -67,10 +67,10 @@ Authorization: Bearer {{token}}
 }
 
 ### Eliminar un ReservationService físicamente (CON token)
-DELETE {{baseUrl}}/api/reservationservices/1
+DELETE {{baseUrl}}/api/ReservationServices/1
 Authorization: Bearer {{token}}
 
 ### Borrado lógico de un ReservationService (CON token)
-DELETE {{baseUrl}}/api/reservationservices/1/logic
+DELETE {{baseUrl}}/api/ReservationServices/1/logic
 Content-Type: application/json
 Authorization: Bearer {{token}}

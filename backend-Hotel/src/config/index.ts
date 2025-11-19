@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import express, { Application } from "express";
 import morgan from "morgan";
-import { sequelize, testConnection, getDatabaseInfo } from "../database/db";
+import { testConnection, syncDatabase } from "../database/db";
 import { Routes } from "../routes/index";
 import { setupAssociations } from "../models/associations";
 
@@ -17,9 +17,7 @@ export class App {
     this.app = express();
     this.settings();
     this.middlewares();
-    setupAssociations(); // Set up associations
     this.routes();
-    this.dbConnection();
   }
 
   private settings(): void {
@@ -60,17 +58,14 @@ export class App {
 
   private async dbConnection(): Promise<void> {
     try {
-      const dbInfo = getDatabaseInfo();
-      console.log(`🔗 Intentando conectar a: ${dbInfo.engine.toUpperCase()}`);
       const isConnected = await testConnection();
       if (!isConnected) {
-        throw new Error(`No se pudo conectar a la base de datos ${dbInfo.engine.toUpperCase()}`);
+        throw new Error(`No se pudo conectar a la base de datos.`);
       }
-      await sequelize.sync({ force: false });
-      // await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
-      // await sequelize.sync({ force: true });
-      // await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;');
-      console.log(`📦 Base de datos sincronizada exitosamente`);
+      // 1. Definir las asociaciones PRIMERO
+      setupAssociations();
+      // 2. Sincronizar la base de datos DESPUÉS
+      await syncDatabase();
     } catch (error) {
       console.error("❌ Error al conectar con la base de datos:", error);
       process.exit(1);
@@ -78,7 +73,9 @@ export class App {
   }
 
   async listen() {
-    await this.app.listen(this.app.get('port'));
-    console.log(`🚀 Servidor ejecutándose en puerto ${this.app.get('port')}`);
+    await this.dbConnection(); // Asegura que la BD esté lista ANTES de iniciar el servidor.
+    this.app.listen(this.app.get('port'), () => {
+      console.log(`🚀 Servidor ejecutándose en puerto ${this.app.get('port')}`);
+    });
   }
 }

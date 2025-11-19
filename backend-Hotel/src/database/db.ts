@@ -5,15 +5,26 @@ import tedious from "tedious";
 
 dotenv.config();
 
+
+
 interface DatabaseConfig {
+
   dialect: string;
+
   host: string;
+
   username: string;
+
   password: string;
+
   database: string;
+
   port: number;
+
   dialectModule?: any;
+
   dialectOptions?: any;
+
 }
 
 const dbConfigurations: Record<string, DatabaseConfig> = {
@@ -109,5 +120,16 @@ export const testConnection = async (): Promise<boolean> => {
   } catch (error) {
     console.error(`❌ Error de conexión a ${selectedEngine.toUpperCase()}:`, error);
     return false;
+  }
+};
+
+export const syncDatabase = async () => {
+  try {
+    // El uso de { alter: true } intentará actualizar las tablas para que coincidan con los modelos
+    // sin perder datos. Para un entorno de desarrollo, es una opción segura.
+    await sequelize.sync({ alter: true });
+    console.log("✅ Base de datos sincronizada.");
+  } catch (error) {
+    console.error("❌ Error al sincronizar la base de datos:", error);
   }
 };

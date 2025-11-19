@@ -1,6 +1,5 @@
 import { Client } from "./Client";
 import { Hotel } from "./Hotel";
-import { Reservation } from "./Reservation";
 import { Room } from "./Room";
 import { RoomType } from "./RoomType";
 import { Season } from "./Season";
@@ -10,8 +9,9 @@ import { Service } from "./Service";
 import { Payment } from "./Payment";
 import { Checkout } from "./Checkout";
 import { ReservationService } from "./ReservationService";
+import { Reservation } from './Reservation';
 
-export const setupAssociations = () => {
+export function setupAssociations() {
   // Client - Reservation (One to Many)
   Client.hasMany(Reservation, {
     foreignKey: "client_id",
@@ -43,15 +43,6 @@ export const setupAssociations = () => {
   });
 
   // Reservation - Service (Many to Many)
-  Reservation.belongsToMany(Service, {
-    through: ReservationService,
-    foreignKey: "reservation_id",
-  });
-  Service.belongsToMany(Reservation, {
-    through: ReservationService,
-    foreignKey: "service_id",
-  });
-
   ReservationService.belongsTo(Reservation, {
     foreignKey: 'reservation_id',
     targetKey: 'id'
@@ -129,4 +120,6 @@ export const setupAssociations = () => {
     foreignKey: "season_id",
     targetKey: "id",
   });
-};
+
+  console.log('Associations setup complete.');
+}
