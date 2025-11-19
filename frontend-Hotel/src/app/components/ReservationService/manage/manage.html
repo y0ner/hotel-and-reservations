@@ -1,0 +1,35 @@
+<div class="card p-8">
+    <h2 class="text-2xl font-bold mb-4">Administrar Servicios para la Reserva #{{ reservationId }}</h2>
+
+    <p-pickList
+        [source]="sourceServices"
+        [target]="targetServices"
+        sourceHeader="Servicios Disponibles"
+        targetHeader="Servicios Asignados"
+        [dragdrop]="true"
+        [responsive]="true"
+        [sourceStyle]="{ height: '300px' }"
+        [targetStyle]="{ height: '300px' }"
+        filterBy="name"
+        sourceFilterPlaceholder="Buscar servicios..."
+        targetFilterPlaceholder="Buscar servicios..."
+        (onMoveToTarget)="onMoveToTarget($event)"
+        (onMoveToSource)="onMoveToSource($event)"
+    >
+        <ng-template let-service pTemplate="item">
+            <div class="flex items-center p-2">
+                <div class="flex-1">
+                    <h3 class="font-bold">{{ service.name }}</h3>
+                    <p class="text-sm text-gray-500">{{ service.description }}</p>
+                </div>
+                <span class="font-bold text-right">{{ service.price | currency:'USD' }}</span>
+            </div>
+        </ng-template>
+    </p-pickList>
+
+    <div class="flex justify-end mt-4">
+        <p-button label="Hecho" icon="pi pi-check" (click)="done()"></p-button>
+    </div>
+</div>
+
+<p-toast></p-toast>

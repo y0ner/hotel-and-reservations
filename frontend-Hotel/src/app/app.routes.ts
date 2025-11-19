@@ -43,6 +43,12 @@ import { Getall as ReservationGetall } from './components/Reserva/getall/getall'
 import { Create as ReservationCreate } from './components/Reserva/create/create';
 import { Update as ReservationUpdate } from './components/Reserva/update/update';
 import { Delete as ReservationDelete } from './components/Reserva/delete/delete';
+// Checkin components
+import { Create as CheckinCreate } from './components/Checkin/create/create';
+// Checkout components
+import { Create as CheckoutCreate } from './components/Checkout/create/create';
+// ReservationService components
+import { Manage as ReservationServiceManage } from './components/ReservationService/manage/manage';
 // Payment components with aliases
 import { Getall as PaymentGetall } from './components/Pago/getall/getall';
 import { Create as PaymentCreate } from './components/Pago/create/create';
@@ -209,6 +215,21 @@ export const routes: Routes = [
     {
         path: "Reserva/edit/:id",
         component: ReservationUpdate,
+        canActivate: [authGuard]
+    },
+    {
+        path: "Reserva/:id/checkin",
+        component: CheckinCreate,
+        canActivate: [authGuard]
+    },
+    {
+        path: "Reserva/:id/checkout",
+        component: CheckoutCreate,
+        canActivate: [authGuard]
+    },
+    {
+        path: "Reserva/:id/services",
+        component: ReservationServiceManage,
         canActivate: [authGuard]
     },
     {

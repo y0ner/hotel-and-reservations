@@ -1,0 +1,14 @@
+.p-8 { padding: 2rem; }
+.max-w-lg { max-width: 32rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mb-4 { margin-bottom: 1rem; }
+.mt-4 { margin-top: 1rem; }
+.text-center { text-align: center; }
+.text-2xl { font-size: 1.5rem; }
+.font-bold { font-weight: 700; }
+.field { margin-bottom: 1rem; }
+.w-full { width: 100%; }
+.flex { display: flex; }
+.justify-end { justify-content: flex-end; }
+.gap-2 { gap: 0.5rem; }
+.text-red-500 { color: #ef4444; }

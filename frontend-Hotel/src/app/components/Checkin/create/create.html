@@ -1,0 +1,31 @@
+<div class="card p-8 max-w-lg mx-auto">
+    <h2 class="text-2xl font-bold mb-4">Confirmar Check-in</h2>
+
+    <div *ngIf="loading" class="text-center">
+        <p>Cargando datos de la reserva...</p>
+    </div>
+
+    <div *ngIf="!loading && reservation">
+        <div class="mb-4">
+            <p><strong>Reserva ID:</strong> {{ reservation.id }}</p>
+            <p><strong>Fecha de Check-in:</strong> {{ reservation.checkin_date | date: 'fullDate' }}</p>
+            <p><strong>Fecha de Check-out:</strong> {{ reservation.checkout_date | date: 'fullDate' }}</p>
+        </div>
+
+        <div class="field">
+            <label for="observation">Observaciones</label>
+            <textarea id="observation" pInputTextarea [(ngModel)]="observation" rows="3" class="w-full"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-4">
+            <p-button label="Cancelar" icon="pi pi-times" (click)="cancel()" styleClass="p-button-secondary"></p-button>
+            <p-button label="Confirmar Check-in" icon="pi pi-check" (click)="confirmCheckin()" [loading]="loading"></p-button>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && !reservation" class="text-center text-red-500">
+        <p>No se pudo cargar la información de la reserva.</p>
+    </div>
+</div>
+
+<p-toast></p-toast>
