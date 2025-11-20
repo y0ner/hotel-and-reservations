@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { RoleUserController } from '../../controllers/authorization/role_user.controller';
-import { authMiddleware } from '../../middleware/auth';
+import { authMiddleware, devAuthMiddleware } from '../../middleware/auth';
 
 export class RoleUserRoutes {
   public roleUserController: RoleUserController = new RoleUserController();
@@ -22,14 +22,14 @@ export class RoleUserRoutes {
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/roleUsers")
       .get(authMiddleware, this.roleUserController.getAllRoleUsers)
-      .post(authMiddleware, this.roleUserController.createRoleUser);
+      .post(devAuthMiddleware, this.roleUserController.createRoleUser);
 
     app.route("/api/roleUsers/:id")
       .get(authMiddleware, this.roleUserController.getRoleUserById)
-      .patch(authMiddleware, this.roleUserController.updateRoleUser)
-      .delete(authMiddleware, this.roleUserController.deleteRoleUser);
+      .patch(devAuthMiddleware, this.roleUserController.updateRoleUser)
+      .delete(devAuthMiddleware, this.roleUserController.deleteRoleUser);
 
     app.route("/api/roleUsers/:id/logic")
-      .delete(authMiddleware, this.roleUserController.deleteRoleUserAdv);
+      .delete(devAuthMiddleware, this.roleUserController.deleteRoleUserAdv);
   }
 }

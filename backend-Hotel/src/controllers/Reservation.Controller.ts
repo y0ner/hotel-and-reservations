@@ -11,7 +11,9 @@ export class ReservationController {
   public async getAllReservations(req: Request, res: Response) {
     try {
       const reservations: ReservationI[] = await Reservation.findAll({ 
-        where: { status: 'ACTIVE' }, 
+        where: { 
+          status: { [Op.notIn]: ['INACTIVE', 'CANCELLED', 'CHECKED-OUT'] }
+        }, 
         include: [
           { model: Client },
           { model: Room },
@@ -28,11 +30,11 @@ export class ReservationController {
   public async getReservationById(req: Request, res: Response) {
     try {
       const { id: pk } = req.params;
-      const reservation = await Reservation.findOne({ where: { id: pk, status: 'ACTIVE' } });
+      const reservation = await Reservation.findByPk(pk);
       if (reservation) {
         res.status(200).json(reservation);
       } else {
-        res.status(404).json({ error: "Reservation not found or inactive" });
+        res.status(404).json({ error: "Reservation not found" });
       }
     } catch (error) {
       res.status(500).json({ error: "Error fetching reservation" });
@@ -55,7 +57,7 @@ export class ReservationController {
 
       const where: any = {
         room_id: roomId,
-        status: 'ACTIVE',
+        status: { [Op.in]: ['PENDING', 'CONFIRMED', 'CHECKED-IN'] },
         [Op.and]: [
           { start_date: { [Op.lte]: end } },
           { end_date: { [Op.gte]: start } }
@@ -77,7 +79,7 @@ export class ReservationController {
   }
 
   public async createReservation(req: Request, res: Response) {
-    const { id,client_id,room_id,reservation_date,start_date, end_date, checkin_date,checkout_date,number_of_guests,total_amount,rate_id,hotel_id,status } = req.body;
+    const { client_id,room_id,reservation_date,start_date, end_date, checkin_date,checkout_date,number_of_guests,rate_id,hotel_id,status } = req.body;
     try {
       // Validación: comprobar disponibilidad
       const start = new Date(start_date as any);
@@ -92,7 +94,7 @@ export class ReservationController {
       const conflicts = await Reservation.findAll({
         where: {
           room_id: room_id,
-          status: 'ACTIVE',
+          status: { [Op.in]: ['PENDING', 'CONFIRMED', 'CHECKED-IN'] },
           [Op.and]: [
             { start_date: { [Op.lte]: end } },
             { end_date: { [Op.gte]: start } }
@@ -104,6 +106,15 @@ export class ReservationController {
         return res.status(400).json({ error: 'La habitación no está disponible en las fechas seleccionadas', conflicts });
       }
 
+      // Cálculo automático de total_amount
+      const rate = await Rate.findByPk(rate_id);
+      if (!rate) {
+        return res.status(404).json({ error: 'Tarifa no encontrada' });
+      }
+      const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
+      const total_amount = nights * rate.amount * number_of_guests;
+
+
       let body: ReservationI = { client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,total_amount,rate_id,hotel_id, status };
       const newReservation = await Reservation.create(body as any);
       res.status(201).json(newReservation);
@@ -114,10 +125,10 @@ export class ReservationController {
 
   public async updateReservation(req: Request, res: Response) {
   const { id: pk } = req.params;
-  const { id,client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,total_amount,rate_id,hotel_id,status } = req.body;
+  const { client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,rate_id,hotel_id,status } = req.body;
   try {
-    const reservationExist = await Reservation.findOne({ where: { id: pk, status: 'ACTIVE' } });
-    let body: ReservationI = { client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,total_amount,rate_id,hotel_id, status };
+    const reservationExist = await Reservation.findByPk(pk);
+    
       if (reservationExist) {
         // Validar que la habitación pertenezca al hotel
         const room = await Room.findByPk(room_id);
@@ -132,7 +143,7 @@ export class ReservationController {
         const conflicts = await Reservation.findAll({
           where: {
             room_id: room_id,
-            status: 'ACTIVE',
+            status: { [Op.in]: ['PENDING', 'CONFIRMED', 'CHECKED-IN'] },
             id: { [Op.ne]: pk },
             [Op.and]: [
               { start_date: { [Op.lte]: end } },
@@ -143,10 +154,20 @@ export class ReservationController {
         if (conflicts.length > 0) {
           return res.status(400).json({ error: 'La habitación no está disponible en las fechas seleccionadas', conflicts });
         }
+
+        // Cálculo automático de total_amount
+        const rate = await Rate.findByPk(rate_id);
+        if (!rate) {
+          return res.status(404).json({ error: 'Tarifa no encontrada' });
+        }
+        const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
+        const total_amount = nights * rate.amount * number_of_guests;
+
+        let body: ReservationI = { client_id,room_id,reservation_date,start_date, end_date,checkin_date,checkout_date,number_of_guests,total_amount,rate_id,hotel_id, status };
         await reservationExist.update(body);
         res.status(200).json(reservationExist);
       } else {
-        res.status(404).json({ error: "Reservation not found or inactive" });
+        res.status(404).json({ error: "Reservation not found" });
       }
     } catch (error: any) {
       res.status(400).json({ error: error.message });
@@ -156,7 +177,7 @@ export class ReservationController {
   public async deleteReservationAdv(req: Request, res: Response) {
     const { id: pk } = req.params;
     try {
-      const reservationToUpdate = await Reservation.findOne({ where: { id: pk, status: 'ACTIVE' } });
+      const reservationToUpdate = await Reservation.findByPk(pk);
       if (reservationToUpdate) {
         await reservationToUpdate.update({ status: 'INACTIVE' });
         res.status(200).json({ message: "Reservation marked as inactive" });

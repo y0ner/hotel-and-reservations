@@ -125,9 +125,20 @@ export const testConnection = async (): Promise<boolean> => {
 
 export const syncDatabase = async () => {
   try {
-    // El uso de { alter: true } intentará actualizar las tablas para que coincidan con los modelos
-    // sin perder datos. Para un entorno de desarrollo, es una opción segura.
-    await sequelize.sync({ alter: true });
+    // Limpiar valores inválidos en ENUM columns antes de sincronizar
+    try {
+      // Actualizar valores inválidos en reservations.status a PENDING
+      await sequelize.query(`
+        UPDATE reservations 
+        SET status = 'PENDING' 
+        WHERE status NOT IN ('PENDING', 'CONFIRMED', 'CANCELLED', 'CHECKED-IN', 'CHECKED-OUT', 'INACTIVE')
+      `);
+    } catch (err) {
+      console.warn("⚠️  No se pudo limpiar valores inválidos en reservations.status (tabla podría no existir aún)");
+    }
+
+    // Solo sincronizar si no existen las tablas (más rápido en desarrollo)
+    await sequelize.sync({ alter: false });
     console.log("✅ Base de datos sincronizada.");
   } catch (error) {
     console.error("❌ Error al sincronizar la base de datos:", error);

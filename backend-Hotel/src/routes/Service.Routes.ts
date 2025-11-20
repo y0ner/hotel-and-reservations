@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { ServiceController } from "../controllers/Service.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class ServiceRoutes {
   public serviceController: ServiceController = new ServiceController();
@@ -13,14 +13,14 @@ export class ServiceRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Services")
-      .get(authMiddleware, this.serviceController.getAllServices)
-      .post(authMiddleware, this.serviceController.createService);
+      .get(devAuthMiddleware, this.serviceController.getAllServices)
+      .post(devAuthMiddleware, this.serviceController.createService);
 
     app.route("/api/Services/:id")
-      .get(authMiddleware, this.serviceController.getServiceById)
-      .patch(authMiddleware, this.serviceController.updateService);
+      .get(devAuthMiddleware, this.serviceController.getServiceById)
+      .patch(devAuthMiddleware, this.serviceController.updateService);
 
     app.route("/api/Services/:id/logic")
-      .delete(authMiddleware, this.serviceController.deleteServiceAdv);
+      .delete(devAuthMiddleware, this.serviceController.deleteServiceAdv);
   }
 }

@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { SeasonController } from "../controllers/Season.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class SeasonRoutes {
   public seasonController: SeasonController = new SeasonController();
@@ -12,19 +12,21 @@ export class SeasonRoutes {
     //   .get(this.seasonController.getAllSeasons);
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
+    // IMPORTANTE: Las rutas específicas deben ir ANTES que las rutas parametrizadas
 
     app.route("/api/Seasons")
-      .get(authMiddleware, this.seasonController.getAllSeasons)
-      .post(authMiddleware, this.seasonController.createSeason);
+      .get(devAuthMiddleware, this.seasonController.getAllSeasons)
+      .post(devAuthMiddleware, this.seasonController.createSeason);
 
+    // Rutas específicas ANTES de rutas con parámetro
     app.route("/api/Seasons/hotel/:hotelId")
-      .get(authMiddleware, this.seasonController.getSeasonsByHotel);
-
-    app.route("/api/Seasons/:id")
-      .get(authMiddleware, this.seasonController.getSeasonById)
-      .patch(authMiddleware, this.seasonController.updateSeason);
+      .get(devAuthMiddleware, this.seasonController.getSeasonsByHotel);
 
     app.route("/api/Seasons/:id/logic")
-      .delete(authMiddleware, this.seasonController.deleteSeasonAdv);
+      .delete(devAuthMiddleware, this.seasonController.deleteSeasonAdv);
+
+    app.route("/api/Seasons/:id")
+      .get(devAuthMiddleware, this.seasonController.getSeasonById)
+      .patch(devAuthMiddleware, this.seasonController.updateSeason);
   }
 }

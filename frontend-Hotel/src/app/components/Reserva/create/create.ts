@@ -76,6 +76,7 @@ export class Create implements OnInit {
     this.form.get('rate_id')?.valueChanges.subscribe(() => this.calculatePrice());
     this.form.get('start_date')?.valueChanges.subscribe(() => this.calculatePrice());
     this.form.get('end_date')?.valueChanges.subscribe(() => this.calculatePrice());
+    this.form.get('number_of_guests')?.valueChanges.subscribe(() => this.calculatePrice());
   }
 
   loadClients(): void {
@@ -115,6 +116,7 @@ export class Create implements OnInit {
     const rateId = this.form.get('rate_id')?.value;
     const startDate = this.form.get('start_date')?.value;
     const endDate = this.form.get('end_date')?.value;
+    const numberOfGuests = this.form.get('number_of_guests')?.value || 1;
 
     if (!rateId || !startDate || !endDate) {
       this.calculatedPrice = 0;
@@ -138,8 +140,8 @@ export class Create implements OnInit {
       return;
     }
 
-    // Calcular precio total: tarifa × número de noches
-    this.calculatedPrice = selectedRate.amount * nights;
+    // Calcular precio total: tarifa × número de noches × número de huéspedes
+    this.calculatedPrice = selectedRate.amount * nights * numberOfGuests;
   }
 
   submit(): void {

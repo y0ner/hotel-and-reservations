@@ -22,14 +22,14 @@
                 <!-- Fecha de Inicio -->
                 <div class="flex flex-col">
                     <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Inicio *</label>
-                    <p-calendar id="start_date" formControlName="start_date" dateFormat="yy-mm-dd"></p-calendar>
+                    <p-datepicker id="start_date" formControlName="start_date" dateFormat="yy-mm-dd"></p-datepicker>
                     <small class="text-red-500 mt-1" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
                 </div>
 
                 <!-- Fecha de Fin -->
                 <div class="flex flex-col">
                     <label for="end_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Fin *</label>
-                    <p-calendar id="end_date" formControlName="end_date" dateFormat="yy-mm-dd"></p-calendar>
+                    <p-datepicker id="end_date" formControlName="end_date" dateFormat="yy-mm-dd"></p-datepicker>
                     <small class="text-red-500 mt-1" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
                 </div>
 

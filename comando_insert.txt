@@ -1,0 +1,309 @@
+-- =======================================================================================
+-- SCRIPT DE DATOS DE NEGOCIO (SIN AUTENTICACIÓN/USUARIOS)
+-- =======================================================================================
+
+-- 1. Desactivar verificaciones de llaves foráneas para limpiar y repoblar sin errores
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 2. Limpiar TODAS las tablas para reiniciar contadores (incluida Auth para limpiar basura vieja)
+TRUNCATE TABLE refresh_tokens;
+TRUNCATE TABLE resource_roles;
+TRUNCATE TABLE role_users;
+TRUNCATE TABLE users;
+TRUNCATE TABLE roles;
+TRUNCATE TABLE resources;
+
+-- Limpiar tablas de Negocio
+TRUNCATE TABLE checkins;
+TRUNCATE TABLE checkouts;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE reservationservices;
+TRUNCATE TABLE reservations;
+TRUNCATE TABLE rates;
+TRUNCATE TABLE seasons;
+TRUNCATE TABLE rooms;
+TRUNCATE TABLE clients;
+TRUNCATE TABLE services;
+TRUNCATE TABLE roomtypes;
+TRUNCATE TABLE hotels;
+
+-- 3. INSERCIONES DE DATOS DE NEGOCIO
+
+-- --- HOTELS (IDs 1-20) ---
+INSERT INTO hotels (id, name, address, city, country, phone, stars, status) VALUES 
+(1, 'Hotel Gran Colombia', 'Calle 10 #5-20', 'Bogotá', 'Colombia', '3001234567', 5, 'ACTIVE'),
+(2, 'Caribe Plaza Resort', 'Av. Santander #45-12', 'Cartagena', 'Colombia', '3019876543', 4, 'ACTIVE'),
+(3, 'Montaña Mágica Lodge', 'Vía al Parque #12', 'Salento', 'Colombia', '3105551234', 3, 'ACTIVE'),
+(4, 'Medellín Business Hotel', 'Cra 43A #1-50', 'Medellín', 'Colombia', '3124445566', 5, 'ACTIVE'),
+(5, 'Pacifico Sunset', 'Playa Ladrilleros', 'Buenaventura', 'Colombia', '3157778899', 3, 'ACTIVE'),
+(6, 'Santa Marta Bay', 'Carrera 1 #22-10', 'Santa Marta', 'Colombia', '3008887766', 4, 'ACTIVE'),
+(7, 'Eje Cafetero Real', 'Km 5 Vía Armenia', 'Armenia', 'Colombia', '3201112233', 4, 'ACTIVE'),
+(8, 'Colonial Popayán', 'Calle 4 #3-10', 'Popayán', 'Colombia', '3112223344', 3, 'ACTIVE'),
+(9, 'Llanos Orientales Suites', 'Av 40 #15-10', 'Villavicencio', 'Colombia', '3134445566', 4, 'ACTIVE'),
+(10, 'Cali Salsa Hotel', 'Av 6N #20-30', 'Cali', 'Colombia', '3156667788', 5, 'ACTIVE'),
+(11, 'Amazonas Jungle Lodge', 'Km 10 Vía Río', 'Leticia', 'Colombia', '3109998877', 3, 'ACTIVE'),
+(12, 'San Andrés Paradise', 'Av Colombia #1', 'San Andrés', 'Colombia', '3208889900', 5, 'ACTIVE'),
+(13, 'Villa de Leyva Colonial', 'Plaza Mayor #5', 'Villa de Leyva', 'Colombia', '3123334455', 4, 'ACTIVE'),
+(14, 'Barranquilla Plaza', 'Calle 72 #50-10', 'Barranquilla', 'Colombia', '3007776655', 5, 'ACTIVE'),
+(15, 'Pasto Nariño Hotel', 'Calle 18 #20-10', 'Pasto', 'Colombia', '3151112233', 3, 'ACTIVE'),
+(16, 'Guajira Desert Inn', 'Av. Riohacha #10', 'Riohacha', 'Colombia', '3104445566', 3, 'ACTIVE'),
+(17, 'Chocó Rainforest', 'Playa Nuquí', 'Nuquí', 'Colombia', '3119990011', 3, 'ACTIVE'),
+(18, 'Bucaramanga City', 'Carrera 27 #36-10', 'Bucaramanga', 'Colombia', '3162223344', 4, 'ACTIVE'),
+(19, 'Manizales Mountain', 'Av Santander #55', 'Manizales', 'Colombia', '3145556677', 4, 'ACTIVE'),
+(20, 'Cúcuta Frontera', 'Av 0 #10-20', 'Cúcuta', 'Colombia', '3178889900', 4, 'ACTIVE');
+
+-- --- ROOMTYPES (IDs 1-20) ---
+INSERT INTO roomtypes (id, name, description, max_people, includes_breakfast, status) VALUES
+(1, 'Sencilla', 'Habitación para una persona', 1, false, 'ACTIVE'),
+(2, 'Doble', 'Habitación con dos camas o cama doble', 2, true, 'ACTIVE'),
+(3, 'Triple', 'Habitación para tres personas', 3, true, 'ACTIVE'),
+(4, 'Suite Junior', 'Suite pequeña con sala de estar', 2, true, 'ACTIVE'),
+(5, 'Suite Presidencial', 'Suite de lujo con jacuzzi', 4, true, 'ACTIVE'),
+(6, 'Familiar', 'Habitación amplia para familias', 5, false, 'ACTIVE'),
+(7, 'Económica', 'Habitación básica sin vistas', 1, false, 'ACTIVE'),
+(8, 'Doble Deluxe', 'Doble con vista al mar', 2, true, 'ACTIVE'),
+(9, 'Bungalow', 'Cabaña independiente', 4, true, 'ACTIVE'),
+(10, 'Penthouse', 'Piso superior con terraza', 6, true, 'ACTIVE'),
+(11, 'Estudio', 'Habitación con cocina pequeña', 2, false, 'ACTIVE'),
+(12, 'Twin', 'Dos camas individuales', 2, true, 'ACTIVE'),
+(13, 'King', 'Cama King Size', 2, true, 'ACTIVE'),
+(14, 'Queen', 'Cama Queen Size', 2, true, 'ACTIVE'),
+(15, 'Ejecutiva', 'Con escritorio y wifi alta velocidad', 1, true, 'ACTIVE'),
+(16, 'Accesible', 'Diseñada para personas con movilidad reducida', 2, true, 'ACTIVE'),
+(17, 'Cabaña', 'Estilo rústico', 3, false, 'ACTIVE'),
+(18, 'Hostel Bed', 'Cama en dormitorio compartido', 1, false, 'ACTIVE'),
+(19, 'Villa', 'Casa completa con piscina', 8, true, 'ACTIVE'),
+(20, 'Loft', 'Espacio abierto moderno', 2, true, 'ACTIVE');
+
+-- --- SEASONS (IDs 1-20) ---
+INSERT INTO seasons (id, name, start_date, end_date, price_multiplier, hotel_id, status) VALUES
+(1, 'Temporada Alta 2024', '2024-12-01', '2025-01-15', 1.5, 1, 'ACTIVE'),
+(2, 'Temporada Baja 2024', '2024-02-01', '2024-03-31', 0.8, 1, 'ACTIVE'),
+(3, 'Semana Santa', '2024-03-24', '2024-03-31', 1.3, 2, 'ACTIVE'),
+(4, 'Verano', '2024-06-01', '2024-08-31', 1.2, 1, 'ACTIVE'),
+(5, 'Receso Escolar', '2024-10-07', '2024-10-14', 1.1, 3, 'ACTIVE'),
+(6, 'Navidad', '2024-12-20', '2024-12-26', 1.6, 1, 'ACTIVE'),
+(7, 'Fin de Año', '2024-12-27', '2025-01-02', 1.8, 1, 'ACTIVE'),
+(8, 'Feria de las Flores', '2024-08-01', '2024-08-10', 1.4, 4, 'ACTIVE'),
+(9, 'Carnaval', '2024-02-10', '2024-02-14', 1.5, 14, 'ACTIVE'),
+(10, 'Black Friday Deal', '2024-11-24', '2024-11-30', 0.7, 1, 'ACTIVE'),
+(11, 'Temporada Lluvias', '2024-04-01', '2024-05-30', 0.9, 1, 'ACTIVE'),
+(12, 'Puente Reyes', '2025-01-04', '2025-01-07', 1.2, 1, 'ACTIVE'),
+(13, 'Festival Vallenato', '2024-04-26', '2024-04-30', 1.4, 1, 'ACTIVE'),
+(14, 'Promoción Mayo', '2024-05-01', '2024-05-31', 0.85, 1, 'ACTIVE'),
+(15, 'Independencia', '2024-07-19', '2024-07-21', 1.1, 1, 'ACTIVE'),
+(16, 'Amor y Amistad', '2024-09-14', '2024-09-16', 1.2, 1, 'ACTIVE'),
+(17, 'Halloween', '2024-10-30', '2024-11-02', 1.1, 1, 'ACTIVE'),
+(18, 'Temporada Ballenas', '2024-07-15', '2024-10-15', 1.3, 5, 'ACTIVE'),
+(19, 'Feria de Cali', '2024-12-25', '2024-12-30', 1.5, 10, 'ACTIVE'),
+(20, 'Enero Promo', '2025-01-20', '2025-01-31', 0.9, 1, 'ACTIVE');
+
+-- --- SERVICES (IDs 1-20) ---
+INSERT INTO services (id, name, description, price, category, status) VALUES
+(1, 'Desayuno Buffet', 'Desayuno ilimitado', 25000, 'Alimentos', 'ACTIVE'),
+(2, 'Lavandería', 'Lavado y planchado por prenda', 5000, 'Limpieza', 'ACTIVE'),
+(3, 'Transporte Aeropuerto', 'Ida o vuelta al aeropuerto', 60000, 'Transporte', 'ACTIVE'),
+(4, 'Spa Masaje', 'Masaje relajante 1 hora', 120000, 'Bienestar', 'ACTIVE'),
+(5, 'Tour Ciudad', 'Recorrido por sitios históricos', 80000, 'Turismo', 'ACTIVE'),
+(6, 'Room Service', 'Servicio a la habitación', 10000, 'Alimentos', 'ACTIVE'),
+(7, 'Minibar', 'Consumo de minibar', 0, 'Alimentos', 'ACTIVE'),
+(8, 'Parqueadero', 'Noche de parqueo', 15000, 'Servicios', 'ACTIVE'),
+(9, 'Cena Romántica', 'Cena para dos con vino', 200000, 'Alimentos', 'ACTIVE'),
+(10, 'Alquiler Bicicleta', 'Día completo', 30000, 'Entretenimiento', 'ACTIVE'),
+(11, 'Gimnasio', 'Acceso diario', 15000, 'Bienestar', 'ACTIVE'),
+(12, 'Piscina', 'Acceso a zona húmeda', 0, 'Entretenimiento', 'ACTIVE'),
+(13, 'Wifi Premium', 'Alta velocidad', 10000, 'Tecnología', 'ACTIVE'),
+(14, 'Cuna Bebé', 'Cuna adicional en hab', 20000, 'Alojamiento', 'ACTIVE'),
+(15, 'Cama Extra', 'Cama sencilla adicional', 50000, 'Alojamiento', 'ACTIVE'),
+(16, 'Impresiones', 'Servicio business center', 2000, 'Negocios', 'ACTIVE'),
+(17, 'Salón Eventos', 'Alquiler por hora', 100000, 'Eventos', 'ACTIVE'),
+(18, 'Decoración', 'Decoración cumpleaños/aniversario', 60000, 'Eventos', 'ACTIVE'),
+(19, 'Late Check-out', 'Salida hasta las 4pm', 80000, 'Alojamiento', 'ACTIVE'),
+(20, 'Early Check-in', 'Entrada desde las 9am', 80000, 'Alojamiento', 'ACTIVE');
+
+-- --- RATES (IDs 1-20) ---
+INSERT INTO rates (id, amount, currency, description, refundable, season_id, roomtype_id, status) VALUES
+(1, 150000, 'COP', 'Tarifa base sencilla alta', true, 1, 1, 'ACTIVE'),
+(2, 200000, 'COP', 'Tarifa base doble alta', true, 1, 2, 'ACTIVE'),
+(3, 100000, 'COP', 'Tarifa base sencilla baja', false, 2, 1, 'ACTIVE'),
+(4, 140000, 'COP', 'Tarifa base doble baja', false, 2, 2, 'ACTIVE'),
+(5, 350000, 'COP', 'Suite Junior Alta', true, 1, 4, 'ACTIVE'),
+(6, 500000, 'COP', 'Suite Presidencial Lujo', true, 1, 5, 'ACTIVE'),
+(7, 80000, 'COP', 'Económica no reembolsable', false, 2, 7, 'ACTIVE'),
+(8, 250000, 'COP', 'Familiar desayuno incluido', true, 1, 6, 'ACTIVE'),
+(9, 180000, 'COP', 'Twin estandar', true, 4, 12, 'ACTIVE'),
+(10, 600000, 'COP', 'Penthouse vista total', true, 1, 10, 'ACTIVE'),
+(11, 120000, 'COP', 'Sencilla promo', false, 10, 1, 'ACTIVE'),
+(12, 300000, 'COP', 'Bungalow naturaleza', true, 1, 9, 'ACTIVE'),
+(13, 160000, 'COP', 'Queen bed confort', true, 1, 14, 'ACTIVE'),
+(14, 170000, 'COP', 'King bed deluxe', true, 1, 13, 'ACTIVE'),
+(15, 90000, 'COP', 'Hostel bed backpacker', false, 4, 18, 'ACTIVE'),
+(16, 1100000, 'COP', 'Villa completa fin de año', false, 7, 19, 'ACTIVE'),
+(17, 220000, 'COP', 'Ejecutiva business', true, 1, 15, 'ACTIVE'),
+(18, 190000, 'COP', 'Accesible planta baja', true, 1, 16, 'ACTIVE'),
+(19, 400000, 'COP', 'Loft moderno', true, 1, 20, 'ACTIVE'),
+(20, 135000, 'COP', 'Sencilla corporativa', true, 4, 1, 'ACTIVE');
+
+-- --- ROOMS (IDs 1-20) ---
+INSERT INTO rooms (id, number, floor, capacity, description, base_price, available, roomtype_id, hotel_id, status) VALUES
+(1, 101, 1, 1, 'Habitación cerca a recepción', 100000, true, 1, 1, 'ACTIVE'),
+(2, 102, 1, 2, 'Vista al jardín', 150000, true, 2, 1, 'ACTIVE'),
+(3, 103, 1, 2, 'Vista a la calle', 140000, true, 2, 1, 'ACTIVE'),
+(4, 201, 2, 3, 'Balcón amplio', 200000, false, 3, 1, 'ACTIVE'),
+(5, 202, 2, 2, 'Cerca al ascensor', 150000, true, 2, 1, 'ACTIVE'),
+(6, 301, 3, 2, 'Suite Junior remodelada', 300000, true, 4, 1, 'ACTIVE'),
+(7, 305, 3, 4, 'Suite Presidencial', 450000, true, 5, 1, 'ACTIVE'),
+(8, 401, 4, 5, 'Familiar con dos baños', 250000, true, 6, 1, 'ACTIVE'),
+(9, 402, 4, 1, 'Económica interior', 80000, true, 7, 1, 'ACTIVE'),
+(10, 501, 5, 2, 'Deluxe vista mar', 220000, true, 8, 2, 'ACTIVE'),
+(11, 10, 1, 4, 'Bungalow en bosque', 280000, true, 9, 3, 'ACTIVE'),
+(12, 601, 6, 6, 'Penthouse exclusivo', 550000, true, 10, 4, 'ACTIVE'),
+(13, 104, 1, 2, 'Estudio cocineta', 180000, true, 11, 1, 'ACTIVE'),
+(14, 203, 2, 2, 'Twin beds', 160000, false, 12, 1, 'ACTIVE'),
+(15, 204, 2, 2, 'King bed', 170000, true, 13, 1, 'ACTIVE'),
+(16, 205, 2, 2, 'Queen bed', 165000, true, 14, 1, 'ACTIVE'),
+(17, 302, 3, 1, 'Ejecutiva work desk', 210000, true, 15, 1, 'ACTIVE'),
+(18, 105, 1, 2, 'Accesible rampas', 150000, true, 16, 1, 'ACTIVE'),
+(19, 11, 1, 3, 'Cabaña rustica', 190000, true, 17, 3, 'ACTIVE'),
+(20, 701, 7, 2, 'Loft vista ciudad', 380000, true, 20, 4, 'ACTIVE');
+
+-- --- CLIENTS (IDs 1-20) ---
+INSERT INTO clients (id, first_name, last_name, document, phone, email, nationality, hotel_id, status) VALUES
+(1, 'Juan', 'Perez', '1098765432', '3001112233', 'juan.perez@email.com', 'Colombiano', 1, 'ACTIVE'),
+(2, 'Maria', 'Gomez', '1098765433', '3001112234', 'maria.gomez@email.com', 'Colombiano', 1, 'ACTIVE'),
+(3, 'John', 'Smith', '987654321', '1555123456', 'john.smith@email.com', 'Estadounidense', 1, 'ACTIVE'),
+(4, 'Carlos', 'Rodriguez', '1098765434', '3001112235', 'carlos.rod@email.com', 'Colombiano', 1, 'ACTIVE'),
+(5, 'Laura', 'Martinez', '1098765435', '3001112236', 'laura.mar@email.com', 'Colombiano', 1, 'ACTIVE'),
+(6, 'Pierre', 'Dubois', '876543210', '3312345678', 'pierre.d@email.com', 'Francés', 2, 'ACTIVE'),
+(7, 'Ana', 'Lopez', '1098765436', '3001112237', 'ana.lopez@email.com', 'Colombiano', 1, 'ACTIVE'),
+(8, 'Miguel', 'Torres', '1098765437', '3001112238', 'miguel.t@email.com', 'Mexicano', 1, 'ACTIVE'),
+(9, 'Sofia', 'Ramirez', '1098765438', '3001112239', 'sofia.r@email.com', 'Colombiano', 1, 'ACTIVE'),
+(10, 'Hans', 'Muller', '765432109', '4912345678', 'hans.m@email.com', 'Alemán', 3, 'ACTIVE'),
+(11, 'Isube', 'Tanaka', '654321098', '8112345678', 'isube.t@email.com', 'Japonés', 1, 'ACTIVE'),
+(12, 'Luisa', 'Fernandez', '1098765439', '3001112240', 'luisa.f@email.com', 'Colombiano', 1, 'ACTIVE'),
+(13, 'Diego', 'Castro', '1098765440', '3001112241', 'diego.c@email.com', 'Colombiano', 1, 'ACTIVE'),
+(14, 'Elena', 'Vargas', '1098765441', '3001112242', 'elena.v@email.com', 'Española', 2, 'ACTIVE'),
+(15, 'Andres', 'Jimenez', '1098765442', '3001112243', 'andres.j@email.com', 'Colombiano', 1, 'ACTIVE'),
+(16, 'Paola', 'Mendoza', '1098765443', '3001112244', 'paola.m@email.com', 'Colombiano', 1, 'ACTIVE'),
+(17, 'Ricardo', 'Silva', '1098765444', '3001112245', 'ricardo.s@email.com', 'Brasileño', 1, 'ACTIVE'),
+(18, 'Valeria', 'Rios', '1098765445', '3001112246', 'valeria.r@email.com', 'Colombiano', 1, 'ACTIVE'),
+(19, 'Gabriel', 'Soto', '1098765446', '3001112247', 'gabriel.s@email.com', 'Chileno', 4, 'ACTIVE'),
+(20, 'Camila', 'Ortiz', '1098765447', '3001112248', 'camila.o@email.com', 'Colombiano', 1, 'ACTIVE');
+
+-- --- RESERVATIONS (IDs 1-20) ---
+INSERT INTO reservations (id, reservation_date, start_date, end_date, checkin_date, checkout_date, number_of_guests, total_amount, client_id, room_id, rate_id, hotel_id, status) VALUES
+(1, '2024-11-01 10:00:00', '2024-12-01', '2024-12-05', '2024-12-01 15:00:00', '2024-12-05 11:00:00', 2, 800000, 1, 1, 2, 1, 'ACTIVE'),
+(2, '2024-11-02 11:30:00', '2024-12-10', '2024-12-12', NULL, NULL, 1, 300000, 2, 1, 1, 1, 'ACTIVE'),
+(3, '2024-11-05 09:00:00', '2024-12-20', '2024-12-27', NULL, NULL, 4, 3500000, 3, 7, 6, 1, 'ACTIVE'),
+(4, '2024-11-10 14:20:00', '2024-11-15', '2024-11-18', '2024-11-15 14:00:00', '2024-11-18 10:00:00', 2, 450000, 4, 3, 2, 1, 'ACTIVE'),
+(5, '2024-11-12 16:00:00', '2025-01-05', '2025-01-10', NULL, NULL, 2, 1000000, 5, 4, 3, 1, 'ACTIVE'),
+(6, '2024-11-15 08:45:00', '2024-11-20', '2024-11-22', '2024-11-20 13:00:00', '2024-11-22 12:00:00', 1, 160000, 6, 9, 7, 1, 'ACTIVE'),
+(7, '2024-11-18 12:10:00', '2024-12-30', '2025-01-02', NULL, NULL, 6, 1800000, 7, 12, 10, 4, 'ACTIVE'),
+(8, '2024-11-20 10:00:00', '2024-12-05', '2024-12-08', NULL, NULL, 2, 540000, 8, 15, 14, 1, 'ACTIVE'),
+(9, '2024-11-22 15:30:00', '2024-12-15', '2024-12-16', NULL, NULL, 1, 135000, 9, 1, 20, 1, 'ACTIVE'),
+(10, '2024-11-25 09:15:00', '2025-02-14', '2025-02-16', NULL, NULL, 2, 400000, 10, 10, 8, 2, 'ACTIVE'),
+(11, '2024-11-26 11:00:00', '2024-12-01', '2024-12-03', '2024-12-01 14:30:00', '2024-12-03 11:00:00', 2, 300000, 11, 2, 2, 1, 'ACTIVE'),
+(12, '2024-11-28 13:45:00', '2024-12-24', '2024-12-26', NULL, NULL, 3, 600000, 12, 4, 11, 1, 'ACTIVE'),
+(13, '2024-12-01 10:00:00', '2024-12-02', '2024-12-05', '2024-12-02 15:00:00', NULL, 2, 450000, 13, 2, 2, 1, 'ACTIVE'),
+(14, '2024-12-02 14:00:00', '2025-01-10', '2025-01-15', NULL, NULL, 2, 900000, 14, 13, 11, 1, 'ACTIVE'),
+(15, '2024-12-03 09:30:00', '2024-12-28', '2025-01-01', NULL, NULL, 4, 2000000, 15, 7, 6, 1, 'ACTIVE'),
+(16, '2024-12-05 16:20:00', '2024-12-10', '2024-12-11', NULL, NULL, 1, 120000, 16, 9, 7, 1, 'ACTIVE'),
+(17, '2024-12-06 11:10:00', '2024-12-15', '2024-12-20', NULL, NULL, 2, 750000, 17, 5, 2, 1, 'ACTIVE'),
+(18, '2024-12-08 10:00:00', '2025-02-01', '2025-02-05', NULL, NULL, 2, 640000, 18, 14, 12, 1, 'ACTIVE'),
+(19, '2024-12-10 12:00:00', '2024-12-22', '2024-12-24', NULL, NULL, 2, 440000, 19, 17, 17, 1, 'ACTIVE'),
+(20, '2024-12-12 15:00:00', '2025-01-15', '2025-01-20', NULL, NULL, 2, 800000, 20, 20, 19, 4, 'ACTIVE');
+
+-- --- RESERVATIONSERVICES ---
+INSERT INTO reservationservices (id, quantity, reservation_id, service_id, status) VALUES
+(1, 2, 1, 1, 'ACTIVE'),
+(2, 1, 1, 3, 'ACTIVE'),
+(3, 1, 3, 4, 'ACTIVE'),
+(4, 1, 4, 8, 'ACTIVE'),
+(5, 1, 5, 9, 'ACTIVE'),
+(6, 3, 7, 1, 'ACTIVE'),
+(7, 1, 2, 6, 'ACTIVE'),
+(8, 1, 6, 13, 'ACTIVE'),
+(9, 1, 8, 2, 'ACTIVE'),
+(10, 2, 10, 5, 'ACTIVE'),
+(11, 1, 11, 7, 'ACTIVE'),
+(12, 1, 12, 14, 'ACTIVE'),
+(13, 1, 13, 19, 'ACTIVE'),
+(14, 1, 14, 10, 'ACTIVE'),
+(15, 1, 15, 17, 'ACTIVE'),
+(16, 4, 3, 1, 'ACTIVE'),
+(17, 1, 9, 20, 'ACTIVE'),
+(18, 1, 16, 6, 'ACTIVE'),
+(19, 2, 18, 11, 'ACTIVE'),
+(20, 1, 20, 12, 'ACTIVE');
+
+-- --- CHECKINS ---
+INSERT INTO checkins (time, observation, reservation_id) VALUES
+('2024-12-01 15:05:00', 'Huésped llegó puntual', 1),
+('2024-11-15 14:10:00', 'Todo en orden', 4),
+('2024-11-20 13:15:00', 'Solicitó almohadas extra', 6),
+('2024-12-01 14:45:00', 'Early checkin autorizado', 11),
+('2024-12-02 15:30:00', 'Equipaje pesado', 13),
+('2024-10-01 15:00:00', 'Registro antiguo', 2), 
+('2024-10-10 14:00:00', 'VIP', 3),
+('2024-10-15 16:00:00', 'Llegada tarde', 5),
+('2024-10-20 15:00:00', NULL, 8),
+('2024-10-22 14:30:00', NULL, 9),
+('2024-10-25 15:00:00', NULL, 10),
+('2024-10-28 15:00:00', NULL, 12),
+('2024-11-01 15:00:00', NULL, 14),
+('2024-11-05 15:00:00', NULL, 15),
+('2024-11-10 15:00:00', NULL, 16),
+('2024-11-12 15:00:00', NULL, 17),
+('2024-11-15 15:00:00', NULL, 18),
+('2024-11-18 15:00:00', NULL, 19),
+('2024-11-20 15:00:00', NULL, 20),
+('2024-11-22 15:00:00', NULL, 7);
+
+-- --- CHECKOUTS ---
+INSERT INTO checkouts (time, observation, reservation_id) VALUES
+('2024-12-05 11:05:00', 'Salida ok', 1),
+('2024-11-18 10:15:00', 'Consumo minibar pagado', 4),
+('2024-11-22 11:50:00', 'Dejó llave en recepción', 6),
+('2024-12-03 10:30:00', 'Cliente satisfecho', 11),
+('2024-10-05 11:00:00', 'Salida ok', 2),
+('2024-10-12 11:00:00', 'Salida ok', 3),
+('2024-10-18 11:00:00', 'Salida ok', 5),
+('2024-10-23 11:00:00', 'Salida ok', 8),
+('2024-10-24 11:00:00', 'Salida ok', 9),
+('2024-10-27 11:00:00', 'Salida ok', 10),
+('2024-10-30 11:00:00', 'Salida ok', 12),
+('2024-11-04 11:00:00', 'Salida ok', 14),
+('2024-11-08 11:00:00', 'Salida ok', 15),
+('2024-11-11 11:00:00', 'Salida ok', 16),
+('2024-11-14 11:00:00', 'Salida ok', 17),
+('2024-11-17 11:00:00', 'Salida ok', 18),
+('2024-11-20 11:00:00', 'Salida ok', 19),
+('2024-11-22 11:00:00', 'Salida ok', 20),
+('2024-11-25 11:00:00', 'Salida ok', 7),
+('2024-11-28 11:00:00', 'Salida ok', 13);
+
+-- --- PAYMENTS ---
+INSERT INTO payments (amount, method, currency, payment_date, reference, reservation_id, status) VALUES
+(400000, 'CREDIT_CARD', 'COP', '2024-11-01 10:05:00', 'REF123456', 1, 'ACTIVE'),
+(400000, 'CASH', 'COP', '2024-12-05 11:00:00', 'REF123457', 1, 'ACTIVE'),
+(150000, 'DEBIT_CARD', 'COP', '2024-11-02 11:35:00', 'REF123458', 2, 'ACTIVE'),
+(1750000, 'TRANSFER', 'COP', '2024-11-05 09:10:00', 'REF123459', 3, 'ACTIVE'),
+(450000, 'CREDIT_CARD', 'COP', '2024-11-10 14:25:00', 'REF123460', 4, 'ACTIVE'),
+(500000, 'CREDIT_CARD', 'COP', '2024-11-12 16:10:00', 'REF123461', 5, 'ACTIVE'),
+(160000, 'CASH', 'COP', '2024-11-15 08:50:00', 'REF123462', 6, 'ACTIVE'),
+(900000, 'TRANSFER', 'COP', '2024-11-18 12:15:00', 'REF123463', 7, 'ACTIVE'),
+(540000, 'DEBIT_CARD', 'COP', '2024-11-20 10:10:00', 'REF123464', 8, 'ACTIVE'),
+(135000, 'CASH', 'COP', '2024-11-22 15:40:00', 'REF123465', 9, 'ACTIVE'),
+(400000, 'CREDIT_CARD', 'COP', '2024-11-25 09:20:00', 'REF123466', 10, 'ACTIVE'),
+(300000, 'DEBIT_CARD', 'COP', '2024-11-26 11:10:00', 'REF123467', 11, 'ACTIVE'),
+(300000, 'TRANSFER', 'COP', '2024-11-28 13:50:00', 'REF123468', 12, 'ACTIVE'),
+(450000, 'CREDIT_CARD', 'COP', '2024-12-01 10:10:00', 'REF123469', 13, 'ACTIVE'),
+(900000, 'TRANSFER', 'COP', '2024-12-02 14:10:00', 'REF123470', 14, 'ACTIVE'),
+(1000000, 'CREDIT_CARD', 'COP', '2024-12-03 09:40:00', 'REF123471', 15, 'ACTIVE'),
+(120000, 'CASH', 'COP', '2024-12-05 16:30:00', 'REF123472', 16, 'ACTIVE'),
+(750000, 'DEBIT_CARD', 'COP', '2024-12-06 11:20:00', 'REF123473', 17, 'ACTIVE'),
+(320000, 'CREDIT_CARD', 'COP', '2024-12-08 10:10:00', 'REF123474', 18, 'ACTIVE'),
+(220000, 'CASH', 'COP', '2024-12-10 12:10:00', 'REF123475', 19, 'ACTIVE');
+
+-- 4. Reactivar verificaciones de llaves foráneas
+SET FOREIGN_KEY_CHECKS = 1;

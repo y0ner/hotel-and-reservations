@@ -37,8 +37,8 @@
             <tr>
                 <td>{{ getClientName(reservation.client_id) }}</td>
                 <td>{{ getRoomNumber(reservation.room_id) }}</td>
-                <td>{{ reservation.checkin_date | date: 'dd/MM/yyyy' }}</td>
-                <td>{{ reservation.checkout_date | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ reservation.start_date | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ reservation.end_date | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ reservation.total_amount | currency:'USD' }}</td>
                 <td>{{ reservation.status }}</td>
                 <td class="text-center">
@@ -47,7 +47,7 @@
                         <p-button icon="pi pi-trash" (click)="confirmDelete(reservation)" styleClass="p-button-rounded p-button-text p-button-danger" pTooltip="Eliminar" tooltipPosition="top"></p-button>
                         <p-button *ngIf="reservation.status === 'CONFIRMED'" icon="pi pi-calendar-plus" [routerLink]="['/Reserva', reservation.id, 'checkin']" styleClass="p-button-rounded p-button-text p-button-success" pTooltip="Check-in" tooltipPosition="top"></p-button>
                         <p-button *ngIf="reservation.status === 'CHECKED_IN'" icon="pi pi-calendar-minus" [routerLink]="['/Reserva', reservation.id, 'checkout']" styleClass="p-button-rounded p-button-text p-button-info" pTooltip="Check-out" tooltipPosition="top"></p-button>
-                        <p-button icon="pi pi-cog" [routerLink]="['/Reserva', reservation.id, 'services']" styleClass="p-button-rounded p-button-text p-button-help" pTooltip="Servicios" tooltipPosition="top"></p-button>
+                        <p-button icon="pi pi-cog" (click)="showServicesModal(reservation)" styleClass="p-button-rounded p-button-text p-button-help" pTooltip="Servicios" tooltipPosition="top"></p-button>
                     </div>
                 </td>
             </tr>

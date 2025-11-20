@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { ClientController } from "../controllers/Client.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class ClientRoutes {
   public clientController: ClientController = new ClientController();
@@ -13,17 +13,18 @@ export class ClientRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Clients")
-      .get(authMiddleware, this.clientController.getAllClients)
-      .post(authMiddleware, this.clientController.createClient);
+      .get(devAuthMiddleware, this.clientController.getAllClients)
+      .post(devAuthMiddleware, this.clientController.createClient);
+
+    // IMPORTANTE: Las rutas específicas deben ir ANTES que las rutas parametrizadas
+    app.route("/api/Clients/hotel/:hotelId")
+      .get(devAuthMiddleware, this.clientController.getClientsByHotel);
 
     app.route("/api/Clients/:id")
-      .get(authMiddleware, this.clientController.getClientById)
-      .patch(authMiddleware, this.clientController.updateClient);
+      .get(devAuthMiddleware, this.clientController.getClientById)
+      .patch(devAuthMiddleware, this.clientController.updateClient);
 
     app.route("/api/Clients/:id/logic")
-      .delete(authMiddleware, this.clientController.deleteClientAdv);
-
-    app.route("/api/Clients/hotel/:hotelId")
-      .get(authMiddleware, this.clientController.getClientsByHotel);
+      .delete(devAuthMiddleware, this.clientController.deleteClientAdv);
   }
 }

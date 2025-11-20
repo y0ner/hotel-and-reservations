@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { ReservationController } from "../controllers/Reservation.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class ReservationRoutes {
   public reservationController: ReservationController = new ReservationController();
@@ -13,17 +13,18 @@ export class ReservationRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Reservations")
-      .get(authMiddleware, this.reservationController.getAllReservations)
-      .post(authMiddleware, this.reservationController.createReservation);
+      .get(devAuthMiddleware, this.reservationController.getAllReservations)
+      .post(devAuthMiddleware, this.reservationController.createReservation);
 
+    // IMPORTANTE: Las rutas específicas deben ir ANTES que las rutas parametrizadas
     app.route("/api/Reservations/availability")
-      .get(authMiddleware, this.reservationController.checkAvailability);
-
-    app.route("/api/Reservations/:id")
-      .get(authMiddleware, this.reservationController.getReservationById)
-      .patch(authMiddleware, this.reservationController.updateReservation);
+      .get(devAuthMiddleware, this.reservationController.checkAvailability);
 
     app.route("/api/Reservations/:id/logic")
-      .delete(authMiddleware, this.reservationController.deleteReservationAdv);
+      .delete(devAuthMiddleware, this.reservationController.deleteReservationAdv);
+
+    app.route("/api/Reservations/:id")
+      .get(devAuthMiddleware, this.reservationController.getReservationById)
+      .patch(devAuthMiddleware, this.reservationController.updateReservation);
   }
 }

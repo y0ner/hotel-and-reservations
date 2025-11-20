@@ -15,7 +15,7 @@ export interface ReservationI {
   room_id: number;
   rate_id: number;
   hotel_id: number;
-  status: "ACTIVE" | "INACTIVE";
+  status: "PENDING" | "CONFIRMED" | "CANCELLED" | "CHECKED-IN" | "CHECKED-OUT" | "INACTIVE";
 }
 
 export class Reservation extends Model<ReservationI> implements ReservationI {
@@ -30,7 +30,7 @@ export class Reservation extends Model<ReservationI> implements ReservationI {
   public room_id!: number;
   public rate_id!: number;
   public hotel_id!: number;
-  public status!: "ACTIVE" | "INACTIVE";
+  public status!: "PENDING" | "CONFIRMED" | "CANCELLED" | "CHECKED-IN" | "CHECKED-OUT" | "INACTIVE";
 }
 
 Reservation.init(
@@ -93,8 +93,8 @@ Reservation.init(
       }
     },
     status: {
-      type: DataTypes.ENUM("ACTIVE", "INACTIVE"),
-      defaultValue: "ACTIVE",
+      type: DataTypes.ENUM("PENDING", "CONFIRMED", "CANCELLED", "CHECKED-IN", "CHECKED-OUT", "INACTIVE"),
+      defaultValue: "PENDING",
     },
   },
   {

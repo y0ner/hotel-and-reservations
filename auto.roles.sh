@@ -541,6 +541,85 @@ function add_crud_permissions_to_admin() {
         printf "%s\n" "${names[@]}" | awk '!seen[$0]++'
     }
 
+    detect_route_endpoints() {
+        local routes_dir="backend-Hotel/src/routes"
+        local endpoints=()
+        shopt -s nullglob
+        # find ts files recursively under routes_dir
+        while IFS= read -r f; do
+            local current_route=""
+            while IFS= read -r line; do
+                # Detect route definition lines
+                if [[ $line =~ app.route\("([^"]+)" ]]; then
+                    current_route="${BASH_REMATCH[1]}"
+                fi
+                if [[ -n $current_route ]]; then
+                    # detect .get( .post( .patch( .delete( .put( methods
+                    if [[ $line == *".get("* ]]; then endpoints+=("GET $current_route") ; fi
+                    if [[ $line == *".post("* ]]; then endpoints+=("POST $current_route") ; fi
+                    if [[ $line == *".patch("* ]]; then endpoints+=("PATCH $current_route") ; fi
+                    if [[ $line == *".delete("* ]]; then endpoints+=("DELETE $current_route") ; fi
+                    if [[ $line == *".put("* ]]; then endpoints+=("PUT $current_route") ; fi
+                    # If line ends with semicolon or contains ');' then reset current route
+                    if [[ $line == *";" ]] || [[ $line == *")"*";" ]]; then
+                        current_route=""
+                    fi
+                fi
+            done < "$f"
+        done < <(find "$routes_dir" -type f -name "*.ts")
+        shopt -u nullglob
+        # deduplicate
+        printf "%s\n" "${endpoints[@]}" | awk '!seen[$0]++'
+    }
+
+    resource_exists() {
+        local path="$1"
+        local method="$2"
+        local resp=$(make_request "GET" "/resources/public")
+        if echo "$resp" | jq -e ".resources[] | select(.path==\"$path\" and .method==\"$method\")" > /dev/null 2>&1; then
+            echo "true"
+        else
+            echo "false"
+        fi
+    }
+
+    get_resource_id() {
+        local path="$1"
+        local method="$2"
+        local resp=$(make_request "GET" "/resources/public")
+        echo "$resp" | jq -r ".resources[] | select(.path==\"$path\" and .method==\"$method\") | .id"
+    }
+
+    ensure_resource_and_assign() {
+        local path="$1"
+        local method="$2"
+        local admin_role_id="$3"
+        if [[ "$(resource_exists "$path" "$method")" == "true" ]]; then
+            local resource_id=$(get_resource_id "$path" "$method")
+            if [[ -z "$resource_id" || "$resource_id" == "null" ]]; then
+                echo -e "${YELLOW}Advertencia: resource exists true pero no se pudo obtener ID para $method $path${NC}"
+            fi
+        else
+            local resource_data=$(printf '{"path": "%s", "method": "%s", "is_active": "ACTIVE"}' "$path" "$method")
+            local resource_response=$(make_request "POST" "/resources/public" "$resource_data")
+            local resource_id=$(echo "$resource_response" | jq -r '.id')
+            if [[ -z "$resource_id" || "$resource_id" == "null" ]]; then
+                echo -e "${RED}Error al crear recurso $method $path${NC}"
+                return 1
+            fi
+        fi
+        # Assign the resource to the admin role (avoid duplicates if possible)
+        # Check existing assignments
+        local existing_assignments=$(make_request "GET" "/resourceRoles/public")
+        local exists_assign=$(echo "$existing_assignments" | jq -r ".resourceRoles[] | select(.resource_id==${resource_id} and .role_id==${admin_role_id}) | .id")
+        if [[ -n "$exists_assign" && "$exists_assign" != "null" ]]; then
+            echo -e "${YELLOW}El recurso $method $path ya está asignado al rol administrador (assignment ID $exists_assign).${NC}"
+            return 0
+        fi
+        local assignment_data=$(printf '{"resource_id": %s, "role_id": %s, "is_active": "ACTIVE"}' "$resource_id" "$admin_role_id")
+        make_request "POST" "/resourceRoles/public" "$assignment_data" | jq .
+    }
+
     # If user wants to override, they can still pass a non-empty input when prompted.
     read -p "Presiona Enter para usar la detección automática o introduce nombres separados por espacios: " resource_names
     if [[ -z "$resource_names" ]]; then
@@ -573,21 +652,21 @@ function add_crud_permissions_to_admin() {
             local path=$(echo "$endpoint" | cut -d' ' -f2)
             echo "Creando y asignando permiso para: ${method} ${path}"
 
-            # Crear el recurso
-            local resource_data=$(printf '{"path": "%s", "method": "%s", "is_active": "ACTIVE"}' "$path" "$method")
-            local resource_response=$(make_request "POST" "/resources" "$resource_data")
-            local new_resource_id=$(echo "$resource_response" | jq -r '.id')
-
-            if [[ -z "$new_resource_id" || "$new_resource_id" == "null" ]]; then
-                echo -e "${RED}   -> Error al crear el recurso. Saltando...${NC}"
-                continue
-            fi
-
-            # Asignar el recurso al rol de Administrador
-            local assignment_data=$(printf '{"resource_id": %s, "role_id": %s, "is_active": "ACTIVE"}' "$new_resource_id" "$admin_role_id")
-            make_request "POST" "/resourceRoles" "$assignment_data" > /dev/null
+            # Ensure resource exists and is assigned to admin
+            ensure_resource_and_assign "$path" "$method" "$admin_role_id"
         done
     done
+    # 4. Detectar rutas especiales (ej: /hotel/:hotelId) y asignarlas también
+    echo -e "\n${CYAN}Detectando rutas especiales definidas en archivos de rutas...${NC}"
+    mapfile -t route_endpoints < <(detect_route_endpoints)
+    if [[ ${#route_endpoints[@]} -gt 0 ]]; then
+        for ep in "${route_endpoints[@]}" ; do
+            method=$(echo "$ep" | awk '{print $1}')
+            path=$(echo "$ep" | awk '{print $2}')
+            echo "Creando y asignando permiso para: ${method} ${path}"
+            ensure_resource_and_assign "$path" "$method" "$admin_role_id"
+        done
+    fi
     echo -e "\n${GREEN}🎉 ¡Todos los permisos CRUD han sido asignados exitosamente!${NC}"
 }
 

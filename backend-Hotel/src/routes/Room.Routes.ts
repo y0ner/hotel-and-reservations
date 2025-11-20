@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { RoomController } from "../controllers/Room.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class RoomRoutes {
   public roomController: RoomController = new RoomController();
@@ -13,17 +13,18 @@ export class RoomRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Rooms")
-      .get(authMiddleware, this.roomController.getAllRooms)
-      .post(authMiddleware, this.roomController.createRoom);
+      .get(devAuthMiddleware, this.roomController.getAllRooms)
+      .post(devAuthMiddleware, this.roomController.createRoom);
+
+    // IMPORTANTE: Las rutas específicas deben ir ANTES que las rutas parametrizadas
+    app.route("/api/Rooms/hotel/:hotelId")
+      .get(devAuthMiddleware, this.roomController.getRoomsByHotel);
 
     app.route("/api/Rooms/:id")
-      .get(authMiddleware, this.roomController.getRoomById)
-      .patch(authMiddleware, this.roomController.updateRoom);
+      .get(devAuthMiddleware, this.roomController.getRoomById)
+      .patch(devAuthMiddleware, this.roomController.updateRoom);
 
     app.route("/api/Rooms/:id/logic")
-      .delete(authMiddleware, this.roomController.deleteRoomAdv);
-
-    app.route("/api/Rooms/hotel/:hotelId")
-      .get(authMiddleware, this.roomController.getRoomsByHotel);
+      .delete(devAuthMiddleware, this.roomController.deleteRoomAdv);
   }
 }

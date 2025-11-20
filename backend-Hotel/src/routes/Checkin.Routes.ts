@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { CheckinController } from "../controllers/Checkin.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class CheckinRoutes {
   public checkinController: CheckinController = new CheckinController();
@@ -13,7 +13,8 @@ export class CheckinRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Checkins")
-      .get(authMiddleware, this.checkinController.getAllCheckins);
+      .get(authMiddleware, this.checkinController.getAllCheckins)
+      .post(devAuthMiddleware, this.checkinController.createCheckin);
 
     app.route("/api/Checkins/:id")
       .get(authMiddleware, this.checkinController.getCheckinById);

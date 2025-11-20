@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { RateController } from "../controllers/Rate.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class RateRoutes {
   public rateController: RateController = new RateController();
@@ -13,17 +13,18 @@ export class RateRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Rates")
-      .get(authMiddleware, this.rateController.getAllRates)
-      .post(authMiddleware, this.rateController.createRate);
+      .get(devAuthMiddleware, this.rateController.getAllRates)
+      .post(devAuthMiddleware, this.rateController.createRate);
+
+    // IMPORTANTE: Las rutas específicas deben ir ANTES que las rutas parametrizadas
+    app.route("/api/Rates/hotel/:hotelId")
+      .get(devAuthMiddleware, this.rateController.getRatesByHotel);
 
     app.route("/api/Rates/:id")
-      .get(authMiddleware, this.rateController.getRateById)
-      .patch(authMiddleware, this.rateController.updateRate);
+      .get(devAuthMiddleware, this.rateController.getRateById)
+      .patch(devAuthMiddleware, this.rateController.updateRate);
 
     app.route("/api/Rates/:id/logic")
-      .delete(authMiddleware, this.rateController.deleteRateAdv);
-
-    app.route("/api/Rates/hotel/:hotelId")
-      .get(authMiddleware, this.rateController.getRatesByHotel);
+      .delete(devAuthMiddleware, this.rateController.deleteRateAdv);
   }
 }

@@ -6,14 +6,17 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription, forkJoin } from 'rxjs';
+
 import { ReservationService } from '../../../services/Reservation.service';
 import { ReservationResponseI } from '../../../models/Reservation';
 import { ClienteService } from '../../../services/Client.service';
 import { ClientResponseI } from '../../../models/Client';
 import { RoomService } from '../../../services/Room.service';
 import { RoomResponseI } from '../../../models/Room';
+import { ReservationServiceModal } from '../../ReservationService/modal/modal';
 
 @Component({
   selector: 'app-reservation-getall',
@@ -25,9 +28,10 @@ import { RoomResponseI } from '../../../models/Room';
     ButtonModule,
     ConfirmDialogModule,
     ToastModule,
-    TooltipModule
+    TooltipModule,
+    DynamicDialogModule
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService, MessageService, DialogService],
   templateUrl: './getall.html',
   styleUrls: ['./getall.css']
 })
@@ -43,7 +47,8 @@ export class Getall implements OnInit, OnDestroy {
     private clienteService: ClienteService,
     private roomService: RoomService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -108,6 +113,18 @@ export class Getall implements OnInit, OnDestroy {
   getRoomNumber(roomId: number): string {
     const room = this.rooms.find(r => r.id === roomId);
     return room ? `N° ${room.number}` : 'Desconocida';
+  }
+
+  showServicesModal(reservation: ReservationResponseI): void {
+    const ref = this.dialogService.open(ReservationServiceModal, {
+      header: 'Servicios de la Reserva',
+      width: '60%',
+      data: { reservation }
+    });
+
+    ref?.onClose.subscribe(() => {
+      this.loadData(); // Recargar los datos cuando se cierra el modal
+    });
   }
 
   confirmDelete(item: ReservationResponseI): void {

@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { RoleController } from '../../controllers/authorization/role.controller';
-import { authMiddleware } from '../../middleware/auth';
+import { authMiddleware, devAuthMiddleware } from '../../middleware/auth';
 
 export class RoleRoutes {
   public roleController: RoleController = new RoleController();
@@ -22,14 +22,14 @@ export class RoleRoutes {
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/roles")
       .get(authMiddleware, this.roleController.getAllRoles)
-      .post(authMiddleware, this.roleController.createRole);
+      .post(devAuthMiddleware, this.roleController.createRole);
 
     app.route("/api/roles/:id")
       .get(authMiddleware, this.roleController.getRoleById)
-      .patch(authMiddleware, this.roleController.updateRole)
-      .delete(authMiddleware, this.roleController.deleteRole);
+      .patch(devAuthMiddleware, this.roleController.updateRole)
+      .delete(devAuthMiddleware, this.roleController.deleteRole);
 
     app.route("/api/roles/:id/logic")
-      .delete(authMiddleware, this.roleController.deleteRoleAdv);
+      .delete(devAuthMiddleware, this.roleController.deleteRoleAdv);
   }
 }

@@ -8,6 +8,15 @@ import { RoleUser } from '../models/authorization/RoleUser';
 import { pathToRegexp } from 'path-to-regexp'; // Importar path-to-regexp
 import { addEmitHelper } from 'typescript';
 
+// Middleware de desarrollo: permite acceso sin token si NODE_ENV=development
+export const devAuthMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+  if (process.env.NODE_ENV === 'development') {
+    // En desarrollo, permitir acceso sin token a todos los métodos
+    next();
+  } else {
+    authMiddleware(req, res, next);
+  }
+};
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -59,8 +68,10 @@ export const validateAuthorization = async (userId: number, resourcePath: string
 
     // Convertir las rutas dinámicas a expresiones regulares y buscar coincidencias
     const matchingResource = resources.find((resource) => {
-      const regex = pathToRegexp(resource.path).regexp.test(resourcePath);
-      return regex;
+      // Replace :paramName with a catch-all segment for a simple regex check
+      const regexPath = resource.path.replace(/:[^/]+/g, '[^/]+');
+      const regex = new RegExp(`^${regexPath}$`);
+      return regex.test(resourcePath);
     });
 
     if (!matchingResource) {

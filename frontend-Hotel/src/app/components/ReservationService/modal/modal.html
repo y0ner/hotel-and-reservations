@@ -1,0 +1,78 @@
+<div class="p-6 bg-slate-50" style="min-width: 50vw;">
+  <p-toast></p-toast>
+  
+  <div class="flex justify-between items-center mb-6 border-b pb-4">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-800">Servicios para la Reserva #{{ reservation.id }}</h2>
+      <p class="text-gray-600">Añada o elimine servicios para esta reserva.</p>
+    </div>
+    <p-button icon="pi pi-times" styleClass="p-button-rounded p-button-text" (click)="closeDialog()"></p-button>
+  </div>
+
+  <!-- Formulario para añadir servicios -->
+  <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+    <h3 class="text-lg font-semibold mb-3">Añadir Nuevo Servicio</h3>
+    <div class="flex gap-4 items-start">
+      <div class="flex-1">
+        <label for="service" class="block text-sm font-medium text-gray-700 mb-1">Servicio</label>
+        <p-select 
+          id="service"
+          [options]="availableServices" 
+          [(ngModel)]="selectedServiceId"
+          optionLabel="name" 
+          optionValue="id"
+          placeholder="Seleccione un servicio"
+          styleClass="w-full"
+        ></p-select>
+      </div>
+      <div class="w-24">
+        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+        <p-inputNumber id="quantity" [(ngModel)]="quantity" [min]="1" [showButtons]="true"></p-inputNumber>
+      </div>
+      <div class="self-end">
+        <p-button label="Añadir" icon="pi pi-plus" (click)="addService()"></p-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de servicios añadidos -->
+  <p-table [value]="reservationServices" [loading]="loading" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Servicio</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Subtotal</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rs>
+      <tr>
+        <td>{{ rs.Service?.name }}</td>
+        <td>{{ rs.quantity }}</td>
+        <td>{{ rs.Service?.price | currency:'USD' }}</td>
+        <td>{{ (rs.Service?.price || 0) * rs.quantity | currency:'USD' }}</td>
+        <td class="text-center">
+          <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger" (click)="removeService(rs.id!)"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex justify-end p-2 bg-gray-100 rounded-b-lg">
+        <div class="text-right">
+          <span class="text-lg font-semibold">Costo Total de Servicios:</span>
+          <span class="text-xl font-bold ml-2">{{ getTotalServicesCost() | currency:'USD' }}</span>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center p-4">No hay servicios añadidos a esta reserva.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <div class="mt-6 flex justify-end">
+    <p-button label="Cerrar" severity="secondary" (click)="closeDialog()"></p-button>
+  </div>
+</div>

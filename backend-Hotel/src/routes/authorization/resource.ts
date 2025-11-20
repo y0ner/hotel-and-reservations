@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { ResourceController } from "../../controllers/authorization/resource.controller";
-import { authMiddleware } from '../../middleware/auth';
+import { authMiddleware, devAuthMiddleware } from '../../middleware/auth';
 
 export class ResourceRoutes {
   public resourceController: ResourceController = new ResourceController();
@@ -22,14 +22,14 @@ export class ResourceRoutes {
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/resources")
       .get(authMiddleware, this.resourceController.getAllResources)
-      .post(authMiddleware, this.resourceController.createResource);
+      .post(devAuthMiddleware, this.resourceController.createResource);
 
     app.route("/api/resources/:id")
       .get(authMiddleware, this.resourceController.getResourceById)
-      .patch(authMiddleware, this.resourceController.updateResource)
-      .delete(authMiddleware, this.resourceController.deleteResource);
+      .patch(devAuthMiddleware, this.resourceController.updateResource)
+      .delete(devAuthMiddleware, this.resourceController.deleteResource);
 
     app.route("/api/resources/:id/logic")
-      .delete(authMiddleware, this.resourceController.deleteResourceAdv);
+      .delete(devAuthMiddleware, this.resourceController.deleteResourceAdv);
   }
 }

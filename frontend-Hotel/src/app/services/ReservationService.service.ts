@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
-import { ReservationServiceI, ReservationServiceResponseI } from '../models/ReservationService';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ReservationServiceI } from '../models/ReservationService';
 import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationServiceService {
-  private baseUrl = 'http://localhost:4000/api/ReservationServices';
-  private reservationServiceSubject = new BehaviorSubject<ReservationServiceResponseI[]>([]);
-  public reservationServices$ = this.reservationServiceSubject.asObservable();
+  private baseUrl = 'http://localhost:4000/api/reservations';
 
   constructor(
     private http: HttpClient,
@@ -26,63 +25,64 @@ export class ReservationServiceService {
     return headers;
   }
 
-  getAll(): Observable<ReservationServiceResponseI[]> {
-    return this.http.get<ReservationServiceResponseI[]>(this.baseUrl, { headers: this.getHeaders() })
+  getServicesByReservation(reservationId: number): Observable<ReservationServiceI[]> {
+    return this.http.get<ReservationServiceI[]>(`${this.baseUrl}/${reservationId}/services`, { headers: this.getHeaders() })
       .pipe(
-        tap(data => {
-          this.reservationServiceSubject.next(data);
-        }),
         catchError(error => {
-          console.error('Error fetching ReservationServices:', error);
+          console.error(`Error fetching services for reservation ${reservationId}:`, error);
           return throwError(() => error);
         })
       );
   }
 
-  getById(id: number): Observable<ReservationServiceResponseI> {
-    return this.http.get<ReservationServiceResponseI>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
+  addServiceToReservation(reservationId: number, service_id: number, quantity: number): Observable<ReservationServiceI> {
+    const body = { service_id, quantity };
+    return this.http.post<ReservationServiceI>(`${this.baseUrl}/${reservationId}/services`, body, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
-          console.error(`Error fetching ReservationService with id ${id}:`, error);
+          console.error(`Error adding service to reservation ${reservationId}:`, error);
           return throwError(() => error);
         })
       );
   }
 
-  create(data: ReservationServiceI): Observable<ReservationServiceResponseI> {
-    return this.http.post<ReservationServiceResponseI>(this.baseUrl, data, { headers: this.getHeaders() })
+  removeServiceFromReservation(reservationId: number, reservationServiceId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${reservationId}/services/${reservationServiceId}`, { headers: this.getHeaders() })
       .pipe(
-        tap(() => this.refresh()),
         catchError(error => {
-          console.error('Error creating ReservationService:', error);
+          console.error(`Error deleting service ${reservationServiceId} from reservation ${reservationId}:`, error);
           return throwError(() => error);
         })
       );
   }
 
-  update(id: number, data: Partial<ReservationServiceI>): Observable<ReservationServiceResponseI> {
-    return this.http.patch<ReservationServiceResponseI>(`${this.baseUrl}/${id}`, data, { headers: this.getHeaders() })
+  getAll(): Observable<ReservationServiceI[]> {
+    return this.http.get<ReservationServiceI[]>('http://localhost:4000/api/reservationservices', { headers: this.getHeaders() })
       .pipe(
-        tap(() => this.refresh()),
         catchError(error => {
-          console.error(`Error updating ReservationService with id ${id}:`, error);
+          console.error('Error fetching all reservation services:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  create(reservationService: ReservationServiceI): Observable<ReservationServiceI> {
+    return this.http.post<ReservationServiceI>('http://localhost:4000/api/reservationservices', reservationService, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          console.error('Error creating reservation service:', error);
           return throwError(() => error);
         })
       );
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
+    return this.http.delete<void>(`http://localhost:4000/api/reservationservices/${id}`, { headers: this.getHeaders() })
       .pipe(
-        tap(() => this.refresh()),
         catchError(error => {
-          console.error(`Error deleting ReservationService with id ${id}:`, error);
+          console.error(`Error deleting reservation service ${id}:`, error);
           return throwError(() => error);
         })
       );
-  }
-
-  refresh(): void {
-    this.getAll().subscribe();
   }
 }

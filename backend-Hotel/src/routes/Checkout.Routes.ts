@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { CheckoutController } from "../controllers/Checkout.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class CheckoutRoutes {
   public checkoutController: CheckoutController = new CheckoutController();

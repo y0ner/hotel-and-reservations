@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { ResourceRoleController } from "../../controllers/authorization/resourceRole.controller";
-import { authMiddleware } from '../../middleware/auth';
+import { authMiddleware, devAuthMiddleware } from '../../middleware/auth';
 
 export class ResourceRoleRoutes {
   public resourceRoleController: ResourceRoleController = new ResourceRoleController();
@@ -22,14 +22,14 @@ export class ResourceRoleRoutes {
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/resourceRoles")
       .get(authMiddleware, this.resourceRoleController.getAllResourceRoles)
-      .post(authMiddleware, this.resourceRoleController.createResourceRole);
+      .post(devAuthMiddleware, this.resourceRoleController.createResourceRole);
 
     app.route("/api/resourceRoles/:id")
       .get(authMiddleware, this.resourceRoleController.getResourceRoleById)
-      .patch(authMiddleware, this.resourceRoleController.updateResourceRole)
-      .delete(authMiddleware, this.resourceRoleController.deleteResourceRole);
+      .patch(devAuthMiddleware, this.resourceRoleController.updateResourceRole)
+      .delete(devAuthMiddleware, this.resourceRoleController.deleteResourceRole);
 
     app.route("/api/resourceRoles/:id/logic")
-      .delete(authMiddleware, this.resourceRoleController.deleteResourceRoleAdv);
+      .delete(devAuthMiddleware, this.resourceRoleController.deleteResourceRoleAdv);
   }
 }

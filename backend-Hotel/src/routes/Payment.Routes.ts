@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { PaymentController } from "../controllers/Payment.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class PaymentRoutes {
   public paymentController: PaymentController = new PaymentController();
@@ -15,14 +15,14 @@ export class PaymentRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Payments")
-      .get(authMiddleware, this.paymentController.getAllPayments)
-      .post(authMiddleware, this.paymentController.createPayment);
+      .get(devAuthMiddleware, this.paymentController.getAllPayments)
+      .post(devAuthMiddleware, this.paymentController.createPayment);
 
     app.route("/api/Payments/:id")
-      .get(authMiddleware, this.paymentController.getPaymentById);
+      .get(devAuthMiddleware, this.paymentController.getPaymentById);
 
     // Cancelar un pago
     app.route("/api/Payments/:id/cancel")
-      .patch(authMiddleware, this.paymentController.cancelPayment);
+      .patch(devAuthMiddleware, this.paymentController.cancelPayment);
   }
 }

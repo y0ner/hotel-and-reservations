@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { HotelController } from "../controllers/Hotel.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class HotelRoutes {
   public hotelController: HotelController = new HotelController();
@@ -13,14 +13,14 @@ export class HotelRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Hotels")
-      .get(authMiddleware, this.hotelController.getAllHotels)
-      .post(authMiddleware, this.hotelController.createHotel);
+      .get(devAuthMiddleware, this.hotelController.getAllHotels)
+      .post(devAuthMiddleware, this.hotelController.createHotel);
 
     app.route("/api/Hotels/:id")
-      .get(authMiddleware, this.hotelController.getHotelById)
-      .patch(authMiddleware, this.hotelController.updateHotel);
+      .get(devAuthMiddleware, this.hotelController.getHotelById)
+      .patch(devAuthMiddleware, this.hotelController.updateHotel);
 
     app.route("/api/Hotels/:id/logic")
-      .delete(authMiddleware, this.hotelController.deleteHotelAdv);
+      .delete(devAuthMiddleware, this.hotelController.deleteHotelAdv);
   }
 }

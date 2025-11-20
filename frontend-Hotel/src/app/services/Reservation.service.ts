@@ -78,14 +78,7 @@ export class ReservationService {
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        tap(() => this.refresh()),
-        catchError(error => {
-          console.error(`Error deleting Reservation with id ${id}:`, error);
-          return throwError(() => error);
-        })
-      );
+    return this.deleteLogic(id);
   }
 
   deleteLogic(id: number): Observable<void> {

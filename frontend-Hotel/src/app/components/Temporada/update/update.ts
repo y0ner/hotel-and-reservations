@@ -66,16 +66,19 @@ export class Update implements OnInit {
     this.loading = true;
     this.seasonService.getById(this.entityId).subscribe({
       next: (data: SeasonResponseI) => {
-        // PrimeNG calendar expects Date objects
+        console.log('Datos cargados:', data);
+        // PrimeNG datepicker expects Date objects
         const seasonData = {
             ...data,
             start_date: new Date(data.start_date),
             end_date: new Date(data.end_date)
         };
+        console.log('Datos formateados:', seasonData);
         this.form.patchValue(seasonData);
         this.loading = false;
       },
       error: (error: any) => {
+        console.error('Error loading season:', error);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los datos de la temporada' });
         this.loading = false;
       }

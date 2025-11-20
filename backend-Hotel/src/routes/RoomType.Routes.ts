@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { RoomTypeController } from "../controllers/RoomType.Controller";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware, devAuthMiddleware } from "../middleware/auth";
 
 export class RoomTypeRoutes {
   public roomtypeController: RoomTypeController = new RoomTypeController();
@@ -13,14 +13,14 @@ export class RoomTypeRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/RoomTypes")
-      .get(authMiddleware, this.roomtypeController.getAllRoomTypes)
-      .post(authMiddleware, this.roomtypeController.createRoomType);
+      .get(devAuthMiddleware, this.roomtypeController.getAllRoomTypes)
+      .post(devAuthMiddleware, this.roomtypeController.createRoomType);
 
     app.route("/api/RoomTypes/:id")
-      .get(authMiddleware, this.roomtypeController.getRoomTypeById)
-      .patch(authMiddleware, this.roomtypeController.updateRoomType);
+      .get(devAuthMiddleware, this.roomtypeController.getRoomTypeById)
+      .patch(devAuthMiddleware, this.roomtypeController.updateRoomType);
 
     app.route("/api/RoomTypes/:id/logic")
-      .delete(authMiddleware, this.roomtypeController.deleteRoomTypeAdv);
+      .delete(devAuthMiddleware, this.roomtypeController.deleteRoomTypeAdv);
   }
 }
