@@ -5,7 +5,7 @@ export interface RateI {
   description: string;
   refundable: boolean;
   season_id: number;
-  room_type_id: number;
+  roomtype_id: number;
   status: "ACTIVE" | "INACTIVE";
 }
 
@@ -16,7 +16,7 @@ export interface RateResponseI {
   currency: string;
   description: string;
   refundable: boolean;
-  room_type_id: number;
+  roomtype_id: number;
   season_id: number;
 
 }

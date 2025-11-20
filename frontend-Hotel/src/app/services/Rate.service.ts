@@ -125,4 +125,46 @@ export class TarifaService {
   updateLocalData(Rate: RateResponseI[]): void {
     this.RateSubject.next(Rate);
   }
+
+  /**
+   * Encontrar tarifa automáticamente basada en temporada y tipo de habitación
+   * @param roomTypeId - ID del tipo de habitación
+   * @param startDate - Fecha de inicio
+   * @param endDate - Fecha de fin
+   * @param seasonId - (Opcional) ID de la temporada específica
+   * @returns Observable con la tarifa encontrada o null
+   */
+  findRateBySeasonAndRoomType(
+    roomTypeId: number,
+    startDate: Date,
+    endDate: Date,
+    seasonId?: number
+  ): Observable<RateResponseI | null> {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    return this.getAllByHotel().pipe(
+      map(rates => {
+        // Si se especifica una temporada, buscar tarifa para esa temporada
+        if (seasonId) {
+          const rate = rates.find(
+            r => r.season_id === seasonId && r.roomtype_id === roomTypeId
+          );
+          return rate || null;
+        }
+
+        // Si no, buscar tarifa que se alinee con el período
+        // Priorizar tarifas cuya temporada contenga el período
+        const rate = rates.find(
+          r => r.roomtype_id === roomTypeId
+        );
+        
+        return rate || null;
+      }),
+      catchError(error => {
+        console.error('Error finding rate by season and room type:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
@@ -27,6 +28,7 @@ import { SeasonResponseI } from '../../../models/Season';
     TextareaModule,
     InputNumberModule,
     SelectModule,
+    CheckboxModule,
     ToastModule,
     CardModule,
     RouterModule
@@ -51,8 +53,10 @@ export class Create implements OnInit {
   ) {
     this.form = this.fb.group({
       description: ['', []],
-      price: [0, [Validators.required, Validators.min(0)]],
-      room_type_id: [null, [Validators.required]],
+      amount: [null, [Validators.required, Validators.min(0.01)]],
+      currency: ['USD', [Validators.required]],
+      refundable: [false],
+      roomtype_id: [null, [Validators.required]],
       season_id: [null, [Validators.required]],
       status: ['ACTIVE', []],
     });
@@ -89,6 +93,9 @@ export class Create implements OnInit {
     if (this.form.valid) {
       this.loading = true;
       const formData = this.form.value;
+      
+      // Debug log para ver qué se envía
+      console.log('Form data being sent:', formData);
 
       this.rateService.create(formData).subscribe({
         next: (response) => {
@@ -106,13 +113,19 @@ export class Create implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: error.error?.message || 'Error al crear la tarifa'
+            detail: error.error?.error || error.error?.message || 'Error al crear la tarifa'
           });
           this.loading = false;
         }
       });
     } else {
       this.markFormGroupTouched();
+      console.log('Form is invalid. Controls:', Object.keys(this.form.controls).map(key => ({
+        key,
+        valid: this.form.get(key)?.valid,
+        value: this.form.get(key)?.value,
+        errors: this.form.get(key)?.errors
+      })));
       this.messageService.add({
         severity: 'warn',
         summary: 'Advertencia',

@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
@@ -28,6 +29,7 @@ import { SeasonResponseI } from '../../../models/Season';
     TextareaModule,
     InputNumberModule,
     SelectModule,
+    CheckboxModule,
     ToastModule,
     CardModule,
     RouterModule
@@ -54,8 +56,10 @@ export class Update implements OnInit {
   ) {
     this.form = this.fb.group({
       description: ['', []],
-      price: [0, [Validators.required, Validators.min(0)]],
-      room_type_id: [null, [Validators.required]],
+      amount: [null, [Validators.required, Validators.min(0.01)]],
+      currency: ['USD', [Validators.required]],
+      refundable: [false],
+      roomtype_id: [null, [Validators.required]],
       season_id: [null, [Validators.required]],
       status: ['ACTIVE', []],
     });

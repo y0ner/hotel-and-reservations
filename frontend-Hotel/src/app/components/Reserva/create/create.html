@@ -20,6 +20,9 @@
           <div class="flex flex-col">
             <label for="room_id" class="block text-sm font-semibold text-gray-700 mb-2">Habitación *</label>
             <p-select id="room_id" [options]="rooms" formControlName="room_id" optionLabel="number" optionValue="id" placeholder="Seleccione una habitación"></p-select>
+            <small class="text-gray-500 mt-1" *ngIf="form.get('room_id')?.value">
+              Capacidad: {{ getRoomCapacity() }} huéspedes
+            </small>
             <small class="text-red-500 mt-1" *ngIf="getFieldError('room_id')">{{ getFieldError('room_id') }}</small>
           </div>
 
@@ -29,6 +32,9 @@
             <p-select id="rate_id" [options]="rates" formControlName="rate_id" optionLabel="description" optionValue="id" placeholder="Seleccione una tarifa"></p-select>
             <small class="text-gray-500 mt-1" *ngIf="form.get('rate_id')?.value">
               Precio por noche: ${{ getPricePerNight() | number:'1.2-2' }}
+            </small>
+            <small class="text-blue-500 mt-1" *ngIf="suggestedRate && form.get('rate_id')?.value === suggestedRate.id">
+              ✓ Seleccionada automáticamente según la temporada
             </small>
             <small class="text-red-500 mt-1" *ngIf="getFieldError('rate_id')">{{ getFieldError('rate_id') }}</small>
           </div>

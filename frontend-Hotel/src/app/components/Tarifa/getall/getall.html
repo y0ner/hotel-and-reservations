@@ -27,6 +27,8 @@
                 <th>Descripción</th>
                 <th>Monto</th>
                 <th>Moneda</th>
+                <th>Tipo de Habitación</th>
+                <th>Temporada</th>
                 <th class="text-center">Acciones</th>
             </tr>
         </ng-template>
@@ -37,6 +39,8 @@
                 <td>{{ rate.description }}</td>
                 <td>{{ rate.amount | currency }}</td>
                 <td>{{ rate.currency }}</td>
+                <td>{{ getRoomTypeName(rate.room_type_id) }}</td>
+                <td>{{ getSeasonName(rate.season_id) }}</td>
                 <td class="text-center">
                     <div class="flex justify-center gap-2">
                         <p-button icon="pi pi-pencil" (click)="editRate(rate.id)" styleClass="p-button-rounded p-button-text p-button-warning" pTooltip="Editar" tooltipPosition="top"></p-button>
@@ -48,7 +52,7 @@
 
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="5" class="text-center p-4">No se encontraron registros</td>
+                <td colspan="7" class="text-center p-4">No se encontraron registros</td>
             </tr>
         </ng-template>
     </p-table>

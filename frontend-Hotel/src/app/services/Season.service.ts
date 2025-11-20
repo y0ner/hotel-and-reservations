@@ -109,4 +109,34 @@ export class SeasonService {
   updateLocalData(Season: SeasonResponseI[]): void {
     this.SeasonSubject.next(Season);
   }
+
+  /**
+   * Encontrar temporada que contenga las fechas especificadas
+   * @param startDate - Fecha de inicio
+   * @param endDate - Fecha de fin
+   * @returns Observable con la temporada encontrada o null
+   */
+  findSeasonByDateRange(startDate: Date, endDate: Date): Observable<SeasonResponseI | null> {
+    return this.getAllByHotel().pipe(
+      map(seasons => {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        
+        // Buscar temporada que contenga al menos parte del período
+        const season = seasons.find(s => {
+          const seasonStart = new Date(s.start_date);
+          const seasonEnd = new Date(s.end_date);
+          
+          // Verificar si hay superposición entre períodos
+          return start <= seasonEnd && end >= seasonStart;
+        });
+        
+        return season || null;
+      }),
+      catchError(error => {
+        console.error('Error finding season by date range:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

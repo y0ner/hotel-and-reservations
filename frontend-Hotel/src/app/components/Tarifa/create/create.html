@@ -9,18 +9,25 @@
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Precio -->
+          <!-- Monto/Precio -->
           <div class="flex flex-col">
-            <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Precio *</label>
-            <p-inputNumber id="price" formControlName="price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-            <small class="text-red-500 mt-1" *ngIf="getFieldError('price')">{{ getFieldError('price') }}</small>
+            <label for="amount" class="block text-sm font-semibold text-gray-700 mb-2">Monto *</label>
+            <p-inputNumber id="amount" formControlName="amount" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('amount')">{{ getFieldError('amount') }}</small>
+          </div>
+
+          <!-- Moneda -->
+          <div class="flex flex-col">
+            <label for="currency" class="block text-sm font-semibold text-gray-700 mb-2">Moneda *</label>
+            <p-select id="currency" formControlName="currency" [options]="[{label: 'USD', value: 'USD'}, {label: 'EUR', value: 'EUR'}, {label: 'MXN', value: 'MXN'}]" optionLabel="label" optionValue="value" placeholder="Seleccione una moneda"></p-select>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('currency')">{{ getFieldError('currency') }}</small>
           </div>
 
           <!-- Tipo de Habitación -->
           <div class="flex flex-col">
-            <label for="room_type_id" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Habitación *</label>
-            <p-select id="room_type_id" [options]="roomTypes" formControlName="room_type_id" optionLabel="name" optionValue="id" placeholder="Seleccione un tipo de habitación"></p-select>
-            <small class="text-red-500 mt-1" *ngIf="getFieldError('room_type_id')">{{ getFieldError('room_type_id') }}</small>
+            <label for="roomtype_id" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Habitación *</label>
+            <p-select id="roomtype_id" [options]="roomTypes" formControlName="roomtype_id" optionLabel="name" optionValue="id" placeholder="Seleccione un tipo de habitación"></p-select>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('roomtype_id')">{{ getFieldError('roomtype_id') }}</small>
           </div>
 
           <!-- Temporada -->
@@ -28,6 +35,12 @@
             <label for="season_id" class="block text-sm font-semibold text-gray-700 mb-2">Temporada *</label>
             <p-select id="season_id" [options]="seasons" formControlName="season_id" optionLabel="name" optionValue="id" placeholder="Seleccione una temporada"></p-select>
             <small class="text-red-500 mt-1" *ngIf="getFieldError('season_id')">{{ getFieldError('season_id') }}</small>
+          </div>
+
+          <!-- Reembolsable -->
+          <div class="flex items-center gap-2 mt-2">
+            <p-checkbox id="refundable" formControlName="refundable" [binary]="true"></p-checkbox>
+            <label for="refundable" class="text-sm font-semibold text-gray-700">¿Es reembolsable?</label>
           </div>
         </div>
 

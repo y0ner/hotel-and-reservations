@@ -14,6 +14,7 @@ import { ReservationService } from '../../../services/Reservation.service';
 import { ClienteService } from '../../../services/Client.service';
 import { RoomService } from '../../../services/Room.service';
 import { TarifaService } from '../../../services/Rate.service';
+import { SeasonService } from '../../../services/Season.service';
 import { AuthService } from '../../../services/auth.service';
 import { ClientResponseI } from '../../../models/Client';
 import { RoomResponseI } from '../../../models/Room';
@@ -45,6 +46,7 @@ export class Create implements OnInit {
   rooms: RoomResponseI[] = [];
   rates: RateResponseI[] = [];
   calculatedPrice: number = 0;
+  suggestedRate: RateResponseI | null = null; // Tarifa sugerida automáticamente
 
   constructor(
     private fb: FormBuilder,
@@ -53,6 +55,7 @@ export class Create implements OnInit {
     private clientService: ClienteService,
     private roomService: RoomService,
     private rateService: TarifaService,
+    private seasonService: SeasonService,
     private authService: AuthService,
     private messageService: MessageService
   ) {
@@ -74,9 +77,10 @@ export class Create implements OnInit {
     
     // Escuchar cambios en el formulario para calcular precio
     this.form.get('rate_id')?.valueChanges.subscribe(() => this.calculatePrice());
-    this.form.get('start_date')?.valueChanges.subscribe(() => this.calculatePrice());
-    this.form.get('end_date')?.valueChanges.subscribe(() => this.calculatePrice());
-    this.form.get('number_of_guests')?.valueChanges.subscribe(() => this.calculatePrice());
+    this.form.get('start_date')?.valueChanges.subscribe(() => this.onDatesChanged());
+    this.form.get('end_date')?.valueChanges.subscribe(() => this.onDatesChanged());
+    this.form.get('room_id')?.valueChanges.subscribe(() => this.onRoomOrDatesChanged());
+    this.form.get('number_of_guests')?.valueChanges.subscribe(() => this.validateGuestCapacity());
   }
 
   loadClients(): void {
@@ -110,6 +114,84 @@ export class Create implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las tarifas' });
       }
     });
+  }
+
+  /**
+   * Cuando cambian las fechas, buscar automáticamente la tarifa
+   */
+  private onDatesChanged(): void {
+    const startDate = this.form.get('start_date')?.value;
+    const endDate = this.form.get('end_date')?.value;
+    const roomId = this.form.get('room_id')?.value;
+
+    if (startDate && endDate && roomId) {
+      this.autoSelectRate(startDate, endDate, roomId);
+    }
+
+    this.calculatePrice();
+  }
+
+  /**
+   * Cuando cambia la habitación, validar capacidad y buscar tarifa
+   */
+  private onRoomOrDatesChanged(): void {
+    this.validateGuestCapacity();
+    this.onDatesChanged();
+  }
+
+  /**
+   * Buscar automáticamente la tarifa según la temporada y tipo de habitación
+   */
+  private autoSelectRate(startDate: Date, endDate: Date, roomId: number): void {
+    const room = this.rooms.find(r => r.id === roomId);
+    if (!room) return;
+
+    // Buscar la temporada que contenga estas fechas
+    this.seasonService.findSeasonByDateRange(startDate, endDate).subscribe({
+      next: (season) => {
+        if (season) {
+          // Buscar tarifa para esta temporada y tipo de habitación
+          const suggestedRate = this.rates.find(
+            r => r.season_id === season.id && r.roomtype_id === room.room_type_id
+          );
+
+          if (suggestedRate && suggestedRate.id) {
+            this.suggestedRate = suggestedRate;
+            this.form.patchValue({ rate_id: suggestedRate.id }, { emitEvent: false });
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Tarifa detectada',
+              detail: `Se seleccionó automáticamente la tarifa para la temporada "${season.name}"`
+            });
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error al buscar temporada:', error);
+      }
+    });
+  }
+
+  /**
+   * Validar que el número de huéspedes no exceda la capacidad de la habitación
+   */
+  private validateGuestCapacity(): void {
+    const roomId = this.form.get('room_id')?.value;
+    const numberOfGuests = this.form.get('number_of_guests')?.value;
+
+    if (!roomId || !numberOfGuests) return;
+
+    const room = this.rooms.find(r => r.id === roomId);
+    if (!room) return;
+
+    if (numberOfGuests > room.capacity) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Capacidad excedida',
+        detail: `La habitación N° ${room.number} tiene capacidad para ${room.capacity} huéspedes`
+      });
+      this.form.patchValue({ number_of_guests: room.capacity });
+    }
   }
 
   calculatePrice(): void {
@@ -249,5 +331,12 @@ export class Create implements OnInit {
     if (!rateId) return 0;
     const selectedRate = this.rates.find(r => r.id === rateId);
     return selectedRate ? selectedRate.amount : 0;
+  }
+
+  getRoomCapacity(): number {
+    const roomId = this.form.get('room_id')?.value;
+    if (!roomId) return 0;
+    const room = this.rooms.find(r => r.id === roomId);
+    return room ? room.capacity : 0;
   }
 }

@@ -9,7 +9,11 @@ import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { TarifaService } from '../../../services/Rate.service';
+import { SeasonService } from '../../../services/Season.service';
+import { RoomTypeService } from '../../../services/RoomType.service';
 import { RateResponseI } from '../../../models/Rate';
+import { SeasonResponseI } from '../../../models/Season';
+import { RoomTypeResponseI } from '../../../models/RoomType';
 
 @Component({
   selector: 'app-rate-getall',
@@ -30,10 +34,14 @@ import { RateResponseI } from '../../../models/Rate';
 })
 export class Getall implements OnInit {
   rates: RateResponseI[] = [];
+  seasons: SeasonResponseI[] = [];
+  roomTypes: RoomTypeResponseI[] = [];
   loading: boolean = true;
 
   constructor(
     private tarifaService: TarifaService,
+    private seasonService: SeasonService,
+    private roomTypeService: RoomTypeService,
     private router: Router,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
@@ -41,6 +49,8 @@ export class Getall implements OnInit {
 
   ngOnInit(): void {
     this.loadRates();
+    this.loadSeasons();
+    this.loadRoomTypes();
   }
 
   loadRates(): void {
@@ -55,6 +65,38 @@ export class Getall implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las tarifas' });
       }
     });
+  }
+
+  loadSeasons(): void {
+    this.seasonService.getAllByHotel().subscribe({
+      next: (data) => {
+        this.seasons = data;
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las temporadas' });
+      }
+    });
+  }
+
+  loadRoomTypes(): void {
+    this.roomTypeService.getAll().subscribe({
+      next: (data) => {
+        this.roomTypes = data;
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los tipos de habitación' });
+      }
+    });
+  }
+
+  getSeasonName(seasonId: number): string {
+    const season = this.seasons.find(s => s.id === seasonId);
+    return season ? season.name : 'Desconocida';
+  }
+
+  getRoomTypeName(roomTypeId: number): string {
+    const roomType = this.roomTypes.find(r => r.id === roomTypeId);
+    return roomType ? roomType.name : 'Desconocido';
   }
 
   createRate(): void {
