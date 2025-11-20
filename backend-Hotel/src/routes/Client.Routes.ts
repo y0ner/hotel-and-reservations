@@ -22,5 +22,8 @@ export class ClientRoutes {
 
     app.route("/api/Clients/:id/logic")
       .delete(authMiddleware, this.clientController.deleteClientAdv);
+
+    app.route("/api/Clients/hotel/:hotelId")
+      .get(authMiddleware, this.clientController.getClientsByHotel);
   }
 }

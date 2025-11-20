@@ -40,6 +40,21 @@ export class SeasonService {
       );
   }
 
+  getAllByHotel(hotelId?: number): Observable<SeasonResponseI[]> {
+    const hotel = hotelId || this.authService.getCurrentHotel();
+    if (!hotel) {
+      return throwError(() => new Error('No hotel selected'));
+    }
+    return this.http.get<SeasonResponseI[]>(`${this.baseUrl}/hotel/${hotel}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(Season => this.SeasonSubject.next(Season)),
+        catchError(error => {
+          console.error('Error fetching Season by hotel:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
   getById(id: number): Observable<SeasonResponseI> {
     return this.http.get<SeasonResponseI>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
       .pipe(

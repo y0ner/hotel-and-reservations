@@ -12,9 +12,13 @@ export class SeasonRoutes {
     //   .get(this.seasonController.getAllSeasons);
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
+
     app.route("/api/Seasons")
       .get(authMiddleware, this.seasonController.getAllSeasons)
       .post(authMiddleware, this.seasonController.createSeason);
+
+    app.route("/api/Seasons/hotel/:hotelId")
+      .get(authMiddleware, this.seasonController.getSeasonsByHotel);
 
     app.route("/api/Seasons/:id")
       .get(authMiddleware, this.seasonController.getSeasonById)

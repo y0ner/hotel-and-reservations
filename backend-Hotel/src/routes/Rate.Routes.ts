@@ -22,5 +22,8 @@ export class RateRoutes {
 
     app.route("/api/Rates/:id/logic")
       .delete(authMiddleware, this.rateController.deleteRateAdv);
+
+    app.route("/api/Rates/hotel/:hotelId")
+      .get(authMiddleware, this.rateController.getRatesByHotel);
   }
 }

@@ -6,7 +6,31 @@ export class AuthController {
   public async register(req: Request, res: Response): Promise<void> {
     try {
       const { username, email, password, is_active, avatar, hotel_id } = req.body;
-      const user_interface: User = await User.create({ username, email, password, is_active, avatar, hotel_id });
+
+      // Ensure there is a hotel_id to satisfy FK constraint on users.
+      let finalHotelId = hotel_id;
+      if (!finalHotelId) {
+        // If no hotel exists, create a default hotel and use its id.
+        const existingHotels = await (await import('../../models/Hotel')).Hotel.findAll();
+        if (!existingHotels || existingHotels.length === 0) {
+          const { Hotel } = await import('../../models/Hotel');
+          const defaultHotel = await Hotel.create({
+            name: 'Default Hotel',
+            address: 'Default Address',
+            city: 'Default City',
+            country: 'Default Country',
+            phone: '',
+            stars: 3,
+            status: 'ACTIVE'
+          } as any);
+          finalHotelId = (defaultHotel as any).id;
+        } else {
+          // use first existing hotel id
+          finalHotelId = (existingHotels[0] as any).id;
+        }
+      }
+
+      const user_interface: User = await User.create({ username, email, password, is_active, avatar, hotel_id: finalHotelId });
       const userWithHotel = await User.findByPk(user_interface.id, {
         include: [{ model: Hotel }]
       });

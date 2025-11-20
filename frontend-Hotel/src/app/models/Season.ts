@@ -4,6 +4,7 @@ export interface SeasonI {
   start_date: Date;
   end_date: Date;
   price_multiplier: number;
+  hotel_id: number;
   status: "ACTIVE" | "INACTIVE";
 }
 
@@ -14,5 +15,6 @@ export interface SeasonResponseI {
   start_date: Date;
   end_date: Date;
   price_multiplier: number;
+  hotel_id: number;
 
 }

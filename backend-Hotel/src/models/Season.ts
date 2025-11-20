@@ -8,6 +8,7 @@ export interface SeasonI {
   start_date: Date;
   end_date: Date;
   price_multiplier: number;
+  hotel_id: number;
   status: "ACTIVE" | "INACTIVE";
 }
 
@@ -16,6 +17,7 @@ export class Season extends Model<SeasonI> implements SeasonI {
   public start_date!: Date;
   public end_date!: Date;
   public price_multiplier!: number;
+  public hotel_id!: number;
   public status!: "ACTIVE" | "INACTIVE";
 }
 
@@ -36,6 +38,14 @@ Season.init(
     price_multiplier: {
       type: DataTypes.FLOAT,
       allowNull: false
+    },
+    hotel_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'hotels',
+        key: 'id'
+      }
     },
     status: {
       type: DataTypes.ENUM("ACTIVE", "INACTIVE"),

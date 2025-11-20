@@ -68,4 +68,16 @@ export class RoomController {
       res.status(500).json({ error: "Error marking room as inactive" });
     }
   }
+
+  public async getRoomsByHotel(req: Request, res: Response) {
+    try {
+      const { hotelId } = req.params;
+      const rooms: RoomI[] = await Room.findAll({ 
+        where: { status: 'ACTIVE', hotel_id: hotelId } 
+      });
+      res.status(200).json(rooms);
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching rooms by hotel" });
+    }
+  }
 }

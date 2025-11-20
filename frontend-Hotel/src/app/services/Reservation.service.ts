@@ -99,6 +99,24 @@ export class ReservationService {
       );
   }
 
+  checkAvailability(roomId: number, startDate: Date | string, endDate: Date | string, excludeId?: number) {
+    const params: any = {
+      roomId: roomId.toString(),
+      start_date: (startDate instanceof Date) ? startDate.toISOString() : startDate,
+      end_date: (endDate instanceof Date) ? endDate.toISOString() : endDate
+    };
+    if (excludeId) params.excludeId = excludeId.toString();
+
+    const urlParams = new URLSearchParams(params).toString();
+    return this.http.get<{ available: boolean; conflicts: ReservationResponseI[] }>(`${this.baseUrl}/availability?${urlParams}`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          console.error('Error checking availability:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
   refresh(): void {
     this.getAll().subscribe();
   }

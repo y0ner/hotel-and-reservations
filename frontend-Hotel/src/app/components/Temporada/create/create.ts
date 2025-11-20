@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { SeasonService } from '../../../services/Season.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-season-create',
@@ -37,6 +38,7 @@ export class Create {
     private fb: FormBuilder,
     private router: Router,
     private seasonService: SeasonService,
+    private authService: AuthService,
     private messageService: MessageService
   ) {
     this.form = this.fb.group({
@@ -44,6 +46,7 @@ export class Create {
       start_date: ['', [Validators.required]],
       end_date: ['', [Validators.required]],
       price_multiplier: [1, [Validators.required, Validators.min(0)]],
+      hotel_id: [null, []],
       status: ['ACTIVE', []],
     });
   }
@@ -51,7 +54,13 @@ export class Create {
   submit(): void {
     if (this.form.valid) {
       this.loading = true;
-      const formData = this.form.value;
+      const hotelId = this.authService.getCurrentHotel();
+      if (!hotelId) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se ha seleccionado un hotel' });
+        this.loading = false;
+        return;
+      }
+      const formData = { ...this.form.value, hotel_id: hotelId };
 
       this.seasonService.create(formData).subscribe({
         next: (response) => {

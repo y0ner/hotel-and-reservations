@@ -49,7 +49,7 @@ export class Getall implements OnInit, OnDestroy {
   loadData(): void {
     this.loading = true;
     this.subscription.add(
-      this.clienteService.getAll().subscribe({
+      this.clienteService.getAllByHotel().subscribe({
         next: (data: ClientResponseI[]) => {
           this.Cliente = data;
           this.clienteService.updateLocalData(data);

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Rate, RateI } from "../models/Rate";
+import { Season } from "../models/Season";
 
 export class RateController {
 
@@ -66,6 +67,25 @@ export class RateController {
       }
     } catch (error) {
       res.status(500).json({ error: "Error marking rate as inactive" });
+    }
+  }
+
+  public async getRatesByHotel(req: Request, res: Response) {
+    try {
+      const { hotelId } = req.params;
+      // Las tarifas están vinculadas a través de Season → Hotel
+      // Necesitamos traer las temporadas del hotel y luego sus tarifas
+      const rates: RateI[] = await Rate.findAll({
+        where: { status: 'ACTIVE' },
+        include: [{
+          model: Season,
+          where: { hotel_id: hotelId },
+          required: true
+        }]
+      });
+      res.status(200).json(rates);
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching rates by hotel" });
     }
   }
 }

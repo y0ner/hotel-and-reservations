@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RateI, RateResponseI } from '../models/Rate';
 import { AuthService } from './auth.service';
+import { HotelContextService } from './hotel-context.service';
 
 // Interfaz para la respuesta del backend (espera un objeto con una propiedad que es el array)
 interface RateApiResponse {
@@ -20,7 +21,8 @@ export class TarifaService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private hotelContextService: HotelContextService
   ) {}
 
   private getHeaders(): HttpHeaders {
@@ -40,6 +42,23 @@ export class TarifaService {
         }),
         catchError(error => {
           console.error('Error fetching Rate:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getAllByHotel(hotelId?: number): Observable<RateResponseI[]> {
+    const hotel = hotelId || this.hotelContextService.getCurrentHotelId();
+    if (!hotel) {
+      return throwError(() => new Error('No hotel selected'));
+    }
+    return this.http.get<RateResponseI[]>(`${this.baseUrl}/hotel/${hotel}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(Rate => {
+          this.RateSubject.next(Rate);
+        }),
+        catchError(error => {
+          console.error('Error fetching Rate by hotel:', error);
           return throwError(() => error);
         })
       );
@@ -100,7 +119,7 @@ export class TarifaService {
   }
 
   refresh(): void {
-    this.getAll().subscribe();
+    this.getAllByHotel().subscribe();
   }
 
   updateLocalData(Rate: RateResponseI[]): void {

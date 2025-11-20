@@ -23,6 +23,26 @@ export function setupAssociations() {
     targetKey: "id",
   });
 
+  // Hotel - Reservation (One to Many)
+  Hotel.hasMany(Reservation, {
+    foreignKey: "hotel_id",
+    sourceKey: "id",
+  });
+  Reservation.belongsTo(Hotel, {
+    foreignKey: "hotel_id",
+    targetKey: "id",
+  });
+
+  // Hotel - Client (One to Many)
+  Hotel.hasMany(Client, {
+    foreignKey: "hotel_id",
+    sourceKey: "id",
+  });
+  Client.belongsTo(Hotel, {
+    foreignKey: "hotel_id",
+    targetKey: "id",
+  });
+
   // Client - Reservation (One to Many)
   Client.hasMany(Reservation, {
     foreignKey: "client_id",
@@ -102,6 +122,16 @@ export function setupAssociations() {
     targetKey: "id",
   });
 
+  // Rate - Reservation (One to Many)
+  Rate.hasMany(Reservation, {
+    foreignKey: "rate_id",
+    sourceKey: "id",
+  });
+  Reservation.belongsTo(Rate, {
+    foreignKey: "rate_id",
+    targetKey: "id",
+  });
+
   // RoomType - Room (One to Many)
   RoomType.hasMany(Room, {
     foreignKey: "roomtype_id",
@@ -129,6 +159,16 @@ export function setupAssociations() {
   });
   Rate.belongsTo(Season, {
     foreignKey: "season_id",
+    targetKey: "id",
+  });
+
+  // Hotel - Season (One to Many)
+  Hotel.hasMany(Season, {
+    foreignKey: "hotel_id",
+    sourceKey: "id",
+  });
+  Season.belongsTo(Hotel, {
+    foreignKey: "hotel_id",
     targetKey: "id",
   });
 

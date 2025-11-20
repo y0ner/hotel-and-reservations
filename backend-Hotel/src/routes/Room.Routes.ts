@@ -22,5 +22,8 @@ export class RoomRoutes {
 
     app.route("/api/Rooms/:id/logic")
       .delete(authMiddleware, this.roomController.deleteRoomAdv);
+
+    app.route("/api/Rooms/hotel/:hotelId")
+      .get(authMiddleware, this.roomController.getRoomsByHotel);
   }
 }

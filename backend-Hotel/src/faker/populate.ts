@@ -54,6 +54,7 @@ async function populateClients(count: number) {
             phone: faker.phone.number(),
             email: faker.internet.email(),
             nationality: faker.location.country(),
+            hotel_id: faker.helpers.arrayElement(populatedIds['Hotel']).id, // asignar hotel
             status: 'ACTIVE',
         });
         createdItems.push(newItem as any);
@@ -83,6 +84,11 @@ async function populateReservations(count: number) {
     for (let i = 0; i < count; i++) {
         const checkin_date = faker.date.soon({ days: 30 });
         const checkout_date = faker.date.soon({ days: 10, refDate: checkin_date });
+        const room = faker.helpers.arrayElement(populatedIds['Room']);
+        // try to pick a rate that matches the room type; if none, pick any rate
+        const ratesForRoomType = (populatedIds['Rate'] || []).filter((r: any) => r.roomtype_id === room.roomtype_id);
+        const rate = ratesForRoomType.length > 0 ? faker.helpers.arrayElement(ratesForRoomType) : faker.helpers.arrayElement(populatedIds['Rate']);
+
         const newItem = await Reservation.create({
             reservation_date: faker.date.past(),
             checkin_date: checkin_date,
@@ -90,7 +96,9 @@ async function populateReservations(count: number) {
             number_of_guests: faker.number.int({ min: 1, max: 4 }),
             total_amount: faker.number.float({ min: 100, max: 2000, fractionDigits: 2 }),
             client_id: faker.helpers.arrayElement(populatedIds['Client']).id,
-            room_id: faker.helpers.arrayElement(populatedIds['Room']).id, // Room debe estar poblado antes
+            room_id: room.id,
+            rate_id: rate?.id,
+            hotel_id: room.hotel_id,
             status: 'ACTIVE',
         });
         createdItems.push(newItem as any);
@@ -127,6 +135,7 @@ async function populateSeasons(count: number) {
             start_date: faker.date.past(),
             end_date: faker.date.future(),
             price_multiplier: faker.number.float({ min: 1, max: 2.5, fractionDigits: 1 }),
+            hotel_id: faker.helpers.arrayElement(populatedIds['Hotel']).id, // assign to hotel
             status: 'ACTIVE',
         });
         createdItems.push(newItem as any);

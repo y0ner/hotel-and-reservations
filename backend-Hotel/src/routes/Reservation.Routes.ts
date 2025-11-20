@@ -16,6 +16,9 @@ export class ReservationRoutes {
       .get(authMiddleware, this.reservationController.getAllReservations)
       .post(authMiddleware, this.reservationController.createReservation);
 
+    app.route("/api/Reservations/availability")
+      .get(authMiddleware, this.reservationController.checkAvailability);
+
     app.route("/api/Reservations/:id")
       .get(authMiddleware, this.reservationController.getReservationById)
       .patch(authMiddleware, this.reservationController.updateReservation);

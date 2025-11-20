@@ -6,6 +6,7 @@ export interface ClientI {
   phone: string;
   email: string;
   nationality: string;
+  hotel_id: number;
   status: "ACTIVE" | "INACTIVE";
 }
 
@@ -18,5 +19,6 @@ export interface ClientResponseI {
   phone: string;
   email: string;
   nationality: string;
+  hotel_id: number;
   status: "ACTIVE" | "INACTIVE";
 }

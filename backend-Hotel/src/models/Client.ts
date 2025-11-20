@@ -10,6 +10,7 @@ export interface ClientI {
   phone: string;
   email: string;
   nationality: string;
+  hotel_id: number;
   status: "ACTIVE" | "INACTIVE";
 }
 
@@ -20,6 +21,7 @@ export class Client extends Model<ClientI> implements ClientI {
   public phone!: string;
   public email!: string;
   public nationality!: string;
+  public hotel_id!: number;
   public status!: "ACTIVE" | "INACTIVE";
 }
 
@@ -48,6 +50,14 @@ Client.init(
     nationality: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    hotel_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'hotels',
+        key: 'id'
+      }
     },
     status: {
       type: DataTypes.ENUM("ACTIVE", "INACTIVE"),

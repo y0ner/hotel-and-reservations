@@ -23,6 +23,23 @@
             <small class="text-red-500 mt-1" *ngIf="getFieldError('room_id')">{{ getFieldError('room_id') }}</small>
           </div>
 
+          <!-- Tarifa -->
+          <div class="flex flex-col">
+            <label for="rate_id" class="block text-sm font-semibold text-gray-700 mb-2">Tarifa *</label>
+            <p-select id="rate_id" [options]="rates" formControlName="rate_id" optionLabel="description" optionValue="id" placeholder="Seleccione una tarifa"></p-select>
+            <small class="text-gray-500 mt-1" *ngIf="form.get('rate_id')?.value">
+              Precio por noche: ${{ getPricePerNight() | number:'1.2-2' }}
+            </small>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('rate_id')">{{ getFieldError('rate_id') }}</small>
+          </div>
+
+          <!-- Cantidad de Huéspedes -->
+          <div class="flex flex-col">
+            <label for="number_of_guests" class="block text-sm font-semibold text-gray-700 mb-2">Número de Huéspedes *</label>
+            <p-inputNumber id="number_of_guests" formControlName="number_of_guests" [min]="1"></p-inputNumber>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('number_of_guests')">{{ getFieldError('number_of_guests') }}</small>
+          </div>
+
           <!-- Fecha de Inicio -->
           <div class="flex flex-col">
             <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Inicio *</label>
@@ -37,11 +54,17 @@
             <small class="text-red-500 mt-1" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
           </div>
 
-          <!-- Precio Total -->
-          <div class="flex flex-col">
-            <label for="total_price" class="block text-sm font-semibold text-gray-700 mb-2">Precio Total *</label>
-            <p-inputNumber id="total_price" formControlName="total_price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-            <small class="text-red-500 mt-1" *ngIf="getFieldError('total_price')">{{ getFieldError('total_price') }}</small>
+          <!-- Precio Total (Calculado automáticamente) -->
+          <div class="flex flex-col md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Precio Total (Calculado) *</label>
+            <div class="p-4 bg-amber-50 border-2 border-amber-200 rounded-lg">
+              <div class="text-3xl font-bold text-amber-600">
+                ${{ calculatedPrice | number:'1.2-2' }}
+              </div>
+              <small class="text-gray-600 mt-2 block" *ngIf="calculatedPrice > 0">
+                Basado en tarifa seleccionada y fechas de reserva
+              </small>
+            </div>
           </div>
         </div>
       </form>

@@ -45,7 +45,7 @@ export class Getall implements OnInit {
 
   loadRates(): void {
     this.loading = true;
-    this.tarifaService.getAll().subscribe({
+    this.tarifaService.getAllByHotel().subscribe({
       next: (data) => {
         this.rates = data;
         this.loading = false;

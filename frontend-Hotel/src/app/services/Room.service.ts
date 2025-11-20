@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RoomI, RoomResponseI } from '../models/Room';
 import { AuthService } from './auth.service';
+import { HotelContextService } from './hotel-context.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class RoomService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private hotelContextService: HotelContextService
   ) {}
 
   private getHeaders(): HttpHeaders {
@@ -35,6 +37,23 @@ export class RoomService {
         }),
         catchError(error => {
           console.error('Error fetching Room:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getAllByHotel(hotelId?: number): Observable<RoomResponseI[]> {
+    const hotel = hotelId || this.hotelContextService.getCurrentHotelId();
+    if (!hotel) {
+      return throwError(() => new Error('No hotel selected'));
+    }
+    return this.http.get<RoomResponseI[]>(`${this.baseUrl}/hotel/${hotel}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(Room => {
+          this.RoomSubject.next(Room);
+        }),
+        catchError(error => {
+          console.error('Error fetching Room by hotel:', error);
           return throwError(() => error);
         })
       );
@@ -88,7 +107,7 @@ export class RoomService {
   }
 
   refresh(): void {
-    this.getAll().subscribe();
+    this.getAllByHotel().subscribe();
   }
 
   updateLocalData(Room: RoomResponseI[]): void {

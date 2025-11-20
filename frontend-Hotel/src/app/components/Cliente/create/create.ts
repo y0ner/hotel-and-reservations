@@ -8,6 +8,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { ClienteService } from '../../../services/Client.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-cliente-create',
@@ -25,6 +26,7 @@ export class Create {
     private fb: FormBuilder,
     private router: Router,
     private clienteService: ClienteService,
+    private authService: AuthService,
     private messageService: MessageService
   ) {
     this.form = this.fb.group({
@@ -41,7 +43,22 @@ export class Create {
   submit(): void {
     if (this.form.valid) {
       this.loading = true;
-      const formData = this.form.value;
+      const hotelId = this.authService.getCurrentHotel();
+
+      if (!hotelId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se ha seleccionado un hotel'
+        });
+        this.loading = false;
+        return;
+      }
+
+      const formData = {
+        ...this.form.value,
+        hotel_id: hotelId
+      };
 
       this.clienteService.create(formData).subscribe({
         next: (response) => {

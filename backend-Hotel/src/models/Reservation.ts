@@ -13,6 +13,8 @@ export interface ReservationI {
   total_amount: number;
   client_id: number;
   room_id: number;
+  rate_id: number;
+  hotel_id: number;
   status: "ACTIVE" | "INACTIVE";
 }
 
@@ -26,6 +28,8 @@ export class Reservation extends Model<ReservationI> implements ReservationI {
   public total_amount!: number;
   public client_id!: number;
   public room_id!: number;
+  public rate_id!: number;
+  public hotel_id!: number;
   public status!: "ACTIVE" | "INACTIVE";
 }
 
@@ -71,6 +75,22 @@ Reservation.init(
     room_id: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    rate_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'rates',
+        key: 'id'
+      }
+    },
+    hotel_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'hotels',
+        key: 'id'
+      }
     },
     status: {
       type: DataTypes.ENUM("ACTIVE", "INACTIVE"),

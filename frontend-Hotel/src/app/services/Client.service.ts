@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ClientI, ClientResponseI } from '../models/Client';
 import { AuthService } from './auth.service';
+import { HotelContextService } from './hotel-context.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class ClienteService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private hotelContextService: HotelContextService
   ) {}
 
   private getHeaders(): HttpHeaders {
@@ -35,6 +37,23 @@ export class ClienteService {
         }),
         catchError(error => {
           console.error('Error fetching Client:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getAllByHotel(hotelId?: number): Observable<ClientResponseI[]> {
+    const hotel = hotelId || this.hotelContextService.getCurrentHotelId();
+    if (!hotel) {
+      return throwError(() => new Error('No hotel selected'));
+    }
+    return this.http.get<ClientResponseI[]>(`${this.baseUrl}/hotel/${hotel}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(Client => {
+          this.ClientSubject.next(Client);
+        }),
+        catchError(error => {
+          console.error('Error fetching Client by hotel:', error);
           return throwError(() => error);
         })
       );
@@ -88,7 +107,7 @@ export class ClienteService {
   }
 
   refresh(): void {
-    this.getAll().subscribe();
+    this.getAllByHotel().subscribe();
   }
 
   updateLocalData(Client: ClientResponseI[]): void {

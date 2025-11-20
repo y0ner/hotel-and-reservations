@@ -75,7 +75,7 @@ export class Create implements OnInit {
   }
 
   loadSeasons(): void {
-    this.seasonService.getAll().subscribe({
+    this.seasonService.getAllByHotel().subscribe({
       next: (data) => {
         this.seasons = data;
       },
