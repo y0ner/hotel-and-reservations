@@ -94,7 +94,8 @@ export class Getall implements OnInit {
     return season ? season.name : 'Desconocida';
   }
 
-  getRoomTypeName(roomTypeId: number): string {
+  getRoomTypeName(roomTypeId: number | undefined): string {
+    if (!roomTypeId) return 'Desconocido';
     const roomType = this.roomTypes.find(r => r.id === roomTypeId);
     return roomType ? roomType.name : 'Desconocido';
   }

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Season, SeasonI } from "../models/Season";
+import { Op } from "sequelize";
 
 export class SeasonController {
   public async getSeasonsByHotel(req: Request, res: Response) {
@@ -60,6 +61,40 @@ export class SeasonController {
       }
     } catch (error: any) {
       res.status(400).json({ error: error.message });
+    }
+  }
+
+  /**
+   * Encuentra la temporada que contiene las fechas especificadas
+   * Query params: startDate, endDate, hotelId
+   */
+  public async findByDateRange(req: Request, res: Response) {
+    try {
+      const { startDate, endDate, hotelId } = req.query as any;
+      
+      if (!startDate || !endDate || !hotelId) {
+        return res.status(400).json({ error: 'Se requieren startDate, endDate y hotelId' });
+      }
+
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      const season = await Season.findOne({
+        where: {
+          hotel_id: hotelId,
+          status: 'ACTIVE',
+          start_date: { [Op.lte]: end },
+          end_date: { [Op.gte]: start }
+        }
+      });
+
+      if (season) {
+        res.status(200).json(season);
+      } else {
+        res.status(404).json({ error: "No season found for the specified date range" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   }
 

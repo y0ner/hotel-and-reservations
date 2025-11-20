@@ -99,7 +99,7 @@ async function populateReservations(count: number) {
             room_id: room.id,
             rate_id: rate?.id,
             hotel_id: room.hotel_id,
-            status: 'ACTIVE',
+            status: 'PENDING',
         });
         createdItems.push(newItem as any);
     }

@@ -9,7 +9,9 @@ import { TooltipModule } from 'primeng/tooltip'; // Mantener TooltipModule
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ClienteService } from '../../../services/Client.service';
+import { HotelService } from '../../../services/Hotel.service';
 import { ClientResponseI } from '../../../models/Client';
+import { HotelResponseI } from '../../../models/Hotel';
 
 @Component({
   selector: 'app-Cliente-getall',
@@ -29,17 +31,38 @@ import { ClientResponseI } from '../../../models/Client';
 })
 export class Getall implements OnInit, OnDestroy {
   Cliente: ClientResponseI[] = [];
+  hotels: HotelResponseI[] = [];
   loading: boolean = false;
   private subscription = new Subscription();
 
   constructor(
     private clienteService: ClienteService,
+    private hotelService: HotelService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
+    this.loadHotels();
     this.loadData(); // Carga inicial de datos
+  }
+
+  loadHotels(): void {
+    this.subscription.add(
+      this.hotelService.getAll().subscribe({
+        next: (data) => {
+          this.hotels = data;
+        },
+        error: () => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los hoteles' });
+        }
+      })
+    );
+  }
+
+  getHotelName(hotelId: number): string {
+    const hotel = this.hotels.find(h => h.id === hotelId);
+    return hotel ? hotel.name : 'Desconocido';
   }
 
   ngOnDestroy(): void {

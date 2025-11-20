@@ -22,6 +22,10 @@ export class SeasonRoutes {
     app.route("/api/Seasons/hotel/:hotelId")
       .get(devAuthMiddleware, this.seasonController.getSeasonsByHotel);
 
+    // Encontrar temporada por rango de fechas
+    app.route("/api/Seasons/find/byDateRange")
+      .get(devAuthMiddleware, this.seasonController.findByDateRange);
+
     app.route("/api/Seasons/:id/logic")
       .delete(devAuthMiddleware, this.seasonController.deleteSeasonAdv);
 

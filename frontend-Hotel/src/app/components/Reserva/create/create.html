@@ -26,26 +26,6 @@
             <small class="text-red-500 mt-1" *ngIf="getFieldError('room_id')">{{ getFieldError('room_id') }}</small>
           </div>
 
-          <!-- Tarifa -->
-          <div class="flex flex-col">
-            <label for="rate_id" class="block text-sm font-semibold text-gray-700 mb-2">Tarifa *</label>
-            <p-select id="rate_id" [options]="rates" formControlName="rate_id" optionLabel="description" optionValue="id" placeholder="Seleccione una tarifa"></p-select>
-            <small class="text-gray-500 mt-1" *ngIf="form.get('rate_id')?.value">
-              Precio por noche: ${{ getPricePerNight() | number:'1.2-2' }}
-            </small>
-            <small class="text-blue-500 mt-1" *ngIf="suggestedRate && form.get('rate_id')?.value === suggestedRate.id">
-              ✓ Seleccionada automáticamente según la temporada
-            </small>
-            <small class="text-red-500 mt-1" *ngIf="getFieldError('rate_id')">{{ getFieldError('rate_id') }}</small>
-          </div>
-
-          <!-- Cantidad de Huéspedes -->
-          <div class="flex flex-col">
-            <label for="number_of_guests" class="block text-sm font-semibold text-gray-700 mb-2">Número de Huéspedes *</label>
-            <p-inputNumber id="number_of_guests" formControlName="number_of_guests" [min]="1"></p-inputNumber>
-            <small class="text-red-500 mt-1" *ngIf="getFieldError('number_of_guests')">{{ getFieldError('number_of_guests') }}</small>
-          </div>
-
           <!-- Fecha de Inicio -->
           <div class="flex flex-col">
             <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Inicio *</label>
@@ -58,6 +38,41 @@
             <label for="end_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Fin *</label>
             <p-datepicker id="end_date" formControlName="end_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
             <small class="text-red-500 mt-1" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
+          </div>
+
+          <!-- Tarifa -->
+          <div class="flex flex-col">
+            <label for="rate_id" class="block text-sm font-semibold text-gray-700 mb-2">Tarifa *</label>
+            <p-select id="rate_id" [options]="rates" formControlName="rate_id" placeholder="Seleccione una tarifa">
+              <ng-template pTemplate="item" let-option>
+                <div class="flex justify-between items-center w-full">
+                  <span>{{ option.description }}</span>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="selectedItem" let-option>
+                <div *ngIf="option" class="flex justify-between items-center w-full">
+                  <span>{{ option.description }}</span>
+                  <span class="ml-2 text-xs font-semibold text-amber-600">${{ option.amount | number:'1.2-2' }}</span>
+                </div>
+              </ng-template>
+            </p-select>
+            <small class="text-gray-500 mt-1" *ngIf="form.get('rate_id')?.value">
+              Precio por noche: ${{ getPricePerNight() | number:'1.2-2' }}
+            </small>
+            <small class="text-green-600 mt-1 font-semibold" *ngIf="suggestedRate && form.get('rate_id')?.value === suggestedRate.id">
+              ✓ Temporada: {{ getSeasonName() }}
+            </small>
+            <small class="text-blue-500 mt-1" *ngIf="suggestedRate && form.get('rate_id')?.value === suggestedRate.id">
+              (Seleccionada automáticamente)
+            </small>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('rate_id')">{{ getFieldError('rate_id') }}</small>
+          </div>
+
+          <!-- Cantidad de Huéspedes -->
+          <div class="flex flex-col">
+            <label for="number_of_guests" class="block text-sm font-semibold text-gray-700 mb-2">Número de Huéspedes *</label>
+            <p-inputNumber id="number_of_guests" formControlName="number_of_guests" [min]="1"></p-inputNumber>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('number_of_guests')">{{ getFieldError('number_of_guests') }}</small>
           </div>
 
           <!-- Precio Total (Calculado automáticamente) -->

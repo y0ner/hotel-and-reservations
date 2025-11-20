@@ -198,12 +198,13 @@ export class Update implements OnInit {
         if (season) {
           // Buscar tarifa para esta temporada y tipo de habitación
           const suggestedRate = this.rates.find(
-            r => r.season_id === season.id && r.roomtype_id === room.room_type_id
+            r => r.season_id === season.id && r.roomtype_id === room.roomtype_id
           );
 
           if (suggestedRate && suggestedRate.id) {
             this.suggestedRate = suggestedRate;
             this.form.patchValue({ rate_id: suggestedRate.id }, { emitEvent: false });
+            this.calculatePrice(); // Calcular precio después de seleccionar la tarifa
           }
         }
       },

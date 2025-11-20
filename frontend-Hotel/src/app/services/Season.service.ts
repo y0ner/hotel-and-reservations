@@ -117,23 +117,30 @@ export class SeasonService {
    * @returns Observable con la temporada encontrada o null
    */
   findSeasonByDateRange(startDate: Date, endDate: Date): Observable<SeasonResponseI | null> {
-    return this.getAllByHotel().pipe(
-      map(seasons => {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        
-        // Buscar temporada que contenga al menos parte del período
-        const season = seasons.find(s => {
-          const seasonStart = new Date(s.start_date);
-          const seasonEnd = new Date(s.end_date);
-          
-          // Verificar si hay superposición entre períodos
-          return start <= seasonEnd && end >= seasonStart;
-        });
-        
-        return season || null;
-      }),
+    const hotelId = this.authService.getCurrentHotel();
+    
+    if (!hotelId) {
+      return throwError(() => new Error('No hotel selected'));
+    }
+
+    const params = {
+      startDate: startDate instanceof Date ? startDate.toISOString() : new Date(startDate).toISOString(),
+      endDate: endDate instanceof Date ? endDate.toISOString() : new Date(endDate).toISOString(),
+      hotelId: hotelId.toString()
+    };
+
+    return this.http.get<SeasonResponseI | null>(`${this.baseUrl}/find/byDateRange`, { 
+      headers: this.getHeaders(),
+      params 
+    }).pipe(
       catchError(error => {
+        // Si no hay temporada para esas fechas, devolver null en lugar de error
+        if (error.status === 404) {
+          return new Observable<SeasonResponseI | null>(observer => {
+            observer.next(null);
+            observer.complete();
+          });
+        }
         console.error('Error finding season by date range:', error);
         return throwError(() => error);
       })

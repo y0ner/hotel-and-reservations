@@ -6,7 +6,7 @@ export interface RoomI {
   description: string;
   base_price: number;
   available: boolean;
-  room_type_id: number;
+  roomtype_id: number;
   hotel_id: number;
   status: "ACTIVE" | "INACTIVE";
 }
@@ -21,6 +21,6 @@ export interface RoomResponseI {
   base_price: number;
   available: boolean;
   hotel_id: number;
-  room_type_id: number;
+  roomtype_id: number;
   status: "ACTIVE" | "INACTIVE";
 }

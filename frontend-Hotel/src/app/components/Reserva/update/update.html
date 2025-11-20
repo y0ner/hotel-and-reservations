@@ -26,6 +26,20 @@
             <small class="text-red-500 mt-1" *ngIf="getFieldError('room_id')">{{ getFieldError('room_id') }}</small>
           </div>
 
+          <!-- Fecha de Inicio -->
+          <div class="flex flex-col">
+            <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Inicio *</label>
+            <p-datepicker id="start_date" formControlName="start_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
+          </div>
+
+          <!-- Fecha de Fin -->
+          <div class="flex flex-col">
+            <label for="end_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Fin *</label>
+            <p-datepicker id="end_date" formControlName="end_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
+            <small class="text-red-500 mt-1" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
+          </div>
+
           <!-- Tarifa -->
           <div class="flex flex-col">
             <label for="rate_id" class="block text-sm font-semibold text-gray-700 mb-2">Tarifa *</label>
@@ -44,20 +58,6 @@
             <label for="number_of_guests" class="block text-sm font-semibold text-gray-700 mb-2">Número de Huéspedes *</label>
             <p-inputNumber id="number_of_guests" formControlName="number_of_guests" [min]="1"></p-inputNumber>
             <small class="text-red-500 mt-1" *ngIf="getFieldError('number_of_guests')">{{ getFieldError('number_of_guests') }}</small>
-          </div>
-
-          <!-- Fecha de Inicio -->
-          <div class="flex flex-col">
-            <label for="start_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Inicio *</label>
-            <p-datepicker id="start_date" formControlName="start_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
-            <small class="text-red-500 mt-1" *ngIf="getFieldError('start_date')">{{ getFieldError('start_date') }}</small>
-          </div>
-
-          <!-- Fecha de Fin -->
-          <div class="flex flex-col">
-            <label for="end_date" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Fin *</label>
-            <p-datepicker id="end_date" formControlName="end_date" [showIcon]="true" dateFormat="dd/mm/yy"></p-datepicker>
-            <small class="text-red-500 mt-1" *ngIf="getFieldError('end_date')">{{ getFieldError('end_date') }}</small>
           </div>
 
           <!-- Estado -->

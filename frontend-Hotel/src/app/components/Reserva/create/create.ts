@@ -19,6 +19,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ClientResponseI } from '../../../models/Client';
 import { RoomResponseI } from '../../../models/Room';
 import { RateResponseI } from '../../../models/Rate';
+import { SeasonResponseI } from '../../../models/Season';
 
 @Component({
   selector: 'app-reservation-create',
@@ -47,6 +48,7 @@ export class Create implements OnInit {
   rates: RateResponseI[] = [];
   calculatedPrice: number = 0;
   suggestedRate: RateResponseI | null = null; // Tarifa sugerida automáticamente
+  currentSeason: SeasonResponseI | null = null; // Temporada actual para mostrar información
 
   constructor(
     private fb: FormBuilder,
@@ -63,8 +65,8 @@ export class Create implements OnInit {
       client_id: [null, [Validators.required]],
       room_id: [null, [Validators.required]],
       rate_id: [null, [Validators.required]],
-      start_date: ['', [Validators.required]],
-      end_date: ['', [Validators.required]],
+      start_date: [null, [Validators.required]],
+      end_date: [null, [Validators.required]],
       number_of_guests: [1, [Validators.required, Validators.min(1)]],
       status: ['PENDING', []],
     });
@@ -146,28 +148,58 @@ export class Create implements OnInit {
     const room = this.rooms.find(r => r.id === roomId);
     if (!room) return;
 
-    // Buscar la temporada que contenga estas fechas
+    // Buscar la temporada que contenga estas fechas usando el backend
     this.seasonService.findSeasonByDateRange(startDate, endDate).subscribe({
       next: (season) => {
         if (season) {
+          this.currentSeason = season;
+          // Debug
+          console.log('Season found:', season);
+          console.log('Room:', room);
+          console.log('Looking for rate with season_id:', season.id, 'and roomtype_id:', room.roomtype_id);
+          console.log('Available rates:', this.rates);
+
           // Buscar tarifa para esta temporada y tipo de habitación
           const suggestedRate = this.rates.find(
-            r => r.season_id === season.id && r.roomtype_id === room.room_type_id
+            r => r.season_id === season.id && r.roomtype_id === room.roomtype_id
           );
+
+          console.log('Suggested rate found:', suggestedRate);
 
           if (suggestedRate && suggestedRate.id) {
             this.suggestedRate = suggestedRate;
             this.form.patchValue({ rate_id: suggestedRate.id }, { emitEvent: false });
+            this.calculatePrice(); // Calcular precio después de seleccionar la tarifa
             this.messageService.add({
               severity: 'info',
               summary: 'Tarifa detectada',
-              detail: `Se seleccionó automáticamente la tarifa para la temporada "${season.name}"`
+              detail: `Se seleccionó automáticamente la tarifa para la temporada "${season.name}": $${suggestedRate.amount}`
             });
+          } else {
+            // No hay tarifa disponible para esta combinación
+            console.log('No rate found for this season and room type combination');
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Tarifa no disponible',
+              detail: `No hay tarifa disponible para la temporada "${season.name}" y tipo de habitación seleccionado`
+            });
+            this.suggestedRate = null;
           }
+        } else {
+          // No hay temporada para esas fechas
+          this.currentSeason = null;
+          this.suggestedRate = null;
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Temporada no encontrada',
+            detail: 'No hay temporada registrada para las fechas seleccionadas'
+          });
         }
       },
       error: (error) => {
         console.error('Error al buscar temporada:', error);
+        this.currentSeason = null;
+        this.suggestedRate = null;
       }
     });
   }
@@ -338,5 +370,9 @@ export class Create implements OnInit {
     if (!roomId) return 0;
     const room = this.rooms.find(r => r.id === roomId);
     return room ? room.capacity : 0;
+  }
+
+  getSeasonName(): string {
+    return this.currentSeason ? this.currentSeason.name : 'N/A';
   }
 }
