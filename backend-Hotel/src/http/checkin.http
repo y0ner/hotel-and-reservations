@@ -1,7 +1,7 @@
 ###
 # @name Checkin
 # Variables de entorno para las pruebas de Checkin
-@token = ey... (Pega aquí tu token JWT)
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzYzNjQ2NTUwLCJleHAiOjE3NjM2NDcxNTB9.lKi_Evhaxm-1MTOgVTJuw4AjQ9eTXvB0tlFRCQstp7g
 @baseUrl = http://localhost:4000
 
 ### ================== RUTAS SIN AUTENTICACIÓN ==================

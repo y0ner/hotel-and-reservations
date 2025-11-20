@@ -77,26 +77,21 @@ export class PaymentService {
       );
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
+  // Cancelar un pago (borrado lógico)
+  cancelPayment(id: number): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/${id}/cancel`, {}, { headers: this.getHeaders() })
       .pipe(
         tap(() => this.refresh()),
         catchError(error => {
-          console.error(`Error deleting Payment with id ${id}:`, error);
+          console.error(`Error cancelling Payment with id ${id}:`, error);
           return throwError(() => error);
         })
       );
   }
 
-  deleteLogic(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}/logic`, { headers: this.getHeaders() })
-      .pipe(
-        tap(() => this.refresh()),
-        catchError(error => {
-          console.error(`Error logic-deleting Payment with id ${id}:`, error);
-          return throwError(() => error);
-        })
-      );
+  // Nota: delete() no está permitido en pagos. Usar cancelPayment() en su lugar
+  delete(id: number): Observable<void> {
+    return throwError(() => new Error('No se permite eliminar pagos. Use cancelPayment() para anular.'));
   }
 
   refresh(): void {

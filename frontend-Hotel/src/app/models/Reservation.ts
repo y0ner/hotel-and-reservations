@@ -9,7 +9,7 @@ export interface ReservationI {
   room_id: number;
   rate_id: number;
   hotel_id: number;
-  status: "ACTIVE" | "INACTIVE";
+  status: "PENDING" | "CONFIRMED" | "CANCELLED" | "CHECKED_IN" | "CHECKED_OUT" | "PAID" | "INACTIVE";
 }
 
 
@@ -24,4 +24,5 @@ export interface ReservationResponseI {
   room_id: number;
   rate_id: number;
   hotel_id: number;
+  status: "PENDING" | "CONFIRMED" | "CANCELLED" | "CHECKED_IN" | "CHECKED_OUT" | "PAID" | "INACTIVE";
 }

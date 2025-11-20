@@ -69,7 +69,32 @@ export class Update implements OnInit {
     this.loadClients();
     this.loadRooms();
     this.loadRates();
-    this.loadReservation(this.reservationId);
+    
+    // Cargar la reserva y validar estado
+    this.reservationService.getById(this.reservationId).subscribe({
+      next: (reservation: any) => {
+        if (reservation.status === 'PAID') {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Operación no permitida',
+            detail: 'No se puede editar una reserva que ya ha sido pagada.'
+          });
+          setTimeout(() => {
+            this.router.navigate(['/Reserva']);
+          }, 2000);
+          return;
+        }
+        this.loadReservation(this.reservationId);
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo cargar la reserva'
+        });
+        this.router.navigate(['/Reserva']);
+      }
+    });
 
     // Escuchar cambios para calcular precio
     this.form.get('rate_id')?.valueChanges.subscribe(() => this.calculatePrice());

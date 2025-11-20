@@ -13,11 +13,11 @@ export class CheckinRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Checkins")
-      .get(authMiddleware, this.checkinController.getAllCheckins)
+      .get(devAuthMiddleware, this.checkinController.getAllCheckins)
       .post(devAuthMiddleware, this.checkinController.createCheckin);
 
     app.route("/api/Checkins/:id")
-      .get(authMiddleware, this.checkinController.getCheckinById);
+      .get(devAuthMiddleware, this.checkinController.getCheckinById);
 
   }
 }

@@ -16,6 +16,7 @@ import { ClienteService } from '../../../services/Client.service';
 import { ClientResponseI } from '../../../models/Client';
 import { RoomService } from '../../../services/Room.service';
 import { RoomResponseI } from '../../../models/Room';
+import { CheckInService } from '../../../services/Checkin.service';
 import { ReservationServiceModal } from '../../ReservationService/modal/modal';
 
 @Component({
@@ -40,12 +41,14 @@ export class Getall implements OnInit, OnDestroy {
   clients: ClientResponseI[] = [];
   rooms: RoomResponseI[] = [];
   loading: boolean = false;
+  checkinMap: Map<number, boolean> = new Map(); // Map para almacenar si existe checkin por reservation_id
   private subscription = new Subscription();
 
   constructor(
     private reservationService: ReservationService,
     private clienteService: ClienteService,
     private roomService: RoomService,
+    private checkInService: CheckInService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private dialogService: DialogService
@@ -65,12 +68,19 @@ export class Getall implements OnInit, OnDestroy {
       forkJoin({
         reservations: this.reservationService.getAll(),
         clients: this.clienteService.getAll(),
-        rooms: this.roomService.getAll()
+        rooms: this.roomService.getAll(),
+        checkins: this.checkInService.getAll()
       }).subscribe({
         next: (data) => {
           this.reservations = data.reservations;
           this.clients = data.clients;
           this.rooms = data.rooms;
+          
+          // Construir mapa de checkins por reservation_id
+          data.checkins.forEach((checkin: any) => {
+            this.checkinMap.set(checkin.reservation_id, true);
+          });
+          
           this.loading = false;
         },
         error: (error) => {
@@ -113,6 +123,10 @@ export class Getall implements OnInit, OnDestroy {
   getRoomNumber(roomId: number): string {
     const room = this.rooms.find(r => r.id === roomId);
     return room ? `N° ${room.number}` : 'Desconocida';
+  }
+
+  hasCheckin(reservationId: number): boolean {
+    return this.checkinMap.has(reservationId) && this.checkinMap.get(reservationId) === true;
   }
 
   showServicesModal(reservation: ReservationResponseI): void {

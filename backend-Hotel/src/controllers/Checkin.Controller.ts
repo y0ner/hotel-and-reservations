@@ -8,7 +8,7 @@ export class CheckinController {
   public async getAllCheckins(req: Request, res: Response) {
     try {
       const checkins = await Checkin.findAll();
-      res.status(200).json(checkins);
+      res.status(200).json({ checkins });
     } catch (error) {
       res.status(500).json({ error: "Error fetching checkins" });
     }
@@ -50,15 +50,20 @@ export class CheckinController {
         observation: observation || null,
       });
 
-      await reservation.update({
-        status: 'CHECKED-IN',
-        checkin_date: new Date(time),
-      });
+      try {
+        await reservation.update({
+          status: 'CHECKED_IN',
+          checkin_date: new Date(time),
+        });
+      } catch (updateError: any) {
+        console.error("Error updating reservation status:", updateError);
+        // Si falla la actualización del estado, al menos devolvemos el checkin creado
+      }
 
       res.status(201).json(newCheckin);
-    } catch (error) {
-      console.error("Error creating checkin:", error);
-      res.status(500).json({ error: "Error creating checkin" });
+    } catch (error: any) {
+      console.error("Error creating checkin:", error.message);
+      res.status(500).json({ error: "Error creating checkin", details: error.message });
     }
   }
 }

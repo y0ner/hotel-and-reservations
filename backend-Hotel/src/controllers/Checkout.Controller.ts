@@ -7,7 +7,7 @@ export class CheckoutController {
   public async getAllCheckouts(req: Request, res: Response) {
     try {
       const checkouts = await Checkout.findAll();
-      res.status(200).json(checkouts);
+      res.status(200).json({ checkouts });
     } catch (error) {
       res.status(500).json({ error: "Error fetching checkouts" });
     }

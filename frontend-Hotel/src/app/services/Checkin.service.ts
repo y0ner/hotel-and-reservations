@@ -56,6 +56,19 @@ export class CheckInService {
       );
   }
 
+  getByReservationId(reservationId: number): Observable<CheckinI | null> {
+    return this.getAll().pipe(
+      map(checkins => {
+        const checkin = checkins.find(c => c.reservation_id === reservationId);
+        return checkin || null;
+      }),
+      catchError(error => {
+        console.error(`Error fetching Checkin for reservation ${reservationId}:`, error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   create(data: CheckinI): Observable<CheckinI> {
     return this.http.post<CheckinI>(this.baseUrl, data, { headers: this.getHeaders() })
       .pipe(

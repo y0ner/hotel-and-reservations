@@ -6,7 +6,7 @@ export interface PaymentI {
   payment_date: Date;
   reference: string;
   reservation_id: number;
-  status?: "ACTIVE" | "CANCELLED";  // coincide con el backend
+  status?: "ACTIVE" | "CANCELLED";
 }
 
 export interface PaymentResponseI {
@@ -17,5 +17,5 @@ export interface PaymentResponseI {
   payment_date: Date;
   reference: string;
   reservation_id: number;
-
+  status?: "ACTIVE" | "CANCELLED";
 }

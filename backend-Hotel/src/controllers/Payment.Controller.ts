@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Payment, PaymentI } from "../models/Payment";
+import { Reservation } from "../models/Reservation";
 
 export class PaymentController {
 
@@ -49,6 +50,13 @@ export class PaymentController {
       };
 
       const newPayment = await Payment.create(body as any);
+
+      // Actualizar el estado de la reserva a PAID
+      const reservation = await Reservation.findByPk(reservation_id);
+      if (reservation) {
+        await reservation.update({ status: "PAID" });
+      }
+
       res.status(201).json(newPayment);
 
     } catch (error: any) {

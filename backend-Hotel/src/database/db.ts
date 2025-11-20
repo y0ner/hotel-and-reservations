@@ -127,18 +127,22 @@ export const syncDatabase = async () => {
   try {
     // Limpiar valores inválidos en ENUM columns antes de sincronizar
     try {
-      // Actualizar valores inválidos en reservations.status a PENDING
+      // Actualizar valores antiguos con guiones a nuevos con guiones bajos
       await sequelize.query(`
         UPDATE reservations 
-        SET status = 'PENDING' 
-        WHERE status NOT IN ('PENDING', 'CONFIRMED', 'CANCELLED', 'CHECKED-IN', 'CHECKED-OUT', 'INACTIVE')
+        SET status = CASE 
+          WHEN status = 'CHECKED-IN' THEN 'CHECKED_IN'
+          WHEN status = 'CHECKED-OUT' THEN 'CHECKED_OUT'
+          ELSE status
+        END
+        WHERE status IN ('CHECKED-IN', 'CHECKED-OUT')
       `);
     } catch (err) {
-      console.warn("⚠️  No se pudo limpiar valores inválidos en reservations.status (tabla podría no existir aún)");
+      console.warn("⚠️  No se pudo migrar valores en reservations.status (tabla podría no existir aún)");
     }
 
-    // Solo sincronizar si no existen las tablas (más rápido en desarrollo)
-    await sequelize.sync({ alter: false });
+    // Sincronizar con alter: true para actualizar columnas existentes
+    await sequelize.sync({ alter: true });
     console.log("✅ Base de datos sincronizada.");
   } catch (error) {
     console.error("❌ Error al sincronizar la base de datos:", error);

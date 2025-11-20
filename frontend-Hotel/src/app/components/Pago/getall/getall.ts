@@ -55,38 +55,29 @@ export class Getall implements OnInit {
     });
   }
 
-  createPayment(): void {
-    this.router.navigate(['/Pago/new']);
-  }
-
-  editPayment(id: number | undefined): void {
-    if (id === undefined) return;
-    this.router.navigate(['/Pago/edit', id]);
-  }
-
-  confirmDelete(payment: PaymentResponseI): void {
+  confirmCancel(payment: PaymentResponseI): void {
     if (payment.id === undefined) return;
     this.confirmationService.confirm({
-      message: `¿Está seguro de que desea eliminar el pago ${payment.id}?`,
-      header: 'Confirmar Eliminación',
+      message: `¿Está seguro de que desea anular el pago ${payment.id}? Esta acción no se puede deshacer.`,
+      header: 'Confirmar Anulación de Pago',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí, eliminar',
+      acceptLabel: 'Sí, anular',
       rejectLabel: 'Cancelar',
-      acceptButtonStyleClass: 'p-button-danger',
+      acceptButtonStyleClass: 'p-button-warning',
       accept: () => {
-        this.deletePayment(payment.id!);
+        this.cancelPayment(payment.id!);
       }
     });
   }
 
-  deletePayment(id: number): void {
-    this.paymentService.delete(id).subscribe({
+  cancelPayment(id: number): void {
+    this.paymentService.cancelPayment(id).subscribe({
       next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Pago eliminado correctamente' });
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Pago anulado correctamente' });
         this.loadPayments();
       },
       error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el pago' });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo anular el pago' });
       }
     });
   }

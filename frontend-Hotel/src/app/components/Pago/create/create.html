@@ -7,12 +7,30 @@
         </div>
       </ng-template>
 
+      <!-- Información de la reserva si viene pre-cargada -->
+      <div *ngIf="selectedReservationData" class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <p class="text-sm text-blue-800">
+          <strong>Reserva Pre-cargada:</strong> #{{ selectedReservationData.id }}
+        </p>
+        <p class="text-sm text-blue-800">
+          <strong>Monto Total:</strong> {{ selectedReservationData.total_amount | currency:'USD' }}
+        </p>
+      </div>
+
       <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Reserva -->
           <div class="flex flex-col">
             <label for="reservation_id" class="block text-sm font-semibold text-gray-700 mb-2">Reserva *</label>
-            <p-select id="reservation_id" [options]="reservations" formControlName="reservation_id" optionLabel="id" optionValue="id" placeholder="Seleccione una reserva"></p-select>
+            <p-select 
+              id="reservation_id" 
+              [options]="reservations" 
+              formControlName="reservation_id" 
+              optionLabel="id" 
+              optionValue="id" 
+              placeholder="Seleccione una reserva"
+              (onChange)="onReservationChange($event.value)">
+            </p-select>
           </div>
 
           <!-- Monto -->

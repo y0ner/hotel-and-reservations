@@ -25,8 +25,8 @@ POST {{baseUrl}}/api/login
 Content-Type: application/json
 
 {
-  "email": "admin@hotel.com",
-  "password": "123456"
+  "email": "admin@gmail.com",
+  "password": "admin123"
 }
 
 ### ================== RUTAS CON AUTENTICACIÓN ==================

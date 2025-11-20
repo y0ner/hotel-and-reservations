@@ -9,6 +9,7 @@ import { PickListModule } from 'primeng/picklist';
 import { ToastModule } from 'primeng/toast';
 import { ReservationServiceService } from '../../../services/ReservationService.service';
 import { ServiceService } from '../../../services/Service.service';
+import { ReservationService } from '../../../services/Reservation.service';
 import { ServiceResponseI } from '../../../models/Service';
 import { ReservationServiceResponseI } from '../../../models/ReservationService';
 
@@ -29,6 +30,8 @@ import { ReservationServiceResponseI } from '../../../models/ReservationService'
 export class Manage implements OnInit {
   loading = true;
   reservationId!: number;
+  reservationStatus: string = '';
+  isPaid: boolean = false;
   
   allServices: ServiceResponseI[] = [];
   sourceServices: ServiceResponseI[] = [];
@@ -42,6 +45,7 @@ export class Manage implements OnInit {
     private router: Router,
     private reservationServiceService: ReservationServiceService,
     private serviceService: ServiceService,
+    private reservationService: ReservationService,
     private messageService: MessageService
   ) {}
 
@@ -55,10 +59,22 @@ export class Manage implements OnInit {
   loadData(): void {
     this.loading = true;
     forkJoin({
+      reservation: this.reservationService.getById(this.reservationId),
       allServices: this.serviceService.getAll(),
       assignedReservationServices: this.reservationServiceService.getAll()
     }).subscribe({
-      next: ({ allServices, assignedReservationServices }) => {
+      next: ({ reservation, allServices, assignedReservationServices }) => {
+        this.reservationStatus = reservation.status;
+        this.isPaid = reservation.status === 'PAID';
+
+        if (this.isPaid) {
+          this.messageService.add({ 
+            severity: 'warn', 
+            summary: 'Reserva Pagada', 
+            detail: 'No se pueden agregar o eliminar servicios a una reserva pagada.' 
+          });
+        }
+
         this.allServices = allServices;
         
         const assignedForThisReservation = assignedReservationServices.filter(
@@ -87,6 +103,15 @@ export class Manage implements OnInit {
   }
 
   onMoveToTarget(event: { items: ServiceResponseI[] }): void {
+    if (this.isPaid) {
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Operación no permitida', 
+        detail: 'No se pueden agregar servicios a una reserva pagada.' 
+      });
+      return;
+    }
+
     event.items.forEach(service => {
       const reservationService = {
         reservation_id: this.reservationId,
@@ -110,6 +135,15 @@ export class Manage implements OnInit {
   }
 
   onMoveToSource(event: { items: ServiceResponseI[] }): void {
+    if (this.isPaid) {
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Operación no permitida', 
+        detail: 'No se pueden eliminar servicios de una reserva pagada.' 
+      });
+      return;
+    }
+
     event.items.forEach(service => {
       const reservationServiceId = this.targetReservationServiceIds.get(service.id!);
       if (reservationServiceId) {

@@ -13,10 +13,10 @@ export class CheckoutRoutes {
 
     // ================== RUTAS CON AUTENTICACIÓN ==================
     app.route("/api/Checkouts")
-      .get(authMiddleware, this.checkoutController.getAllCheckouts);
+      .get(devAuthMiddleware, this.checkoutController.getAllCheckouts);
 
     app.route("/api/Checkouts/:id")
-      .get(authMiddleware, this.checkoutController.getCheckoutById);
+      .get(devAuthMiddleware, this.checkoutController.getCheckoutById);
 
   }
 }

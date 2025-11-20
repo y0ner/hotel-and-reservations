@@ -52,8 +52,6 @@ import { Manage as ReservationServiceManage } from './components/ReservationServ
 // Payment components with aliases
 import { Getall as PaymentGetall } from './components/Pago/getall/getall';
 import { Create as PaymentCreate } from './components/Pago/create/create';
-import { Update as PaymentUpdate } from './components/Pago/update/update';
-import { Delete as PaymentDelete } from './components/Pago/delete/delete';
 
 export const routes: Routes = [
     { 
@@ -247,13 +245,8 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
-        path: "Pago/edit/:id",
-        component: PaymentUpdate,
-        canActivate: [authGuard]
-    },
-    {
-        path: "Pago/delete/:id",
-        component: PaymentDelete,
+        path: "Pago/new/:reservationId",
+        component: PaymentCreate,
         canActivate: [authGuard]
     },
     {

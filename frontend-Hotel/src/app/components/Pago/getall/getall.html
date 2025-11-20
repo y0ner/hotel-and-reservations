@@ -1,12 +1,7 @@
 <div class="card p-8">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Gestión de Pagos</h2>
-        <p-button
-            label="Nuevo Pago"
-            icon="pi pi-plus"
-            (click)="createPayment()"
-            styleClass="p-button-success"
-        ></p-button>
+        <p class="text-sm text-gray-600">Los pagos se crean desde la sección de Reservas</p>
     </div>
 
     <p-table 
@@ -33,16 +28,28 @@
         </ng-template>
 
         <ng-template pTemplate="body" let-payment>
-            <tr>
+            <tr [ngClass]="{'opacity-60 bg-gray-100': payment.status === 'CANCELLED'}">
                 <td>{{ payment.id }}</td>
                 <td>{{ payment.reservation_id }}</td>
-                <td>{{ payment.amount | currency }}</td>
+                <td>
+                    <span [ngClass]="{'line-through': payment.status === 'CANCELLED'}">
+                        {{ payment.amount | currency }}
+                    </span>
+                    <span *ngIf="payment.status === 'CANCELLED'" class="text-red-600 ml-2 text-sm font-bold">(ANULADO)</span>
+                </td>
                 <td>{{ payment.method }}</td>
                 <td>{{ payment.payment_date | date: 'dd/MM/yyyy' }}</td>
                 <td class="text-center">
                     <div class="flex justify-center gap-2">
-                        <p-button icon="pi pi-pencil" (click)="editPayment(payment.id)" styleClass="p-button-rounded p-button-text p-button-warning" pTooltip="Editar" tooltipPosition="top"></p-button>
-                        <p-button icon="pi pi-trash" (click)="confirmDelete(payment)" styleClass="p-button-rounded p-button-text p-button-danger" pTooltip="Eliminar" tooltipPosition="top"></p-button>
+                        <p-button 
+                            *ngIf="payment.status === 'ACTIVE'" 
+                            icon="pi pi-times" 
+                            (click)="confirmCancel(payment)" 
+                            styleClass="p-button-rounded p-button-text p-button-danger" 
+                            pTooltip="Anular Pago" 
+                            tooltipPosition="top">
+                        </p-button>
+                        <span *ngIf="payment.status === 'CANCELLED'" class="text-gray-500 text-sm">Pago Anulado</span>
                     </div>
                 </td>
             </tr>

@@ -43,11 +43,13 @@
                 <td>{{ reservation.status }}</td>
                 <td class="text-center">
                     <div class="flex justify-center gap-2">
-                        <p-button icon="pi pi-pencil" [routerLink]="['/Reserva/edit', reservation.id]" styleClass="p-button-rounded p-button-text p-button-warning" pTooltip="Editar" tooltipPosition="top"></p-button>
+                        <p-button *ngIf="reservation.status !== 'PAID'" icon="pi pi-pencil" [routerLink]="['/Reserva/edit', reservation.id]" styleClass="p-button-rounded p-button-text p-button-warning" pTooltip="Editar" tooltipPosition="top"></p-button>
                         <p-button icon="pi pi-trash" (click)="confirmDelete(reservation)" styleClass="p-button-rounded p-button-text p-button-danger" pTooltip="Eliminar" tooltipPosition="top"></p-button>
                         <p-button *ngIf="reservation.status === 'CONFIRMED'" icon="pi pi-calendar-plus" [routerLink]="['/Reserva', reservation.id, 'checkin']" styleClass="p-button-rounded p-button-text p-button-success" pTooltip="Check-in" tooltipPosition="top"></p-button>
                         <p-button *ngIf="reservation.status === 'CHECKED_IN'" icon="pi pi-calendar-minus" [routerLink]="['/Reserva', reservation.id, 'checkout']" styleClass="p-button-rounded p-button-text p-button-info" pTooltip="Check-out" tooltipPosition="top"></p-button>
-                        <p-button icon="pi pi-cog" (click)="showServicesModal(reservation)" styleClass="p-button-rounded p-button-text p-button-help" pTooltip="Servicios" tooltipPosition="top"></p-button>
+                        <p-button *ngIf="hasCheckin(reservation.id!) && reservation.status === 'CHECKED_IN'" icon="pi pi-credit-card" [routerLink]="['/Pago/new', reservation.id]" styleClass="p-button-rounded p-button-text p-button-success" pTooltip="Registrar Pago" tooltipPosition="top"></p-button>
+                        <p-button *ngIf="reservation.status === 'PAID'" icon="pi pi-check-circle" styleClass="p-button-rounded p-button-text p-button-success" pTooltip="Pagado" tooltipPosition="top" disabled></p-button>
+                        <p-button *ngIf="reservation.status !== 'PAID'" icon="pi pi-cog" (click)="showServicesModal(reservation)" styleClass="p-button-rounded p-button-text p-button-help" pTooltip="Servicios" tooltipPosition="top"></p-button>
                     </div>
                 </td>
             </tr>
